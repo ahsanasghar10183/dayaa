@@ -61,6 +61,7 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
 
     // Campaigns
     Route::resource('campaigns', \App\Http\Controllers\Organization\CampaignController::class);
+    Route::post('/campaigns/{campaign}/duplicate', [\App\Http\Controllers\Organization\CampaignController::class, 'duplicate'])->name('campaigns.duplicate');
 
     // Devices
     Route::resource('devices', \App\Http\Controllers\Organization\DeviceController::class);

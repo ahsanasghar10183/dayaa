@@ -377,6 +377,45 @@ class CampaignController extends Controller
     }
 
     /**
+     * Duplicate the specified campaign
+     */
+    public function duplicate(Campaign $campaign)
+    {
+        // Authorize
+        $userOrgId = auth()->user()->organization ? auth()->user()->organization->id : null;
+        if ($campaign->organization_id != $userOrgId) {
+            abort(403);
+        }
+
+        // Create a duplicate
+        $duplicate = $campaign->replicate();
+        $duplicate->name = $campaign->name . ' (Copy)';
+        $duplicate->status = 'inactive'; // Set to inactive by default
+        $duplicate->reference_code = null; // Clear reference code
+        $duplicate->save();
+
+        // Copy device assignments
+        $campaign->devices->each(function ($device) use ($duplicate) {
+            $duplicate->devices()->attach($device->id);
+        });
+
+        // Log activity
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'organization_id' => $campaign->organization_id,
+            'action' => 'duplicated',
+            'model_type' => Campaign::class,
+            'model_id' => $duplicate->id,
+            'description' => "Campaign '{$campaign->name}' duplicated as '{$duplicate->name}'",
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+        return redirect()->route('organization.campaigns.edit', $duplicate)
+            ->with('success', 'Campaign duplicated successfully! You can now customize it.');
+    }
+
+    /**
      * Remove the specified campaign
      */
     public function destroy(Campaign $campaign)
