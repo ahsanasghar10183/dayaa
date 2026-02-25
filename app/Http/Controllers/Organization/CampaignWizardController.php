@@ -203,7 +203,11 @@ class CampaignWizardController extends Controller
         }
 
         $organization = auth()->user()->organization;
-        $devices = $organization->devices()->get();
+        $devices = $organization->devices()
+            ->with(['campaigns' => function ($query) {
+                $query->where('status', 'active')->select('campaigns.id', 'campaigns.name', 'campaigns.status');
+            }])
+            ->get();
 
         return view('organization.campaigns.wizard.step5-final', compact('devices'));
     }
@@ -229,6 +233,30 @@ class CampaignWizardController extends Controller
             'devices' => 'nullable|array',
             'devices.*' => 'exists:devices,id',
         ]);
+
+        // If status is active, validate that selected devices aren't already assigned to other active campaigns
+        if ($validated['status'] === 'active' && !empty($validated['devices'])) {
+            $conflictingDevices = \App\Models\Device::whereIn('id', $validated['devices'])
+                ->whereHas('campaigns', function ($query) {
+                    $query->where('status', 'active');
+                })
+                ->with(['campaigns' => function ($query) {
+                    $query->where('status', 'active')->select('id', 'name');
+                }])
+                ->get();
+
+            if ($conflictingDevices->isNotEmpty()) {
+                $errors = [];
+                foreach ($conflictingDevices as $device) {
+                    $campaignNames = $device->campaigns->pluck('name')->join(', ');
+                    $errors[] = "Device '{$device->name}' is already assigned to active campaign(s): {$campaignNames}";
+                }
+
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['devices' => 'Cannot assign devices to this active campaign. ' . implode(' ', $errors) . ' Please deactivate those campaigns first or set this campaign as inactive.']);
+            }
+        }
 
         // Get wizard data from session
         $wizard = session('campaign_wizard', []);

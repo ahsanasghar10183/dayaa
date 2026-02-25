@@ -135,8 +135,15 @@ class ProfileController extends Controller
             'bank_account' => 'nullable|string|max:100',
         ]);
 
+        // Handle logo removal
+        if ($request->has('remove_logo') && $request->remove_logo) {
+            if ($organization->logo) {
+                Storage::disk('public')->delete($organization->logo);
+                $validated['logo'] = null;
+            }
+        }
         // Handle logo upload
-        if ($request->hasFile('logo')) {
+        elseif ($request->hasFile('logo')) {
             // Delete old logo
             if ($organization->logo) {
                 Storage::disk('public')->delete($organization->logo);

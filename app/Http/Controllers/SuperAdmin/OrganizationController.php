@@ -5,8 +5,11 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\ActivityLog;
+use App\Mail\OrganizationApproved;
+use App\Mail\OrganizationRejected;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class OrganizationController extends Controller
@@ -92,7 +95,11 @@ class OrganizationController extends Controller
             'user_agent' => request()->userAgent(),
         ]);
 
-        // TODO: Send approval email to organization
+        // Send approval email to organization owner
+        $organization->load('user');
+        if ($organization->user && $organization->user->email) {
+            Mail::to($organization->user->email)->send(new OrganizationApproved($organization));
+        }
 
         return back()->with('success', 'Organization approved successfully.');
     }
@@ -127,7 +134,11 @@ class OrganizationController extends Controller
             'user_agent' => request()->userAgent(),
         ]);
 
-        // TODO: Send rejection email to organization
+        // Send rejection email to organization owner
+        $organization->load('user');
+        if ($organization->user && $organization->user->email) {
+            Mail::to($organization->user->email)->send(new OrganizationRejected($organization, $request->rejection_reason));
+        }
 
         return back()->with('success', 'Organization rejected.');
     }

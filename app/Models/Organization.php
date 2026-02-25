@@ -27,6 +27,7 @@ class Organization extends Model
         'address',
         'charity_number',
         'tax_id',
+        'bank_account',
         'website',
         'logo',
         'status',
@@ -126,6 +127,14 @@ class Organization extends Model
     public function activityLogs(): HasMany
     {
         return $this->hasMany(ActivityLog::class);
+    }
+
+    /**
+     * Get all tier change logs for this organization
+     */
+    public function tierChangeLogs(): HasMany
+    {
+        return $this->hasMany(TierChangeLog::class);
     }
 
     /**

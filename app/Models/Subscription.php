@@ -14,6 +14,7 @@ class Subscription extends Model
      */
     protected $fillable = [
         'organization_id',
+        'tier_id',
         'plan',
         'price',
         'status',
@@ -72,5 +73,13 @@ class Subscription extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * Get the subscription tier
+     */
+    public function tier(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionTier::class, 'tier_id');
     }
 }

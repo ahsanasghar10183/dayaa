@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register Donation Observer for real-time tier checking
+        \App\Models\Donation::observe(\App\Observers\DonationObserver::class);
     }
 }

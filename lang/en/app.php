@@ -1,0 +1,146 @@
+<?php
+
+return [
+
+    // Navigation
+    'nav' => [
+        'dashboard'  => 'Dashboard',
+        'profile'    => 'Profile',
+        'campaigns'  => 'Campaigns',
+        'devices'    => 'Devices',
+        'donations'  => 'Donations',
+        'reports'    => 'Reports',
+        'sign_out'   => 'Sign Out',
+        'account_settings' => 'Account Settings',
+        'org_profile' => 'Organization Profile',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'title'             => 'Dashboard',
+        'welcome'           => 'Welcome back',
+        'total_donations'   => 'Total Donations',
+        'this_month'        => 'This Month',
+        'active_campaigns'  => 'Active Campaigns',
+        'online_devices'    => 'Online Devices',
+        'recent_donations'  => 'Recent Donations',
+        'view_all'          => 'View All',
+        'no_donations_yet'  => 'No donations yet',
+    ],
+
+    // Campaigns
+    'campaigns' => [
+        'title'         => 'Campaigns',
+        'create'        => 'Create Campaign',
+        'edit'          => 'Edit Campaign',
+        'name'          => 'Campaign Name',
+        'status'        => 'Status',
+        'type'          => 'Type',
+        'start_date'    => 'Start Date',
+        'end_date'      => 'End Date',
+        'active'        => 'Active',
+        'inactive'      => 'Inactive',
+        'scheduled'     => 'Scheduled',
+        'one_time'      => 'One-Time',
+        'recurring'     => 'Recurring',
+        'no_campaigns'  => 'No campaigns yet. Create your first campaign!',
+        'duplicate'     => 'Duplicate',
+        'delete'        => 'Delete',
+        'preview'       => 'Preview',
+    ],
+
+    // Devices
+    'devices' => [
+        'title'         => 'Devices',
+        'add'           => 'Add Device',
+        'name'          => 'Device Name',
+        'status'        => 'Status',
+        'online'        => 'Online',
+        'offline'       => 'Offline',
+        'active'        => 'Active',
+        'inactive'      => 'Inactive',
+        'pairing_code'  => 'Pairing Code',
+        'last_seen'     => 'Last Seen',
+        'no_devices'    => 'No devices registered yet.',
+        'pair_new'      => 'Pair New Device',
+    ],
+
+    // Donations
+    'donations' => [
+        'title'         => 'Donations',
+        'amount'        => 'Amount',
+        'date'          => 'Date',
+        'campaign'      => 'Campaign',
+        'device'        => 'Device',
+        'status'        => 'Status',
+        'receipt'       => 'Receipt #',
+        'transaction'   => 'Transaction ID',
+        'success'       => 'Success',
+        'pending'       => 'Pending',
+        'failed'        => 'Failed',
+        'no_donations'  => 'No donations found.',
+    ],
+
+    // Reports
+    'reports' => [
+        'title'         => 'Reports & Analytics',
+        'subtitle'      => 'Donation insights and performance metrics',
+        'export_csv'    => 'Export CSV',
+        'today'         => 'Today',
+        'this_week'     => 'This Week',
+        'this_month'    => 'This Month',
+        'all_time'      => 'All Time',
+        'top_campaign'  => 'Top Campaign',
+        'top_device'    => 'Top Device',
+        'active_devices' => 'Active Devices',
+        'trend_chart'   => 'Donation Trend (Last 30 Days)',
+        'campaign_perf' => 'Campaign Performance',
+        'hourly_chart'  => 'Hourly Activity (Last 30 Days)',
+        'dow_chart'     => 'Day of Week Analysis (Last 90 Days)',
+        'device_perf'   => 'Device Performance',
+        'filter'        => 'Filter Donations',
+        'apply_filters' => 'Apply Filters',
+        'reset'         => 'Reset',
+        'date_range'    => 'Date Range',
+        'yesterday'     => 'Yesterday',
+        'last_7_days'   => 'Last 7 Days',
+        'last_30_days'  => 'Last 30 Days',
+        'last_month'    => 'Last Month',
+        'custom_range'  => 'Custom Range',
+        'no_data'       => 'No donations found',
+        'adjust_filters' => 'Try adjusting your filters',
+    ],
+
+    // Kiosk
+    'kiosk' => [
+        'tap_to_donate'   => 'Tap an amount to continue',
+        'enter_amount'    => 'Enter Amount',
+        'custom_amount'   => 'Enter Custom Amount',
+        'cancel'          => 'Cancel',
+        'continue'        => 'Continue',
+        'clear'           => 'Clear',
+        'thank_you'       => 'Thank You!',
+        'donation_received' => 'Your donation has been received.',
+        'processing'      => 'Processing...',
+    ],
+
+    // Common
+    'common' => [
+        'save'     => 'Save',
+        'cancel'   => 'Cancel',
+        'delete'   => 'Delete',
+        'edit'     => 'Edit',
+        'view'     => 'View',
+        'back'     => 'Back',
+        'search'   => 'Search',
+        'loading'  => 'Loading...',
+        'yes'      => 'Yes',
+        'no'       => 'No',
+        'actions'  => 'Actions',
+        'status'   => 'Status',
+        'name'     => 'Name',
+        'email'    => 'Email',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+    ],
+];

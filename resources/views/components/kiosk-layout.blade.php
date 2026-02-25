@@ -18,13 +18,18 @@
 
     <style>
         /* Kiosk Mode Styles */
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             cursor: default;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            background: #000;
         }
 
         /* Disable right-click */
@@ -40,6 +45,15 @@
             position: fixed;
             top: 0;
             left: 0;
+            background: #fff;
+        }
+
+        /* Ensure full height on kiosk elements */
+        #kioskApp,
+        #campaignScreen,
+        #campaignContent {
+            width: 100%;
+            height: 100%;
         }
 
         /* Touch optimized buttons */
@@ -48,11 +62,38 @@
             min-width: 60px;
             font-size: 1.125rem;
             -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+        }
+
+        .touch-btn:active {
+            transform: scale(0.98);
         }
 
         /* Prevent text selection */
         * {
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ensure text is always readable */
+        h1, h2, h3, h4, h5, h6, p, span, div {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Amount buttons styling */
+        .amount-button {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-center;
+        }
+
+        /* Fix for mobile viewport height */
+        @supports (-webkit-touch-callout: none) {
+            .kiosk-container {
+                height: -webkit-fill-available;
+            }
         }
     </style>
 

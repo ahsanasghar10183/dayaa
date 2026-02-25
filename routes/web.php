@@ -69,6 +69,15 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
     // Donations
     Route::get('/donations', [\App\Http\Controllers\Organization\DonationController::class, 'index'])->name('donations.index');
 
+    // Reports & Analytics
+    Route::get('/reports', [\App\Http\Controllers\Organization\ReportingController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export', [\App\Http\Controllers\Organization\ReportingController::class, 'export'])->name('reports.export');
+
+    // Billing & Subscription
+    Route::get('/billing', [\App\Http\Controllers\Organization\SubscriptionController::class, 'index'])->name('billing.index');
+    Route::get('/billing/plans', [\App\Http\Controllers\Organization\SubscriptionController::class, 'plans'])->name('billing.plans');
+    Route::post('/billing/plan', [\App\Http\Controllers\Organization\SubscriptionController::class, 'changePlan'])->name('billing.change-plan');
+
     // Status pages
     Route::get('/pending', function () {
         return view('organization.status.pending');
@@ -82,6 +91,15 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
         return view('organization.status.suspended');
     })->name('suspended');
 });
+
+// Language Switcher (accessible to all)
+Route::get('/language/{locale}', function (string $locale) {
+    $supported = ['en', 'de'];
+    if (in_array($locale, $supported)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back()->withInput();
+})->name('language.switch');
 
 // User Profile Routes
 Route::middleware('auth')->group(function () {
@@ -98,6 +116,14 @@ Route::prefix('kiosk')->name('kiosk.')->group(function () {
     Route::get('/get-campaign', [\App\Http\Controllers\KioskController::class, 'getCampaign'])->name('get-campaign');
     Route::post('/heartbeat', [\App\Http\Controllers\KioskController::class, 'heartbeat'])->name('heartbeat');
     Route::post('/unpair', [\App\Http\Controllers\KioskController::class, 'unpair'])->name('unpair');
+
+    // Donation Flow
+    Route::post('/initiate-payment', [\App\Http\Controllers\KioskController::class, 'initiatePayment'])->name('initiate-payment');
+    Route::get('/payment-status/{donationId}', [\App\Http\Controllers\KioskController::class, 'paymentStatus'])->name('payment-status');
+    Route::get('/thankyou', [\App\Http\Controllers\KioskController::class, 'thankYou'])->name('thankyou');
+
+    // SumUp Webhook (excluded from CSRF)
+    Route::post('/sumup-webhook', [\App\Http\Controllers\KioskController::class, 'sumupWebhook'])->name('sumup-webhook');
 });
 
 require __DIR__.'/auth.php';

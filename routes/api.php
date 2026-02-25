@@ -1,29 +1,36 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\DevicePairingController;
+use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\CampaignController;
+use App\Http\Controllers\Api\DonationController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
 
-Route::prefix('device')->group(function () {
-    // Device pairing endpoints
-    Route::post('/pair', [DevicePairingController::class, 'pair']);
-    Route::post('/heartbeat', [DevicePairingController::class, 'heartbeat']);
-    Route::post('/status', [DevicePairingController::class, 'status']);
+// Device endpoints
+Route::prefix('devices')->group(function () {
+    // Public: Pairing
+    Route::post('/pair', [DeviceController::class, 'pair']);
 
-    // Protected device endpoints (requires device authentication)
-    Route::middleware('auth:device')->group(function () {
-        Route::get('/campaigns', [DevicePairingController::class, 'getCampaigns']);
-        Route::post('/donation/record', [DevicePairingController::class, 'recordDonation']);
+    // Protected: Requires Sanctum token
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/heartbeat', [DeviceController::class, 'heartbeat']);
+        Route::post('/unpair', [DeviceController::class, 'unpair']);
     });
+});
+
+// Campaign endpoints (protected)
+Route::middleware('auth:sanctum')->prefix('campaigns')->group(function () {
+    Route::get('/active', [CampaignController::class, 'getActive']);
+});
+
+// Donation endpoints (protected)
+Route::middleware('auth:sanctum')->prefix('donations')->group(function () {
+    Route::post('/', [DonationController::class, 'store']);
+    Route::patch('/{id}/complete', [DonationController::class, 'complete']);
+    Route::patch('/{id}/fail', [DonationController::class, 'fail']);
 });

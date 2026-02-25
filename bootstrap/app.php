@@ -3,6 +3,7 @@
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\OrganizationAdminMiddleware;
 use App\Http\Middleware\EnsureOrganizationActive;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,16 @@ return Application::configure(basePath: dirname(__DIR__))
             'super_admin' => SuperAdminMiddleware::class,
             'org_admin' => OrganizationAdminMiddleware::class,
             'org_active' => EnsureOrganizationActive::class,
+        ]);
+
+        // Apply locale middleware globally to web routes
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
+        // Exclude SumUp webhook from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'kiosk/sumup-webhook',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

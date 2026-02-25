@@ -21,12 +21,16 @@ class Campaign extends Model
         'organization_id',
         'name',
         'description',
+        'campaign_type',
+        'reference_code',
         'design_settings',
         'content_settings',
         'amount_settings',
         'status',
         'start_date',
         'end_date',
+        'language',
+        'currency',
     ];
 
     /**

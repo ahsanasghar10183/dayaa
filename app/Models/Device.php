@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
 class Device extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.

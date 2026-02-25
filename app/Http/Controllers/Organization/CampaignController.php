@@ -355,8 +355,35 @@ class CampaignController extends Controller
 
         $campaign->save();
 
-        // Sync devices
+        // Sync devices with validation
         if (isset($validated['devices'])) {
+            // If campaign is active, validate that devices aren't assigned to other active campaigns
+            if ($campaign->status === 'active' && !empty($validated['devices'])) {
+                $conflictingDevices = \App\Models\Device::whereIn('id', $validated['devices'])
+                    ->whereHas('campaigns', function ($query) use ($campaign) {
+                        $query->where('status', 'active')
+                              ->where('campaigns.id', '!=', $campaign->id); // Exclude current campaign
+                    })
+                    ->with(['campaigns' => function ($query) use ($campaign) {
+                        $query->where('status', 'active')
+                              ->where('campaigns.id', '!=', $campaign->id)
+                              ->select('id', 'name');
+                    }])
+                    ->get();
+
+                if ($conflictingDevices->isNotEmpty()) {
+                    $errors = [];
+                    foreach ($conflictingDevices as $device) {
+                        $campaignNames = $device->campaigns->pluck('name')->join(', ');
+                        $errors[] = "Device '{$device->name}' is already assigned to: {$campaignNames}";
+                    }
+
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['devices' => 'Cannot assign devices. ' . implode(' ', $errors) . ' Please deactivate those campaigns first or remove these devices from the selection.']);
+                }
+            }
+
             $campaign->devices()->sync($validated['devices']);
         }
 

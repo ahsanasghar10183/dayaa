@@ -424,8 +424,8 @@
         const layoutType = '{{ $layoutType }}';
         const primaryColor = '{{ $designSettings["primary_color"] ?? "#1163F0" }}';
         const accentColor = '{{ $designSettings["accent_color"] ?? "#F3F4F6" }}';
-        const heading = '{{ $designSettings["heading"] ?? $campaign->name }}';
-        const message = '{{ $designSettings["message"] ?? "" }}';
+        const heading = `{{ addslashes($designSettings["heading"] ?? $campaign->name) }}`;
+        const message = `{{ addslashes($designSettings["message"] ?? "") }}`;
         const backgroundImage = '{{ $backgroundImageUrl }}';
         const amounts = @json($amountSettings['preset_amounts'] ?? [10, 25, 50]);
         const buttonPosition = '{{ $amountSettings["button_position"] ?? "middle" }}';
@@ -433,16 +433,25 @@
 
         const preview = document.getElementById('campaign-preview');
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function renderPreview() {
+            const safeHeading = escapeHtml(heading);
+            const safeMessage = escapeHtml(message);
+
             let buttonsHTML = amounts.map(amount =>
-                `<button class="px-6 py-3 rounded-lg font-semibold shadow-lg text-white" style="background-color: ${primaryColor}">€${amount.toFixed(2)}</button>`
+                `<button class="px-6 py-3 rounded-lg font-semibold shadow-lg text-white transition-transform hover:scale-105" style="background-color: ${primaryColor}">€${amount}</button>`
             ).join('');
 
             if (showCustomAmount) {
-                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg" style="border-color: ${primaryColor}; color: ${primaryColor}">Custom Amount</button>`;
+                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg transition-transform hover:scale-105" style="border-color: ${primaryColor}; color: ${primaryColor}">Custom</button>`;
             }
 
-            const buttonContainer = `<div class="grid grid-cols-2 gap-3 w-full max-w-sm">${buttonsHTML}</div>`;
+            const buttonContainer = `<div class="grid grid-cols-2 gap-3 w-full max-w-sm mx-auto">${buttonsHTML}</div>`;
             const justifyClass = buttonPosition === 'top' ? 'justify-start pt-12' : buttonPosition === 'bottom' ? 'justify-end pb-12' : 'justify-center';
 
             let html = '';
@@ -450,49 +459,58 @@
             switch(layoutType) {
                 case 'solid_color':
                     html = `
-                        <div class="h-full flex flex-col items-center ${justifyClass} p-8 text-center" style="background-color: ${primaryColor}">
-                            ${buttonPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${heading}</h1><p class="text-white opacity-90 mb-8 text-sm">${message}</p>` : ''}
+                        <div class="h-full flex flex-col items-center ${justifyClass} p-8 text-center relative" style="background-color: ${primaryColor}">
+                            ${buttonPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${safeHeading}</h1>${safeMessage ? `<p class="text-white opacity-90 mb-8 text-sm">${safeMessage}</p>` : ''}` : ''}
                             ${buttonContainer}
-                            ${buttonPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${heading}</h1><p class="text-white opacity-90 text-sm">${message}</p>` : ''}
+                            ${buttonPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${safeHeading}</h1>${safeMessage ? `<p class="text-white opacity-90 text-sm">${safeMessage}</p>` : ''}` : ''}
                         </div>
                     `;
                     break;
 
                 case 'dual_color':
                     html = `
-                        <div class="h-1/3 flex flex-col items-center justify-center p-6 text-center" style="background-color: ${primaryColor}">
-                            <h1 class="text-xl font-bold text-white">${heading}</h1>
-                        </div>
-                        <div class="flex-1 flex flex-col items-center ${justifyClass} p-8" style="background-color: ${accentColor}">
-                            ${buttonPosition !== 'bottom' ? `<p class="text-gray-700 mb-8 text-sm text-center">${message}</p>` : ''}
-                            ${buttonContainer}
-                            ${buttonPosition === 'bottom' ? `<p class="text-gray-700 mt-8 text-sm text-center">${message}</p>` : ''}
+                        <div class="h-full flex flex-col relative">
+                            <div class="h-1/3 flex flex-col items-center justify-center p-6 text-center" style="background-color: ${primaryColor}">
+                                <h1 class="text-xl font-bold text-white">${safeHeading}</h1>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center ${justifyClass} p-8" style="background-color: ${accentColor}">
+                                ${buttonPosition !== 'bottom' && safeMessage ? `<p class="text-gray-700 mb-8 text-sm text-center">${safeMessage}</p>` : ''}
+                                ${buttonContainer}
+                                ${buttonPosition === 'bottom' && safeMessage ? `<p class="text-gray-700 mt-8 text-sm text-center">${safeMessage}</p>` : ''}
+                            </div>
                         </div>
                     `;
                     break;
 
                 case 'banner_image':
+                    const bannerBg = backgroundImage ? `url('${backgroundImage}')` : `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`;
                     html = `
-                        <div class="h-1/3 relative" style="background: ${backgroundImage ? `url(${backgroundImage})` : 'linear-gradient(135deg, ' + primaryColor + ' 0%, ' + primaryColor + 'dd 100%)'} center/cover"></div>
-                        <div class="flex-1 flex flex-col items-center ${justifyClass} p-8" style="background-color: ${accentColor || '#ffffff'}">
-                            ${buttonPosition !== 'bottom' ? `<h1 class="text-xl font-bold mb-4" style="color: ${primaryColor}">${heading}</h1><p class="text-gray-700 mb-8 text-sm text-center">${message}</p>` : ''}
-                            ${buttonContainer}
-                            ${buttonPosition === 'bottom' ? `<h1 class="text-xl font-bold mt-8 mb-4" style="color: ${primaryColor}">${heading}</h1><p class="text-gray-700 text-sm text-center">${message}</p>` : ''}
+                        <div class="h-full flex flex-col relative">
+                            <div class="h-1/3 relative bg-cover bg-center" style="background: ${bannerBg}">
+                                ${!backgroundImage ? `<div class="absolute inset-0 flex items-center justify-center text-white opacity-30"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>` : ''}
+                            </div>
+                            <div class="flex-1 flex flex-col items-center ${justifyClass} p-8" style="background-color: ${accentColor || '#ffffff'}">
+                                ${buttonPosition !== 'bottom' ? `<h1 class="text-xl font-bold mb-4" style="color: ${primaryColor}">${safeHeading}</h1>${safeMessage ? `<p class="text-gray-700 mb-8 text-sm text-center">${safeMessage}</p>` : ''}` : ''}
+                                ${buttonContainer}
+                                ${buttonPosition === 'bottom' ? `<h1 class="text-xl font-bold mt-8 mb-4" style="color: ${primaryColor}">${safeHeading}</h1>${safeMessage ? `<p class="text-gray-700 text-sm text-center">${safeMessage}</p>` : ''}` : ''}
+                            </div>
                         </div>
                     `;
                     break;
 
                 case 'full_background':
+                    const fullBg = backgroundImage ? `url('${backgroundImage}')` : `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}aa 100%)`;
                     html = `
-                        <div class="h-full relative flex flex-col items-center ${justifyClass} p-8 text-center" style="background: ${backgroundImage ? `url(${backgroundImage})` : 'linear-gradient(135deg, ' + primaryColor + ' 0%, ' + primaryColor + 'aa 100%)'} center/cover">
-                            <div class="absolute inset-0 bg-black opacity-40"></div>
-                            <div class="relative z-10">
-                                ${buttonPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${heading}</h1><p class="text-white opacity-90 mb-8 text-sm">${message}</p>` : ''}
-                                <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
-                                    ${amounts.map(amount => `<button class="px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold shadow-xl">€${amount.toFixed(2)}</button>`).join('')}
-                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl">Custom Amount</button>` : ''}
+                        <div class="h-full relative flex flex-col items-center ${justifyClass} p-8 text-center bg-cover bg-center" style="background: ${fullBg}">
+                            ${backgroundImage ? '<div class="absolute inset-0 bg-black opacity-40"></div>' : ''}
+                            ${!backgroundImage ? `<div class="absolute inset-0 flex items-center justify-center opacity-10"><svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>` : ''}
+                            <div class="relative z-10 w-full">
+                                ${buttonPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${safeHeading}</h1>${safeMessage ? `<p class="text-white opacity-90 mb-8 text-sm">${safeMessage}</p>` : ''}` : ''}
+                                <div class="grid grid-cols-2 gap-3 w-full max-w-sm mx-auto">
+                                    ${amounts.map(amount => `<button class="px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold shadow-xl transition-transform hover:scale-105">€${amount}</button>`).join('')}
+                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl transition-transform hover:scale-105">Custom</button>` : ''}
                                 </div>
-                                ${buttonPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${heading}</h1><p class="text-white opacity-90 text-sm">${message}</p>` : ''}
+                                ${buttonPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${safeHeading}</h1>${safeMessage ? `<p class="text-white opacity-90 text-sm">${safeMessage}</p>` : ''}` : ''}
                             </div>
                         </div>
                     `;
@@ -503,6 +521,8 @@
         }
 
         // Render on load
-        renderPreview();
+        if (preview) {
+            renderPreview();
+        }
     </script>
 </x-organization-layout>

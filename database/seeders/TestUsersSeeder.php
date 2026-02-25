@@ -10,6 +10,7 @@ use App\Models\Device;
 use App\Models\Donation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Faker\Factory as Faker;
 
 class TestUsersSeeder extends Seeder
 {
@@ -18,25 +19,31 @@ class TestUsersSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
+
         // Create Super Admin
-        $superAdmin = User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@dayaa.com',
-            'password' => Hash::make('password'),
-            'role' => 'super_admin',
-            'language' => 'en',
-            'email_verified_at' => now(),
-        ]);
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'admin@dayaa.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'role' => 'super_admin',
+                'language' => 'en',
+                'email_verified_at' => now(),
+            ]
+        );
 
         // Create Organization Admin 1 (Approved)
-        $orgAdmin1 = User::create([
-            'name' => 'John Doe',
-            'email' => 'org1@dayaa.com',
-            'password' => Hash::make('password'),
-            'role' => 'organization_admin',
-            'language' => 'en',
-            'email_verified_at' => now(),
-        ]);
+        $orgAdmin1 = User::firstOrCreate(
+            ['email' => 'org1@dayaa.com'],
+            [
+                'name' => 'John Doe',
+                'password' => Hash::make('password'),
+                'role' => 'organization_admin',
+                'language' => 'en',
+                'email_verified_at' => now(),
+            ]
+        );
 
         $organization1 = Organization::create([
             'user_id' => $orgAdmin1->id,
@@ -140,31 +147,33 @@ class TestUsersSeeder extends Seeder
                 'organization_id' => $organization1->id,
                 'campaign_id' => $campaign1->id,
                 'device_id' => $device1->id,
-                'amount' => fake()->randomElement([5, 10, 20, 50, 100]),
-                'receipt_number' => 'RCP-' . date('Ymd') . '-' . strtoupper(fake()->bothify('????####')),
-                'donor_name' => fake()->name(),
-                'donor_email' => fake()->safeEmail(),
+                'amount' => $faker->randomElement([5, 10, 20, 50, 100]),
+                'receipt_number' => 'RCP-' . date('Ymd') . '-' . strtoupper($faker->bothify('????####')),
+                'donor_name' => $faker->name(),
+                'donor_email' => $faker->safeEmail(),
                 'payment_method' => 'card',
                 'payment_status' => 'success',
-                'transaction_id' => 'TXN-' . fake()->uuid(),
-                'sumup_transaction_id' => 'SUMUP-' . fake()->uuid(),
+                'transaction_id' => 'TXN-' . $faker->uuid(),
+                'sumup_transaction_id' => 'SUMUP-' . $faker->uuid(),
                 'sumup_fee' => 0.50,
-                'net_amount' => fake()->randomElement([4.50, 9.50, 19.50, 49.50, 99.50]),
+                'net_amount' => $faker->randomElement([4.50, 9.50, 19.50, 49.50, 99.50]),
                 'currency' => 'EUR',
-                'ip_address' => fake()->ipv4(),
+                'ip_address' => $faker->ipv4(),
                 'created_at' => now()->subDays(rand(0, 30)),
             ]);
         }
 
         // Create Organization Admin 2 (Pending)
-        $orgAdmin2 = User::create([
-            'name' => 'Maria Schmidt',
-            'email' => 'org2@dayaa.com',
-            'password' => Hash::make('password'),
-            'role' => 'organization_admin',
-            'language' => 'de',
-            'email_verified_at' => now(),
-        ]);
+        $orgAdmin2 = User::firstOrCreate(
+            ['email' => 'org2@dayaa.com'],
+            [
+                'name' => 'Maria Schmidt',
+                'password' => Hash::make('password'),
+                'role' => 'organization_admin',
+                'language' => 'de',
+                'email_verified_at' => now(),
+            ]
+        );
 
         Organization::create([
             'user_id' => $orgAdmin2->id,
@@ -179,14 +188,16 @@ class TestUsersSeeder extends Seeder
         ]);
 
         // Create Organization Admin 3 (Rejected)
-        $orgAdmin3 = User::create([
-            'name' => 'Hans Weber',
-            'email' => 'org3@dayaa.com',
-            'password' => Hash::make('password'),
-            'role' => 'organization_admin',
-            'language' => 'de',
-            'email_verified_at' => now(),
-        ]);
+        $orgAdmin3 = User::firstOrCreate(
+            ['email' => 'org3@dayaa.com'],
+            [
+                'name' => 'Hans Weber',
+                'password' => Hash::make('password'),
+                'role' => 'organization_admin',
+                'language' => 'de',
+                'email_verified_at' => now(),
+            ]
+        );
 
         Organization::create([
             'user_id' => $orgAdmin3->id,

@@ -1,0 +1,146 @@
+<?php
+
+return [
+
+    // Navigation
+    'nav' => [
+        'dashboard'  => 'Dashboard',
+        'profile'    => 'Profil',
+        'campaigns'  => 'Kampagnen',
+        'devices'    => 'Geräte',
+        'donations'  => 'Spenden',
+        'reports'    => 'Berichte',
+        'sign_out'   => 'Abmelden',
+        'account_settings' => 'Kontoeinstellungen',
+        'org_profile' => 'Organisationsprofil',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'title'             => 'Dashboard',
+        'welcome'           => 'Willkommen zurück',
+        'total_donations'   => 'Spenden gesamt',
+        'this_month'        => 'Diesen Monat',
+        'active_campaigns'  => 'Aktive Kampagnen',
+        'online_devices'    => 'Online-Geräte',
+        'recent_donations'  => 'Letzte Spenden',
+        'view_all'          => 'Alle anzeigen',
+        'no_donations_yet'  => 'Noch keine Spenden',
+    ],
+
+    // Campaigns
+    'campaigns' => [
+        'title'         => 'Kampagnen',
+        'create'        => 'Kampagne erstellen',
+        'edit'          => 'Kampagne bearbeiten',
+        'name'          => 'Kampagnenname',
+        'status'        => 'Status',
+        'type'          => 'Typ',
+        'start_date'    => 'Startdatum',
+        'end_date'      => 'Enddatum',
+        'active'        => 'Aktiv',
+        'inactive'      => 'Inaktiv',
+        'scheduled'     => 'Geplant',
+        'one_time'      => 'Einmalig',
+        'recurring'     => 'Wiederkehrend',
+        'no_campaigns'  => 'Noch keine Kampagnen. Erstellen Sie Ihre erste Kampagne!',
+        'duplicate'     => 'Duplizieren',
+        'delete'        => 'Löschen',
+        'preview'       => 'Vorschau',
+    ],
+
+    // Devices
+    'devices' => [
+        'title'         => 'Geräte',
+        'add'           => 'Gerät hinzufügen',
+        'name'          => 'Gerätename',
+        'status'        => 'Status',
+        'online'        => 'Online',
+        'offline'       => 'Offline',
+        'active'        => 'Aktiv',
+        'inactive'      => 'Inaktiv',
+        'pairing_code'  => 'Kopplungscode',
+        'last_seen'     => 'Zuletzt gesehen',
+        'no_devices'    => 'Noch keine Geräte registriert.',
+        'pair_new'      => 'Neues Gerät koppeln',
+    ],
+
+    // Donations
+    'donations' => [
+        'title'         => 'Spenden',
+        'amount'        => 'Betrag',
+        'date'          => 'Datum',
+        'campaign'      => 'Kampagne',
+        'device'        => 'Gerät',
+        'status'        => 'Status',
+        'receipt'       => 'Quittung #',
+        'transaction'   => 'Transaktions-ID',
+        'success'       => 'Erfolgreich',
+        'pending'       => 'Ausstehend',
+        'failed'        => 'Fehlgeschlagen',
+        'no_donations'  => 'Keine Spenden gefunden.',
+    ],
+
+    // Reports
+    'reports' => [
+        'title'         => 'Berichte & Analysen',
+        'subtitle'      => 'Spendeneinblicke und Leistungskennzahlen',
+        'export_csv'    => 'CSV exportieren',
+        'today'         => 'Heute',
+        'this_week'     => 'Diese Woche',
+        'this_month'    => 'Diesen Monat',
+        'all_time'      => 'Gesamt',
+        'top_campaign'  => 'Top-Kampagne',
+        'top_device'    => 'Top-Gerät',
+        'active_devices' => 'Aktive Geräte',
+        'trend_chart'   => 'Spendentrend (Letzte 30 Tage)',
+        'campaign_perf' => 'Kampagnenleistung',
+        'hourly_chart'  => 'Stündliche Aktivität (Letzte 30 Tage)',
+        'dow_chart'     => 'Wochentagsanalyse (Letzte 90 Tage)',
+        'device_perf'   => 'Geräteleistung',
+        'filter'        => 'Spenden filtern',
+        'apply_filters' => 'Filter anwenden',
+        'reset'         => 'Zurücksetzen',
+        'date_range'    => 'Zeitraum',
+        'yesterday'     => 'Gestern',
+        'last_7_days'   => 'Letzte 7 Tage',
+        'last_30_days'  => 'Letzte 30 Tage',
+        'last_month'    => 'Letzten Monat',
+        'custom_range'  => 'Benutzerdefinierter Zeitraum',
+        'no_data'       => 'Keine Spenden gefunden',
+        'adjust_filters' => 'Versuchen Sie, die Filter anzupassen',
+    ],
+
+    // Kiosk
+    'kiosk' => [
+        'tap_to_donate'   => 'Tippen Sie auf einen Betrag, um fortzufahren',
+        'enter_amount'    => 'Betrag eingeben',
+        'custom_amount'   => 'Eigenen Betrag eingeben',
+        'cancel'          => 'Abbrechen',
+        'continue'        => 'Weiter',
+        'clear'           => 'Löschen',
+        'thank_you'       => 'Vielen Dank!',
+        'donation_received' => 'Ihre Spende wurde entgegengenommen.',
+        'processing'      => 'Verarbeitung...',
+    ],
+
+    // Common
+    'common' => [
+        'save'     => 'Speichern',
+        'cancel'   => 'Abbrechen',
+        'delete'   => 'Löschen',
+        'edit'     => 'Bearbeiten',
+        'view'     => 'Ansehen',
+        'back'     => 'Zurück',
+        'search'   => 'Suchen',
+        'loading'  => 'Laden...',
+        'yes'      => 'Ja',
+        'no'       => 'Nein',
+        'actions'  => 'Aktionen',
+        'status'   => 'Status',
+        'name'     => 'Name',
+        'email'    => 'E-Mail',
+        'created_at' => 'Erstellt am',
+        'updated_at' => 'Aktualisiert am',
+    ],
+];

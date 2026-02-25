@@ -14,88 +14,166 @@
         <!-- Main Campaign Display -->
         <div id="campaignScreen" class="w-full h-full flex flex-col">
             <!-- Dynamic Campaign Content -->
-            <div id="campaignContent" class="flex-1 flex flex-col" style="background: {{ $campaign->design_settings['background_color'] ?? '#FFFFFF' }};">
+            <div id="campaignContent" class="flex-1 flex flex-col relative overflow-hidden">
                 @php
-                    $settings = $campaign->design_settings;
+                    // Ensure settings are arrays (handle both string and array cases)
+                    $settings = is_array($campaign->design_settings)
+                        ? $campaign->design_settings
+                        : (is_string($campaign->design_settings)
+                            ? json_decode($campaign->design_settings, true)
+                            : []);
+
+                    $amountSettings = is_array($campaign->amount_settings)
+                        ? $campaign->amount_settings
+                        : (is_string($campaign->amount_settings)
+                            ? json_decode($campaign->amount_settings, true)
+                            : []);
+
+                    // Debug: Log the settings (will be visible in browser console via JavaScript)
+                    $debugInfo = [
+                        'campaign_id' => $campaign->id,
+                        'campaign_name' => $campaign->name,
+                        'settings_type' => gettype($settings),
+                        'settings' => $settings,
+                        'amounts_type' => gettype($amountSettings),
+                        'amounts' => $amountSettings,
+                    ];
+
+                    // Extract layout and design settings with fallbacks
                     $layoutType = $settings['layout_type'] ?? 'solid_color';
-                    $heading = $settings['heading'] ?? $campaign->name;
-                    $message = $settings['message'] ?? '';
+                    $heading = $settings['heading'] ?? $campaign->name ?? 'Support Our Cause';
+                    $message = $settings['message'] ?? $campaign->description ?? '';
                     $primaryColor = $settings['primary_color'] ?? '#1163F0';
-                    $accentColor = $settings['accent_color'] ?? '#1707B2';
+                    $accentColor = $settings['accent_color'] ?? '#F3F4F6';
+                    $backgroundImage = $settings['background_image'] ?? null;
+                    $logo = $settings['logo'] ?? null;
+
+                    // Extract amount settings with fallbacks
+                    $amounts = $amountSettings['preset_amounts'] ?? $amountSettings['amounts'] ?? [5, 10, 20, 50, 100];
+                    // Ensure amounts are numeric
+                    $amounts = array_map('floatval', array_filter($amounts, function($a) { return $a > 0; }));
+                    $showCustom = $amountSettings['allow_custom_amount'] ?? $amountSettings['allow_custom'] ?? true;
+                    $buttonPosition = $amountSettings['button_position'] ?? 'middle';
                 @endphp
 
-                <!-- Background Image (if applicable) -->
-                @if(in_array($layoutType, ['banner_image', 'full_background']) && !empty($settings['background_image']))
-                    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('storage/' . $settings['background_image']) }}');"></div>
+                <!-- Debug Info (visible in console) -->
+                <script>
+                    console.log('=== KIOSK DEBUG INFO ===');
+                    console.log(@json($debugInfo));
+                    console.log('Layout Type:', '{{ $layoutType }}');
+                    console.log('Heading:', '{{ $heading }}');
+                    console.log('Primary Color:', '{{ $primaryColor }}');
+                    console.log('Accent Color:', '{{ $accentColor }}');
+                    console.log('Amounts:', @json($amounts));
+                    console.log('Button Position:', '{{ $buttonPosition }}');
+                </script>
+
+                <!-- Background Layer -->
+                @if($layoutType === 'solid_color')
+                    <div class="absolute inset-0" style="background-color: {{ $primaryColor }};"></div>
+                @elseif($layoutType === 'dual_color')
+                    <div class="absolute top-0 left-0 right-0 h-1/3" style="background-color: {{ $primaryColor }};"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-2/3" style="background-color: {{ $accentColor }};"></div>
+                @elseif($layoutType === 'banner_image')
+                    @if($backgroundImage)
+                        <div class="absolute top-0 left-0 right-0 h-1/3 bg-cover bg-center" style="background-image: url('{{ asset('storage/' . $backgroundImage) }}');"></div>
+                    @else
+                        <div class="absolute top-0 left-0 right-0 h-1/3" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);"></div>
+                    @endif
+                    <div class="absolute bottom-0 left-0 right-0 h-2/3" style="background-color: {{ $accentColor ?? '#ffffff' }};"></div>
+                @elseif($layoutType === 'full_background')
+                    @if($backgroundImage)
+                        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('storage/' . $backgroundImage) }}');"></div>
+                        <div class="absolute inset-0 bg-black opacity-40"></div>
+                    @else
+                        <div class="absolute inset-0" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}aa 100%);"></div>
+                    @endif
                 @endif
 
                 <!-- Content Container -->
-                <div class="relative z-10 flex flex-col h-full p-12">
+                <div class="relative z-10 flex flex-col h-full p-12 {{ $buttonPosition === 'top' ? 'justify-start pt-16' : ($buttonPosition === 'bottom' ? 'justify-end pb-16' : 'justify-center') }}">
                     <!-- Header Section -->
-                    <div class="text-center mb-12">
-                        @if(!empty($settings['logo']))
-                            <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo" class="h-24 mx-auto mb-6">
+                    @if($buttonPosition !== 'top')
+                    <div class="text-center {{ $buttonPosition === 'middle' ? 'mb-12' : 'mb-8' }}">
+                        @if(!empty($logo))
+                            <img src="{{ asset('storage/' . $logo) }}" alt="Logo" class="h-24 mx-auto mb-6">
                         @endif
 
-                        <h1 class="text-6xl font-bold mb-6" style="color: {{ $primaryColor }};">
+                        <h1 class="text-6xl font-bold mb-6" style="color: {{ $layoutType === 'full_background' || ($layoutType === 'dual_color' && $buttonPosition !== 'bottom') ? '#FFFFFF' : $primaryColor }};">
                             {{ $heading }}
                         </h1>
 
                         @if($message)
-                            <p class="text-3xl text-gray-700 max-w-4xl mx-auto">
+                            <p class="text-3xl max-w-4xl mx-auto" style="color: {{ $layoutType === 'full_background' || ($layoutType === 'dual_color' && $buttonPosition !== 'bottom') ? '#FFFFFF' : '#374151' }};">
                                 {{ $message }}
                             </p>
                         @endif
                     </div>
+                    @endif
 
                     <!-- Amount Selection -->
-                    <div class="flex-1 flex items-center justify-center">
-                        <div class="w-full max-w-5xl">
-                            <p class="text-4xl font-semibold text-gray-900 text-center mb-8">
-                                Select Donation Amount
-                            </p>
-
-                            @php
-                                $amounts = $campaign->amount_settings['amounts'] ?? [5, 10, 20, 50, 100];
-                                $showCustom = $campaign->amount_settings['show_custom_amount'] ?? true;
-                            @endphp
-
-                            <!-- Amount Buttons Grid -->
-                            <div class="grid grid-cols-3 gap-6 mb-8">
-                                @foreach($amounts as $amount)
-                                    @if($amount)
-                                        <button
-                                            onclick="selectAmount({{ $amount }})"
-                                            class="touch-btn bg-white hover:bg-gray-50 border-4 border-gray-300 hover:border-primary-500 rounded-3xl p-8 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-2xl group"
-                                            style="border-color: {{ $primaryColor }}20;"
-                                        >
-                                            <div class="text-5xl font-bold group-hover:text-primary-600" style="color: {{ $primaryColor }};">
-                                                €{{ number_format($amount, 0) }}
-                                            </div>
-                                        </button>
-                                    @endif
-                                @endforeach
-                            </div>
-
-                            <!-- Custom Amount -->
-                            @if($showCustom)
-                                <button
-                                    onclick="showCustomAmount()"
-                                    class="w-full touch-btn bg-gradient-to-r from-primary-500 to-blue-600 hover:from-primary-600 hover:to-blue-700 text-white text-3xl font-bold py-6 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
-                                >
-                                    <svg class="w-10 h-10 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    Enter Custom Amount
-                                </button>
-                            @endif
+                    <div class="w-full max-w-5xl mx-auto">
+                        <!-- Amount Buttons Grid -->
+                        <div class="grid grid-cols-3 gap-6 mb-8">
+                            @foreach($amounts as $amount)
+                                @if($amount)
+                                    <button
+                                        onclick="selectAmount({{ $amount }})"
+                                        class="touch-btn bg-white hover:bg-gray-50 border-4 rounded-3xl p-8 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-2xl group"
+                                        style="border-color: {{ $primaryColor }};"
+                                    >
+                                        <div class="text-5xl font-bold" style="color: {{ $primaryColor }};">
+                                            €{{ number_format($amount, 0) }}
+                                        </div>
+                                    </button>
+                                @endif
+                            @endforeach
                         </div>
+
+                        <!-- Custom Amount -->
+                        @if($showCustom)
+                            <button
+                                onclick="showCustomAmount()"
+                                class="w-full touch-btn text-white text-3xl font-bold py-6 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                                style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);"
+                            >
+                                <svg class="w-10 h-10 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Enter Custom Amount
+                            </button>
+                        @endif
                     </div>
 
-                    <!-- Footer -->
-                    <div class="text-center text-gray-600 text-xl mt-8">
-                        <p>Tap an amount to continue</p>
+                    <!-- Header Section (if bottom position) -->
+                    @if($buttonPosition === 'bottom')
+                    <div class="text-center mt-8">
+                        @if(!empty($logo))
+                            <img src="{{ asset('storage/' . $logo) }}" alt="Logo" class="h-24 mx-auto mb-6">
+                        @endif
+
+                        <h1 class="text-6xl font-bold mb-6" style="color: {{ $layoutType === 'full_background' ? '#FFFFFF' : ($layoutType === 'dual_color' ? '#FFFFFF' : $primaryColor) }};">
+                            {{ $heading }}
+                        </h1>
+
+                        @if($message)
+                            <p class="text-3xl max-w-4xl mx-auto" style="color: {{ $layoutType === 'full_background' ? '#FFFFFF' : ($layoutType === 'dual_color' ? '#FFFFFF' : '#374151') }};">
+                                {{ $message }}
+                            </p>
+                        @endif
                     </div>
+                    @endif
+
+                    <!-- Footer Hint -->
+                    @if($layoutType !== 'full_background')
+                        <div class="text-center text-xl mt-8" style="color: {{ $layoutType === 'dual_color' && $buttonPosition === 'top' ? '#FFFFFF' : '#6B7280' }};">
+                            <p>Tap an amount to continue</p>
+                        </div>
+                    @else
+                        <div class="text-center text-white opacity-90 text-xl mt-8">
+                            <p>Tap an amount to continue</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
