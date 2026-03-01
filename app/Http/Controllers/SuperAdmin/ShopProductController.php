@@ -1,0 +1,222 @@
+<?php
+
+namespace App\Http\Controllers\SuperAdmin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductImage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+class ShopProductController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $query = Product::with('category', 'primaryImage');
+
+        // Search
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->has('category') && $request->category != '') {
+            $query->where('category_id', $request->category);
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('is_active', $request->status);
+        }
+
+        $products = $query->latest()->paginate(20);
+        $categories = ProductCategory::active()->ordered()->get();
+
+        return view('super-admin.shop.products.index', compact('products', 'categories'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $categories = ProductCategory::active()->ordered()->get();
+        return view('super-admin.shop.products.create', compact('categories'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:product_categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'compare_price' => 'nullable|numeric|min:0',
+            'sku' => 'required|string|max:100|unique:products,sku',
+            'barcode' => 'nullable|string|max:100',
+            'quantity' => 'required|integer|min:0',
+            'weight' => 'nullable|numeric|min:0',
+            'dimensions' => 'nullable|string|max:100',
+            'specifications' => 'nullable|array',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $product = Product::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'specifications' => $request->specifications,
+            'price' => $request->price,
+            'compare_price' => $request->compare_price,
+            'sku' => $request->sku,
+            'barcode' => $request->barcode,
+            'quantity' => $request->quantity,
+            'weight' => $request->weight,
+            'dimensions' => $request->dimensions,
+            'is_active' => $request->has('is_active'),
+            'is_featured' => $request->has('is_featured'),
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_path' => $imagePath,
+                'alt_text' => $product->name,
+                'is_primary' => true,
+                'sort_order' => 1,
+            ]);
+        }
+
+        return redirect()->route('super-admin.shop.products.index')
+            ->with('success', 'Product created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Product $product)
+    {
+        $product->load('category', 'images');
+        return view('super-admin.shop.products.show', compact('product'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Product $product)
+    {
+        $categories = ProductCategory::active()->ordered()->get();
+        $product->load('images');
+        return view('super-admin.shop.products.edit', compact('product', 'categories'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Product $product)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:product_categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'compare_price' => 'nullable|numeric|min:0',
+            'sku' => 'required|string|max:100|unique:products,sku,' . $product->id,
+            'barcode' => 'nullable|string|max:100',
+            'quantity' => 'required|integer|min:0',
+            'weight' => 'nullable|numeric|min:0',
+            'dimensions' => 'nullable|string|max:100',
+            'specifications' => 'nullable|array',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $product->update([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'specifications' => $request->specifications,
+            'price' => $request->price,
+            'compare_price' => $request->compare_price,
+            'sku' => $request->sku,
+            'barcode' => $request->barcode,
+            'quantity' => $request->quantity,
+            'weight' => $request->weight,
+            'dimensions' => $request->dimensions,
+            'is_active' => $request->has('is_active'),
+            'is_featured' => $request->has('is_featured'),
+        ]);
+
+        // Handle new image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            // Set existing primary image to not primary
+            ProductImage::where('product_id', $product->id)
+                ->where('is_primary', true)
+                ->update(['is_primary' => false]);
+
+            // Create new primary image
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_path' => $imagePath,
+                'alt_text' => $product->name,
+                'is_primary' => true,
+                'sort_order' => 1,
+            ]);
+        }
+
+        return redirect()->route('super-admin.shop.products.index')
+            ->with('success', 'Product updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Product $product)
+    {
+        // Delete associated images from storage
+        foreach ($product->images as $image) {
+            if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            $image->delete();
+        }
+
+        $product->delete();
+
+        return redirect()->route('super-admin.shop.products.index')
+            ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Toggle product active status
+     */
+    public function toggleStatus(Product $product)
+    {
+        $product->update(['is_active' => !$product->is_active]);
+
+        return back()->with('success', 'Product status updated successfully.');
+    }
+}

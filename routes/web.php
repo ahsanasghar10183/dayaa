@@ -5,7 +5,69 @@ use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboard;
 use App\Http\Controllers\SuperAdmin\OrganizationController as SuperAdminOrganization;
 use App\Http\Controllers\Organization\DashboardController as OrgDashboard;
 use App\Http\Controllers\Organization\ProfileController as OrgProfile;
+use App\Http\Controllers\Marketing\MarketingController;
+use App\Http\Controllers\Marketing\ShopController;
+use App\Http\Controllers\Marketing\CartController;
+use App\Http\Controllers\Marketing\CheckoutController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Marketing Website Routes (dayaatech.de)
+|--------------------------------------------------------------------------
+*/
+
+Route::domain(config('app.marketing_domain'))->name('marketing.')->group(function () {
+    // Homepage
+    Route::get('/', [MarketingController::class, 'home'])->name('home');
+
+    // About & Info Pages
+    Route::get('/about', [MarketingController::class, 'about'])->name('about');
+    Route::get('/features', [MarketingController::class, 'features'])->name('features');
+    Route::get('/pricing', [MarketingController::class, 'pricing'])->name('pricing');
+    Route::get('/faq', [MarketingController::class, 'faq'])->name('faq');
+
+    // Contact
+    Route::get('/contact', [MarketingController::class, 'contact'])->name('contact');
+    Route::post('/contact', [MarketingController::class, 'submitContact'])->name('contact.submit');
+
+    // Shop
+    Route::prefix('shop')->name('shop.')->group(function () {
+        Route::get('/', [ShopController::class, 'index'])->name('index');
+        Route::get('/category/{slug}', [ShopController::class, 'category'])->name('category');
+        Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product');
+    });
+
+    // Cart
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
+        Route::patch('/update/{cartItem}', [CartController::class, 'update'])->name('update');
+        Route::delete('/remove/{cartItem}', [CartController::class, 'remove'])->name('remove');
+        Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
+        Route::get('/count', [CartController::class, 'count'])->name('count');
+    });
+
+    // Checkout
+    Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        Route::post('/process', [CheckoutController::class, 'process'])->name('process');
+        Route::get('/success/{orderNumber}', [CheckoutController::class, 'success'])->name('success');
+    });
+
+    // Demo/Trial Signup - Redirects to platform
+    Route::get('/get-started', function () {
+        return redirect('https://' . config('app.platform_domain') . '/register');
+    })->name('get-started');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Platform Routes (software.dayaatech.de)
+|--------------------------------------------------------------------------
+*/
+
+Route::domain(config('app.platform_domain'))->group(function () {
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +93,21 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
     Route::post('/organizations/{organization}/suspend', [SuperAdminOrganization::class, 'suspend'])->name('organizations.suspend');
     Route::post('/organizations/{organization}/reactivate', [SuperAdminOrganization::class, 'reactivate'])->name('organizations.reactivate');
     Route::delete('/organizations/{organization}', [SuperAdminOrganization::class, 'destroy'])->name('organizations.destroy');
+
+    // Shop Management
+    Route::prefix('shop')->name('shop.')->group(function () {
+        // Products
+        Route::resource('products', \App\Http\Controllers\SuperAdmin\ShopProductController::class);
+        Route::post('products/{product}/toggle-status', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'toggleStatus'])->name('products.toggle-status');
+
+        // Categories
+        Route::resource('categories', \App\Http\Controllers\SuperAdmin\ShopCategoryController::class)->except(['show']);
+
+        // Orders
+        Route::resource('orders', \App\Http\Controllers\SuperAdmin\ShopOrderController::class)->except(['create', 'store', 'edit']);
+        Route::post('orders/{order}/update-status', [\App\Http\Controllers\SuperAdmin\ShopOrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::post('orders/{order}/update-payment', [\App\Http\Controllers\SuperAdmin\ShopOrderController::class, 'updatePayment'])->name('orders.update-payment');
+    });
 });
 
 // Organization Admin Routes
@@ -127,3 +204,5 @@ Route::prefix('kiosk')->name('kiosk.')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+}); // End Platform Domain Group

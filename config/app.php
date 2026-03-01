@@ -56,6 +56,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Domain Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure the marketing website and platform domains. The marketing
+    | domain serves public pages while the platform domain serves the app.
+    |
+    */
+
+    'marketing_domain' => env('MARKETING_DOMAIN', 'dayaatech.de'),
+    'platform_domain' => env('PLATFORM_DOMAIN', 'software.dayaatech.de'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

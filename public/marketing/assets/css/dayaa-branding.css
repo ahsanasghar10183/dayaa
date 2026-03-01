@@ -1,0 +1,612 @@
+/**
+ * Dayaa Branding Overrides
+ * Replaces template purple gradient with Dayaa brand colors
+ * Primary Gradient: #0F69F3 → #170AB5
+ */
+
+/* ============================================
+   PRIMARY BUTTONS - Dayaa Gradient
+   ============================================ */
+
+/* Main gradient buttons */
+.pp-theme-btn:not(.pp-style-2),
+.pp-theme-btn-2,
+.theme-btn,
+.theme-btn-2,
+.mean-container .mean-nav ul li a.mean-expand,
+.pp-footer-widget-items .social-icon a:hover,
+.pp-header-top-btn a,
+.header-button a:not(.pp-style-2),
+.pp-cta-video-btn a,
+.cta-video-btn a,
+.pp-breadcrumb-thumb .breadcrumb-search-form button,
+.breadcrumb-search-form button {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Gradient button hover states */
+.pp-theme-btn:not(.pp-style-2):hover,
+.pp-theme-btn-2:hover,
+.theme-btn:hover,
+.theme-btn-2:hover {
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+}
+
+/* ============================================
+   TRANSPARENT/BORDERED BUTTONS - Keep Original
+   ============================================ */
+
+   .pp-hero-button a.pp-theme-btn{
+    background: transparent !important;
+   }
+   .pp-cta-button a.pp-theme-btn{
+    color: black !important;
+    background: white !important;
+   }
+/* Transparent buttons with border - keep them as they were */
+.pp-theme-btn.pp-style-2 {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Style-2 button after pseudo element - Dayaa gradient */
+.pp-theme-btn.pp-style-2::after {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Style-2 button hover */
+.pp-theme-btn.pp-style-2:hover {
+    border: 1px solid transparent !important;
+    color: #ffffff !important;
+}
+
+/* Text gradient for headings and special text */
+.text-gradient,
+.pp-section-title span,
+.section-title span {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.section-title span::before {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    content: "";
+    color: var(--pp-theme);
+    width: 32px;
+    height: 4px;
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+.section-title span::after {
+    position: absolute;
+    top: 2px;
+    left: 16px;
+    content: "";
+    background: linear-gradient(270deg, #0F69F3 0%, #170AB5 100%) !important;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+}
+/* ============================================
+   ICONS & DECORATIVE ELEMENTS - Dayaa Gradient
+   ============================================ */
+
+/* Primary color for icons */
+.pp-service-card-item .pp-service-card-icon i,
+.service-card-icon i,
+.pp-service-card-icon i,
+.pp-features-card-item .pp-features-card-icon i,
+.pp-features-card-item:hover .pp-features-card-icon i,
+.features-card-icon i,
+.pp-feature-card-icon i,
+.feature-card-icon i,
+.pp-how-work-icon i,
+.how-work-icon i,
+.pp-pricing-card-item.active .pp-pricing-card-head,
+.pricing-card-head,
+.pp-team-card-social a:hover,
+.team-card-social a:hover {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* Icon boxes with gradient background */
+.pp-service-card-icon,
+.pp-features-card-icon,
+.pp-feature-card-icon,
+.pp-how-work-icon {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.1) 0%, rgba(23, 10, 181, 0.1) 100%) !important;
+    border-color: rgba(15, 105, 243, 0.3) !important;
+}
+
+/* Section title decorative elements (before/after) */
+.pp-section-title::before,
+.pp-section-title::after,
+.section-title::before,
+.section-title::after,
+.pp-section-title .pp-title-shape,
+.section-title .title-shape,
+.pp-section-title .pp-shape,
+.section-title .shape {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Wow animated elements */
+.wow-icon,
+.animated-icon,
+.pp-animated-icon,
+[class*="wow-"]::before,
+[class*="wow-"]::after {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Background colors */
+.pp-service-card-item:hover,
+.service-card-item:hover,
+.pp-features-card-item:hover,
+.features-card-item:hover {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.05) 0%, rgba(23, 10, 181, 0.05) 100%) !important;
+}
+
+/* Border colors */
+.pp-pricing-card-item.active,
+.pricing-card-item.active,
+.pp-service-card-item:hover,
+.service-card-item:hover {
+    border-color: #0F69F3 !important;
+}
+
+/* Links and hover states */
+a:hover,
+.pp-header-menu ul li a:hover,
+.header-menu ul li a:hover,
+.pp-footer-widget-items ul li a:hover,
+.footer-widget-items ul li a:hover {
+    color: #0F69F3 !important;
+}
+
+/* Active menu items */
+.pp-header-menu ul li.active a,
+.header-menu ul li.active a,
+.mean-container .mean-nav ul li a.mean-expand.mean-clicked {
+    color: #0F69F3 !important;
+}
+
+/* Progress bars and loaders */
+.preloader .animation-preloader .txt-loading .letters-loading {
+    color: #0F69F3 !important;
+}
+
+/* Scroll to top button */
+.scroll-up {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+.scroll-up:hover {
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+}
+
+/* Form elements focus state */
+input:focus,
+textarea:focus,
+select:focus,
+.nice-select:focus {
+    border-color: #0F69F3 !important;
+}
+
+/* Badges and tags */
+.badge,
+.tag,
+.label {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Pagination */
+.pagination .page-item.active .page-link,
+.pagination .page-link:hover {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    border-color: #0F69F3 !important;
+}
+
+/* ============================================
+   HERO SECTION - Dayaa Gradient Background
+   ============================================ */
+
+/* Hero section gradient overlay */
+.pp-hero-section::before,
+.pp-hero-wrapper::before,
+.hero-wrapper::before,
+.pp-hero-1::before,
+.pp-hero-2::before,
+.hero-section::before {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+
+/* CTA sections */
+.pp-cta-section,
+.cta-section {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Blockquotes and highlights */
+blockquote {
+    border-left-color: #0F69F3 !important;
+}
+
+/* Social media icons */
+.social-icon a,
+.social-links a {
+    transition: all 0.3s ease;
+}
+
+.social-icon a:hover,
+.social-links a:hover {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Navigation dropdown */
+.pp-header-menu ul li ul.submenu,
+.header-menu ul li ul.submenu {
+    border-top-color: #0F69F3 !important;
+}
+
+/* Shop/Cart badge */
+.cart-badge,
+.notification-badge {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Testimonial cards */
+.pp-testimonial-card-item.active,
+.testimonial-card-item.active {
+    border-color: #0F69F3 !important;
+}
+
+/* Feature boxes */
+.pp-feature-box:hover,
+.feature-box:hover {
+    box-shadow: 0 10px 30px rgba(15, 105, 243, 0.2) !important;
+}
+
+/* Video play button */
+.video-play-btn,
+.play-btn {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+.video-play-btn:hover,
+.play-btn:hover {
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+}
+
+/* Newsletter form */
+.newsletter-form button,
+.subscribe-form button {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+.newsletter-form button:hover,
+.subscribe-form button:hover {
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+}
+
+/* Swiper pagination */
+.swiper-pagination-bullet-active {
+    background: #0F69F3 !important;
+}
+
+/* Section backgrounds with gradient */
+.gradient-bg {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Counter/Stats sections */
+.counter-item .counter-icon,
+.stats-item .stats-icon {
+    color: #0F69F3 !important;
+}
+
+/* Timeline elements */
+.timeline-item::before,
+.timeline-dot {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Accordion active state */
+.accordion-button:not(.collapsed),
+.faq-item.active .faq-question {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.1) 0%, rgba(23, 10, 181, 0.1) 100%) !important;
+    color: #0F69F3 !important;
+}
+
+/* Price tables - featured plan */
+.pricing-table.featured,
+.price-card.featured {
+    border-color: #0F69F3 !important;
+    box-shadow: 0 10px 40px rgba(15, 105, 243, 0.15) !important;
+}
+
+/* Loading spinner */
+.spinner,
+.loader {
+    border-top-color: #0F69F3 !important;
+}
+
+/* Success messages */
+.alert-success,
+.success-message {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.1) 0%, rgba(23, 10, 181, 0.1) 100%) !important;
+    border-left-color: #0F69F3 !important;
+}
+
+/* Custom checkboxes and radio buttons */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    border-color: #0F69F3 !important;
+}
+
+/* Tab navigation */
+.nav-tabs .nav-link.active,
+.tabs .tab-link.active {
+    color: #0F69F3 !important;
+    border-bottom-color: #0F69F3 !important;
+}
+
+/* Progress bars */
+.progress-bar {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Tooltips */
+.tooltip {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Star ratings */
+.star-rating .star.active,
+.rating .star.filled {
+    color: #0F69F3 !important;
+}
+
+/* ============================================
+   SPECIFIC PURPLE TO DAYAA CONVERSIONS
+   ============================================ */
+
+/* Replace all instances of purple gradient with Dayaa gradient */
+[style*="#A121CA"],
+[style*="#7B1FE4"],
+[style*="rgba(161, 33, 202"],
+[style*="rgba(123, 31, 228"] {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Number counters and stats */
+.pp-counter-items .pp-counter-number,
+.counter-number,
+.pp-stats-number,
+.stats-number {
+    color: #0F69F3 !important;
+}
+
+/* Brand logos hover */
+.pp-brand-item:hover,
+.brand-item:hover {
+    filter: brightness(0) saturate(100%) invert(42%) sepia(95%) saturate(2619%) hue-rotate(206deg) brightness(99%) contrast(93%) !important;
+}
+
+/* List item markers */
+.pp-list-area li::before,
+.list-area li::before,
+ul.check-list li::before {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Step numbers in process/workflow sections */
+.pp-step-number,
+.step-number,
+.pp-process-number,
+.process-number {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Dividers and separators */
+.pp-divider,
+.divider,
+hr.gradient {
+    background: linear-gradient(90deg, transparent 0%, #0F69F3 50%, transparent 100%) !important;
+}
+
+/* Quote/Testimonial accent */
+.pp-testimonial-quote,
+.testimonial-quote,
+.quote-icon {
+    color: #0F69F3 !important;
+}
+
+/* Category badges */
+.pp-category-badge,
+.category-badge,
+.pp-tag,
+.tag-item {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.1) 0%, rgba(23, 10, 181, 0.1) 100%) !important;
+    color: #0F69F3 !important;
+}
+
+/* Hover effects on cards */
+.pp-card:hover,
+.card-hover:hover {
+    box-shadow: 0 10px 30px rgba(15, 105, 243, 0.15) !important;
+}
+
+/* Active states */
+.active-item,
+.is-active,
+.current {
+    color: #0F69F3 !important;
+}
+
+/* Underlines and text decorations */
+.pp-underline,
+.text-underline,
+.link-underline:hover {
+    border-bottom-color: #0F69F3 !important;
+}
+
+/* Circle/Dot indicators */
+.pp-dot,
+.dot-indicator,
+.circle-indicator {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Image overlays */
+.pp-image-overlay,
+.image-overlay {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.7) 0%, rgba(23, 10, 181, 0.7) 100%) !important;
+}
+
+/* ============================================
+   SPECIFIC TEMPLATE ELEMENTS
+   ============================================ */
+
+/* How it works section numbers */
+.pp-how-work-items .pp-how-work-number,
+.how-work-number {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Feature list checkmarks */
+.pp-feature-list li::before,
+.feature-list li::before {
+    color: #0F69F3 !important;
+}
+
+/* Pricing plan popular badge */
+.pp-pricing-badge,
+.pricing-badge,
+.popular-badge {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Service hover state */
+.pp-service-card-item:hover {
+    border-color: #0F69F3 !important;
+}
+
+/* Blog/Article category */
+.pp-blog-category,
+.blog-category,
+.article-category {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Read more links */
+.pp-read-more,
+.read-more-link {
+    color: #0F69F3 !important;
+}
+
+.pp-read-more:hover,
+.read-more-link:hover {
+    color: #0d5ad4 !important;
+}
+
+/* Newsletter input focus */
+.pp-newsletter-form input:focus,
+.newsletter-form input:focus {
+    border-color: #0F69F3 !important;
+}
+
+/* Back to top button circle */
+#pp-back-top,
+.back-to-top {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Mobile menu toggle */
+.header-bar span {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Breadcrumb active */
+.breadcrumb-item.active {
+    color: #0F69F3 !important;
+}
+
+/* ============================================
+   ENSURE NO PURPLE REMAINS
+   ============================================ */
+
+/* Force override any remaining purple colors */
+*[style*="background: linear-gradient(270deg, #A121CA"] {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+*[style*="background: linear-gradient(270deg, rgba(161, 33, 202"] {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.1) 0%, rgba(23, 10, 181, 0.1) 100%) !important;
+}
+
+/* Override CSS variables if template uses them */
+:root {
+    --pp-theme: #0F69F3 !important;
+    --pp-theme-rgb: 15, 105, 243 !important;
+    --primary-color: #0F69F3 !important;
+    --secondary-color: #170AB5 !important;
+    --gradient-start: #0F69F3 !important;
+    --gradient-end: #170AB5 !important;
+}
+
+/* Section title span decorative elements - Dayaa gradient */
+.pp-section-title span::before {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+.pp-section-title span::after {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+/* Offer box icon - Dayaa gradient */
+.pp-offer-box-item .pp-offer-icon {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+}
+
+.pp-how-work-items h6 {
+    
+    background: linear-gradient(270deg, #0F69F3 0%, #170AB5 100%) !important;
+   
+}
+.pp-hero-section h1.wow.fadeInUp {
+    color: white !important;
+}
+.pp-hero-section p.wow.fadeInUp {
+    color: white !important;
+}
+.pp-hero-section a.wow.fadeInUp {
+    color: white !important;
+}
+.pp-hero-section a.wow.fadeInUp:hover {
+    color: #0F69F3 !important;
+}
+.pp-cta-content h2 {
+    color: white !important;
+}
+.pp-cta-content p {
+    color: white !important;
+}
+.pp-cta-content a {
+    color: white !important;
+}
+.pp-cta-content a:hover {
+    color: #0F69F3 !important;
+}

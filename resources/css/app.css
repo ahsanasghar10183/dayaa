@@ -4,9 +4,11 @@
 
 /* Custom CSS Variables - Dayaa Theme */
 :root {
-    /* Primary Gradient Colors */
-    --primary-start: #1163F0;
-    --primary-end: #1707B2;
+    /* Dayaa Brand Gradient Colors */
+    --dayaa-blue: #0F69F3;
+    --dayaa-purple: #170AB5;
+    --primary-start: #0F69F3;
+    --primary-end: #170AB5;
 
     /* Status Colors */
     --success: #10B981;
@@ -18,26 +20,49 @@
 /* Custom Gradient Utilities */
 @layer utilities {
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #1163F0 0%, #1707B2 100%);
+        background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
+    }
+
+    .bg-gradient-dayaa {
+        background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
     }
 
     .bg-gradient-primary-hover:hover {
-        background: linear-gradient(135deg, #0A46C4 0%, #12047D 100%);
+        background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%);
+    }
+
+    .bg-gradient-dayaa-hover:hover {
+        background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%);
     }
 
     .text-gradient-primary {
-        background: linear-gradient(135deg, #1163F0 0%, #1707B2 100%);
+        background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .text-gradient-dayaa {
+        background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
     .shadow-primary {
-        box-shadow: 0 10px 25px -5px rgba(17, 99, 240, 0.3);
+        box-shadow: 0 10px 25px -5px rgba(15, 105, 243, 0.3);
     }
 
     .shadow-primary-lg {
-        box-shadow: 0 20px 40px -10px rgba(17, 99, 240, 0.4);
+        box-shadow: 0 20px 40px -10px rgba(15, 105, 243, 0.4);
+    }
+
+    .shadow-dayaa {
+        box-shadow: 0 10px 25px -5px rgba(15, 105, 243, 0.3);
+    }
+
+    .shadow-dayaa-lg {
+        box-shadow: 0 20px 40px -10px rgba(15, 105, 243, 0.4);
     }
 }
 
@@ -198,7 +223,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, #1163F0 0%, #1707B2 100%);
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -211,16 +236,16 @@
 
 .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px -10px rgba(17, 99, 240, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(15, 105, 243, 0.3);
 }
 
 /* Glow effect */
 .glow {
-    box-shadow: 0 0 20px rgba(17, 99, 240, 0.4);
+    box-shadow: 0 0 20px rgba(15, 105, 243, 0.4);
 }
 
 .glow-sm {
-    box-shadow: 0 0 10px rgba(17, 99, 240, 0.3);
+    box-shadow: 0 0 10px rgba(15, 105, 243, 0.3);
 }
 
 /* Smooth transitions */
@@ -241,10 +266,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #1163F0 0%, #1707B2 100%);
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #0A46C4 0%, #12047D 100%);
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%);
 }

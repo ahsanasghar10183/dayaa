@@ -37,6 +37,19 @@
                                 <a href="{{ route('super-admin.organizations.index') }}" class="px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('super-admin.organizations.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100' }}">
                                     Organizations
                                 </a>
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" class="px-4 py-2 text-sm font-medium rounded-lg flex items-center {{ request()->routeIs('super-admin.shop.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100' }}">
+                                        Shop Management
+                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div x-show="open" @click.away="open = false" x-cloak class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200 z-50">
+                                        <a href="{{ route('super-admin.shop.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Products</a>
+                                        <a href="{{ route('super-admin.shop.categories.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Categories</a>
+                                        <a href="{{ route('super-admin.shop.orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
