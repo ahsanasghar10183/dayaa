@@ -1,14 +1,17 @@
-<x-super-admin-layout>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Back Button -->
-        <div class="mb-6">
-            <a href="{{ route('super-admin.organizations.index') }}" class="text-gray-600 hover:text-gray-900 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<x-super-admin-sidebar-layout>
+    <x-slot name="header">
+        <div class="flex items-center space-x-4">
+            <a href="{{ route('super-admin.organizations.index') }}" class="text-gray-600 hover:text-gray-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Organizations
             </a>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ $organization->name }}</h1>
+                <p class="text-sm text-gray-600 mt-1">Organization Details</p>
+            </div>
         </div>
+    </x-slot>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
@@ -279,4 +282,4 @@
             </form>
         </div>
     </div>
-</x-super-admin-layout>
+</x-super-admin-sidebar-layout>

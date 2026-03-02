@@ -171,7 +171,7 @@ class Product extends Model
         }
 
         // Return placeholder if no image
-        return asset('marketing/assets/img/placeholder-product.jpg');
+        return asset('marketing/assets/img/placeholder-product.svg');
     }
 
     /**

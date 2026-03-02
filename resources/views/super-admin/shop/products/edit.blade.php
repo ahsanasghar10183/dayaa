@@ -1,4 +1,4 @@
-<x-super-admin-layout>
+<x-super-admin-sidebar-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-2xl text-gray-800">Edit Product: {{ $product->name }}</h2>
@@ -89,24 +89,171 @@
                     @enderror
                 </div>
 
-                <!-- Current Product Image -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Image</label>
-                    <div class="flex items-center space-x-4">
-                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-24 w-24 object-cover rounded-lg border border-gray-200">
-                        <div>
-                            <p class="text-sm text-gray-600">Current product image</p>
-                            <p class="text-xs text-gray-500 mt-1">Upload a new image below to replace it</p>
+                <!-- Product Images Manager -->
+                <div class="md:col-span-2" x-data="imageManager()">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Product Images</label>
+
+                    <!-- Existing Images Grid -->
+                    @if($product->images->count() > 0)
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        @foreach($product->images as $existingImage)
+                        <div class="relative group rounded-xl overflow-hidden border-2 border-gray-200 bg-white shadow-sm hover:shadow-md transition-all"
+                             data-image-id="{{ $existingImage->id }}">
+                            <!-- Image Preview -->
+                            <div class="aspect-square relative">
+                                <img src="{{ asset('storage/' . $existingImage->image_path) }}"
+                                     alt="{{ $existingImage->alt_text }}"
+                                     class="w-full h-full object-cover">
+
+                                <!-- Primary Badge -->
+                                @if($existingImage->is_primary)
+                                <div class="absolute top-2 left-2 bg-gradient-dayaa text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
+                                    Primary
+                                </div>
+                                @endif
+
+                                <!-- Delete Button -->
+                                <button type="button"
+                                        @click="markForDeletion({{ $existingImage->id }})"
+                                        class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- Set Primary Button -->
+                                @if(!$existingImage->is_primary)
+                                <form action="{{ route('super-admin.shop.products.set-primary-image', [$product, $existingImage]) }}"
+                                      method="POST" class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                            class="w-full bg-white/90 hover:bg-white text-gray-700 text-xs font-medium px-2 py-1.5 rounded-lg shadow-md transition-colors">
+                                        Set as Primary
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                         </div>
+                        @endforeach
                     </div>
+                    @endif
+
+                    <!-- New Images Preview Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" x-show="newImages.length > 0">
+                        <template x-for="(image, index) in newImages" :key="index">
+                            <div class="relative group rounded-xl overflow-hidden border-2 border-green-300 bg-white shadow-sm hover:shadow-md transition-all">
+                                <!-- Image Preview -->
+                                <div class="aspect-square relative">
+                                    <img :src="image.preview" :alt="'New image ' + (index + 1)" class="w-full h-full object-cover">
+
+                                    <!-- New Badge -->
+                                    <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
+                                        New
+                                    </div>
+
+                                    <!-- Remove Button -->
+                                    <button type="button" @click="removeNewImage(index)"
+                                            class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <div class="relative">
+                        <input type="file" id="new-images" name="images[]" multiple accept="image/*"
+                               @change="handleFileSelect($event)" class="hidden">
+                        <label for="new-images"
+                               class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-primary-500 transition-all group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-10 h-10 mb-3 text-gray-400 group-hover:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="mb-2 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Hidden inputs for images to delete -->
+                    <template x-for="imageId in imagesToDelete" :key="imageId">
+                        <input type="hidden" name="delete_images[]" :value="imageId">
+                    </template>
+
+                    <p class="mt-2 text-xs text-gray-500">💡 Green border indicates new images to be uploaded. Click "Set as Primary" on any existing image to make it the main product image.</p>
                 </div>
 
-                <!-- Product Image Upload -->
-                <div class="md:col-span-2">
-                    <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Replace Product Image</label>
-                    <input type="file" name="image" id="image" accept="image/*" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-xs text-gray-500">Max size: 2MB. Formats: JPG, PNG, GIF. Leave empty to keep current image.</p>
-                </div>
+                <script>
+                    function imageManager() {
+                        return {
+                            newImages: [],
+                            imagesToDelete: [],
+                            maxImages: 10,
+                            currentImageCount: {{ $product->images->count() }},
+
+                            handleFileSelect(event) {
+                                const files = Array.from(event.target.files);
+                                const totalImages = this.currentImageCount + this.newImages.length - this.imagesToDelete.length + files.length;
+
+                                if (totalImages > this.maxImages) {
+                                    alert(`You can only have a maximum of ${this.maxImages} images.`);
+                                    return;
+                                }
+
+                                files.forEach(file => {
+                                    if (file.size > 2 * 1024 * 1024) {
+                                        alert(`${file.name} is larger than 2MB.`);
+                                        return;
+                                    }
+
+                                    if (!file.type.startsWith('image/')) {
+                                        alert(`${file.name} is not an image file.`);
+                                        return;
+                                    }
+
+                                    const reader = new FileReader();
+                                    reader.onload = (e) => {
+                                        this.newImages.push({
+                                            file: file,
+                                            preview: e.target.result,
+                                            name: file.name
+                                        });
+                                    };
+                                    reader.readAsDataURL(file);
+                                });
+
+                                // Reset input
+                                event.target.value = '';
+                            },
+
+                            removeNewImage(index) {
+                                this.newImages.splice(index, 1);
+                            },
+
+                            markForDeletion(imageId) {
+                                if (confirm('Are you sure you want to delete this image?')) {
+                                    this.imagesToDelete.push(imageId);
+                                    // Hide the image element
+                                    const imageElement = document.querySelector(`[data-image-id="${imageId}"]`);
+                                    if (imageElement) {
+                                        imageElement.style.opacity = '0.3';
+                                        imageElement.style.pointerEvents = 'none';
+                                        // Add deleted badge
+                                        const badge = document.createElement('div');
+                                        badge.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10';
+                                        badge.innerHTML = '<span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg">Deleted</span>';
+                                        imageElement.querySelector('.aspect-square').appendChild(badge);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                </script>
 
                 <!-- Status Checkboxes -->
                 <div class="md:col-span-2 space-y-2">
@@ -132,4 +279,4 @@
             </div>
         </form>
     </div>
-</x-super-admin-layout>
+</x-super-admin-sidebar-layout>

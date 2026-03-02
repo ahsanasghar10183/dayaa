@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
@@ -196,4 +196,4 @@
             </div>
         </div>
     </div>
-</x-organization-layout>
+</x-organization-sidebar-layout>

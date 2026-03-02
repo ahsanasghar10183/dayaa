@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="py-12">
             <!-- Rejected Icon -->
@@ -136,4 +136,4 @@
             </div>
         </div>
     </div>
-</x-organization-layout>
+</x-organization-sidebar-layout>

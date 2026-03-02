@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     @php
         $amountSettings = is_string($campaign->amount_settings) ? json_decode($campaign->amount_settings, true) : $campaign->amount_settings;
         $designSettings = is_string($campaign->design_settings) ? json_decode($campaign->design_settings, true) : ($campaign->design_settings ?? []);
@@ -807,4 +807,4 @@
         // Initial render
         updatePreview();
     </script>
-</x-organization-layout>
+</x-organization-sidebar-layout>

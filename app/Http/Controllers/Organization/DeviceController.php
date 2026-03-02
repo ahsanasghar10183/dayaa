@@ -228,4 +228,34 @@ class DeviceController extends Controller
         return redirect()->route('organization.devices.index')
             ->with('success', 'Device deleted successfully!');
     }
+
+    /**
+     * Regenerate pairing PIN for the device
+     */
+    public function regeneratePin(Device $device)
+    {
+        // Authorize
+        $userOrgId = auth()->user()->organization ? auth()->user()->organization->id : null;
+        if ($device->organization_id != $userOrgId) {
+            abort(403);
+        }
+
+        // Regenerate PIN
+        $device->regeneratePairingPin();
+
+        // Log activity
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'organization_id' => $device->organization_id,
+            'action' => 'updated',
+            'model_type' => Device::class,
+            'model_id' => $device->id,
+            'description' => "Pairing PIN regenerated for device '{$device->name}'",
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+        return redirect()->route('organization.devices.show', $device)
+            ->with('success', 'Pairing PIN regenerated successfully! The new PIN will expire in 24 hours.');
+    }
 }

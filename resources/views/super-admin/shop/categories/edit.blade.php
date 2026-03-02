@@ -1,4 +1,4 @@
-<x-super-admin-layout>
+<x-super-admin-sidebar-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-2xl text-gray-800">Edit Category: {{ $category->name }}</h2>
@@ -120,4 +120,4 @@
             </div>
         </form>
     </div>
-</x-super-admin-layout>
+</x-super-admin-sidebar-layout>

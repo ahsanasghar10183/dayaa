@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <x-slot name="header">
         <div>
             <h2 class="text-2xl font-bold text-gray-900">Subscription Tiers</h2>
@@ -155,4 +155,4 @@
         </div>
 
     </div>
-</x-organization-layout>
+</x-organization-sidebar-layout>

@@ -11,7 +11,7 @@ class DashboardController extends Controller
     /**
      * Display the organization dashboard
      */
-    public function index()
+    public function index(Request $request)
     {
         $organization = auth()->user()->organization;
 
@@ -20,7 +20,11 @@ class DashboardController extends Controller
                 ->with('info', 'Please complete your organization profile to get started.');
         }
 
-        // Get key statistics
+        // Determine date range based on filter
+        $period = $request->get('period', 'this_month');
+        $dateRange = $this->getDateRange($period, $request->get('start_date'), $request->get('end_date'));
+
+        // Get key statistics (filtered by date range where applicable)
         $stats = [
             'total_campaigns' => $organization->campaigns()->count(),
             'active_campaigns' => $organization->campaigns()->where('status', 'active')->count(),
@@ -30,8 +34,14 @@ class DashboardController extends Controller
             'online_devices' => $organization->devices()->where('status', 'online')->count(),
             'offline_devices' => $organization->devices()->where('status', 'offline')->count(),
 
-            'total_donations' => $organization->donations()->where('payment_status', 'success')->count(),
-            'total_amount' => $organization->donations()->where('payment_status', 'success')->sum('amount'),
+            'total_donations' => $organization->donations()
+                ->where('payment_status', 'success')
+                ->whereBetween('created_at', $dateRange)
+                ->count(),
+            'total_amount' => $organization->donations()
+                ->where('payment_status', 'success')
+                ->whereBetween('created_at', $dateRange)
+                ->sum('amount'),
 
             'donations_today' => $organization->donations()
                 ->where('payment_status', 'success')
@@ -54,9 +64,10 @@ class DashboardController extends Controller
                 ->sum('amount'),
         ];
 
-        // Get recent donations
+        // Get recent donations (filtered)
         $recentDonations = $organization->donations()
             ->where('payment_status', 'success')
+            ->whereBetween('created_at', $dateRange)
             ->with(['campaign', 'device'])
             ->latest()
             ->limit(10)
@@ -65,8 +76,9 @@ class DashboardController extends Controller
         // Get active campaigns
         $activeCampaigns = $organization->campaigns()
             ->where('status', 'active')
-            ->withCount(['donations' => function ($query) {
-                $query->where('payment_status', 'success');
+            ->withCount(['donations' => function ($query) use ($dateRange) {
+                $query->where('payment_status', 'success')
+                    ->whereBetween('created_at', $dateRange);
             }])
             ->latest()
             ->limit(5)
@@ -75,11 +87,11 @@ class DashboardController extends Controller
         // Get subscription info
         $subscription = $organization->subscription;
 
-        // Get daily donation trends (last 7 days)
+        // Get donation trends based on selected period
         $dailyDonations = $organization->donations()
             ->where('payment_status', 'success')
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(amount) as total')
-            ->where('created_at', '>=', now()->subDays(7))
+            ->whereBetween('created_at', $dateRange)
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -92,5 +104,42 @@ class DashboardController extends Controller
             'subscription',
             'dailyDonations'
         ));
+    }
+
+    /**
+     * Get date range based on period filter
+     */
+    private function getDateRange(string $period, $startDate = null, $endDate = null): array
+    {
+        return match ($period) {
+            'today' => [
+                now()->startOfDay(),
+                now()->endOfDay()
+            ],
+            'this_month' => [
+                now()->startOfMonth(),
+                now()->endOfMonth()
+            ],
+            'last_month' => [
+                now()->subMonth()->startOfMonth(),
+                now()->subMonth()->endOfMonth()
+            ],
+            'last_6_months' => [
+                now()->subMonths(6)->startOfDay(),
+                now()->endOfDay()
+            ],
+            'last_year' => [
+                now()->subYear()->startOfDay(),
+                now()->endOfDay()
+            ],
+            'custom' => [
+                $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : now()->startOfMonth()->startOfDay(),
+                $endDate ? \Carbon\Carbon::parse($endDate)->endOfDay() : now()->endOfDay()
+            ],
+            default => [
+                now()->startOfMonth(),
+                now()->endOfDay()
+            ]
+        };
     }
 }

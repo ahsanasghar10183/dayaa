@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class DevicePairingController extends Controller
 {
     /**
-     * Pair a device using its device_id
+     * Pair a device using its device_id and pairing PIN
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -22,6 +22,7 @@ class DevicePairingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'device_id' => 'required|string',
+            'pairing_pin' => 'required|string|size:6',
         ]);
 
         if ($validator->fails()) {
@@ -41,12 +42,39 @@ class DevicePairingController extends Controller
             ], 404);
         }
 
+        // Check if device is already paired
+        if ($device->is_paired) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Device is already paired. Please unpair it first or contact support.'
+            ], 400);
+        }
+
+        // Validate pairing PIN
+        if ($device->pairing_pin !== $request->pairing_pin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid pairing PIN. Please check your PIN and try again.'
+            ], 401);
+        }
+
+        // Check if PIN has expired
+        if (!$device->isPairingPinValid()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pairing PIN has expired. Please generate a new PIN from the dashboard.'
+            ], 401);
+        }
+
         // Generate API token for the device
         $token = Str::random(64);
         $device->update([
             'api_token' => hash('sha256', $token),
             'last_active' => now(),
         ]);
+
+        // Mark device as paired
+        $device->markAsPaired();
 
         return response()->json([
             'success' => true,

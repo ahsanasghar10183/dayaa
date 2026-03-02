@@ -22,6 +22,9 @@ class Device extends Model
     protected $fillable = [
         'organization_id',
         'device_id',
+        'pairing_pin',
+        'pairing_pin_expires_at',
+        'is_paired',
         'api_token',
         'name',
         'location',
@@ -40,11 +43,13 @@ class Device extends Model
         return [
             'last_active' => 'datetime',
             'deleted_at' => 'datetime',
+            'pairing_pin_expires_at' => 'datetime',
+            'is_paired' => 'boolean',
         ];
     }
 
     /**
-     * Boot the model and generate unique device ID
+     * Boot the model and generate unique device ID and pairing PIN
      */
     protected static function boot()
     {
@@ -54,7 +59,45 @@ class Device extends Model
             if (empty($device->device_id)) {
                 $device->device_id = 'DEV-' . strtoupper(Str::random(12));
             }
+
+            // Generate 6-digit pairing PIN
+            $device->pairing_pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            // PIN expires in 24 hours
+            $device->pairing_pin_expires_at = now()->addHours(24);
+            $device->is_paired = false;
         });
+    }
+
+    /**
+     * Generate a new pairing PIN
+     */
+    public function regeneratePairingPin(): void
+    {
+        $this->update([
+            'pairing_pin' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
+            'pairing_pin_expires_at' => now()->addHours(24),
+            'is_paired' => false,
+        ]);
+    }
+
+    /**
+     * Check if pairing PIN is valid (not expired)
+     */
+    public function isPairingPinValid(): bool
+    {
+        return $this->pairing_pin_expires_at && $this->pairing_pin_expires_at->isFuture();
+    }
+
+    /**
+     * Mark device as paired
+     */
+    public function markAsPaired(): void
+    {
+        $this->update([
+            'is_paired' => true,
+            'pairing_pin' => null, // Clear PIN after successful pairing
+            'pairing_pin_expires_at' => null,
+        ]);
     }
 
     /**

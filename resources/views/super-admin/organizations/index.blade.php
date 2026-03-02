@@ -1,10 +1,8 @@
-<x-super-admin-layout>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Organizations</h1>
-            <p class="mt-2 text-gray-600">Manage and review all registered organizations</p>
-        </div>
+<x-super-admin-sidebar-layout>
+    <x-slot name="header">
+        <h1 class="text-2xl font-bold text-gray-900">Organizations</h1>
+        <p class="text-sm text-gray-600 mt-1">Manage and review all registered organizations</p>
+    </x-slot>
 
         <!-- Filters and Search -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
@@ -123,5 +121,4 @@
             </div>
             @endif
         </div>
-    </div>
-</x-super-admin-layout>
+</x-super-admin-sidebar-layout>

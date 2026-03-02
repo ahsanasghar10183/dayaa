@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
@@ -311,4 +311,4 @@
             secondaryColorText.value = this.value.toUpperCase();
         });
     </script>
-</x-organization-layout>
+</x-organization-sidebar-layout>

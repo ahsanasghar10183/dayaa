@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
@@ -167,4 +167,4 @@
             </div>
         </form>
     </div>
-</x-organization-layout>
+</x-organization-sidebar-layout>

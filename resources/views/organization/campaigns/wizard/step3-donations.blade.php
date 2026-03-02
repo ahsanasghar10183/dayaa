@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Wizard Header -->
         <div class="mb-8">
@@ -343,4 +343,4 @@
         updateRemoveButtons();
         updatePreview();
     </script>
-</x-organization-layout>
+</x-organization-sidebar-layout>

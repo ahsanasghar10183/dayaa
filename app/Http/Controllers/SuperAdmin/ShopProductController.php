@@ -73,7 +73,7 @@ class ShopProductController extends Controller
             'specifications' => 'nullable|array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $product = Product::create([
@@ -93,17 +93,19 @@ class ShopProductController extends Controller
             'is_featured' => $request->has('is_featured'),
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+        // Handle multiple images upload
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $imagePath = $image->store('products', 'public');
 
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_path' => $imagePath,
-                'alt_text' => $product->name,
-                'is_primary' => true,
-                'sort_order' => 1,
-            ]);
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $imagePath,
+                    'alt_text' => $product->name,
+                    'is_primary' => $index === 0, // First image is primary
+                    'sort_order' => $index + 1,
+                ]);
+            }
         }
 
         return redirect()->route('super-admin.shop.products.index')
@@ -148,7 +150,9 @@ class ShopProductController extends Controller
             'specifications' => 'nullable|array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'exists:product_images,id',
         ]);
 
         $product->update([
@@ -168,23 +172,39 @@ class ShopProductController extends Controller
             'is_featured' => $request->has('is_featured'),
         ]);
 
-        // Handle new image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+        // Handle image deletions
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imageId) {
+                $image = ProductImage::where('id', $imageId)
+                    ->where('product_id', $product->id)
+                    ->first();
 
-            // Set existing primary image to not primary
-            ProductImage::where('product_id', $product->id)
-                ->where('is_primary', true)
-                ->update(['is_primary' => false]);
+                if ($image) {
+                    // Delete from storage
+                    if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                        Storage::disk('public')->delete($image->image_path);
+                    }
+                    $image->delete();
+                }
+            }
+        }
 
-            // Create new primary image
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_path' => $imagePath,
-                'alt_text' => $product->name,
-                'is_primary' => true,
-                'sort_order' => 1,
-            ]);
+        // Handle new images upload
+        if ($request->hasFile('images')) {
+            $currentMaxOrder = ProductImage::where('product_id', $product->id)->max('sort_order') ?? 0;
+            $hasPrimary = ProductImage::where('product_id', $product->id)->where('is_primary', true)->exists();
+
+            foreach ($request->file('images') as $index => $image) {
+                $imagePath = $image->store('products', 'public');
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $imagePath,
+                    'alt_text' => $product->name,
+                    'is_primary' => !$hasPrimary && $index === 0, // First new image becomes primary if no primary exists
+                    'sort_order' => $currentMaxOrder + $index + 1,
+                ]);
+            }
         }
 
         return redirect()->route('super-admin.shop.products.index')
@@ -218,5 +238,25 @@ class ShopProductController extends Controller
         $product->update(['is_active' => !$product->is_active]);
 
         return back()->with('success', 'Product status updated successfully.');
+    }
+
+    /**
+     * Set primary product image
+     */
+    public function setPrimaryImage(Product $product, ProductImage $image)
+    {
+        // Verify the image belongs to this product
+        if ($image->product_id !== $product->id) {
+            abort(403);
+        }
+
+        // Set all images to not primary
+        ProductImage::where('product_id', $product->id)
+            ->update(['is_primary' => false]);
+
+        // Set this image as primary
+        $image->update(['is_primary' => true]);
+
+        return back()->with('success', 'Primary image updated successfully.');
     }
 }

@@ -99,6 +99,7 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
         // Products
         Route::resource('products', \App\Http\Controllers\SuperAdmin\ShopProductController::class);
         Route::post('products/{product}/toggle-status', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'toggleStatus'])->name('products.toggle-status');
+        Route::patch('products/{product}/images/{image}/set-primary', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 
         // Categories
         Route::resource('categories', \App\Http\Controllers\SuperAdmin\ShopCategoryController::class)->except(['show']);
@@ -142,6 +143,7 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
 
     // Devices
     Route::resource('devices', \App\Http\Controllers\Organization\DeviceController::class);
+    Route::post('devices/{device}/regenerate-pin', [\App\Http\Controllers\Organization\DeviceController::class, 'regeneratePin'])->name('devices.regenerate-pin');
 
     // Donations
     Route::get('/donations', [\App\Http\Controllers\Organization\DonationController::class, 'index'])->name('donations.index');

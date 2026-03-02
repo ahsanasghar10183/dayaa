@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
@@ -604,4 +604,4 @@
         }
     </script>
     @endpush
-</x-organization-layout>
+</x-organization-sidebar-layout>

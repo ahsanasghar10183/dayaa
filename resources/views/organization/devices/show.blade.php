@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Navigation -->
         <div class="mb-6">
@@ -92,58 +92,66 @@
         <!-- Statistics Dashboard -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Donations -->
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-shadow">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-white bg-opacity-20 rounded-xl">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-sm">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold mb-1">{{ number_format($stats['total_donations']) }}</div>
-                <div class="text-blue-100 text-sm">Total Donations</div>
+                <div>
+                    <p class="text-sm text-gray-600 font-medium">Total Donations</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_donations']) }}</p>
+                </div>
             </div>
 
             <!-- Total Amount -->
-            <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-shadow">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-white bg-opacity-20 rounded-xl">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center shadow-sm">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold mb-1">€{{ number_format($stats['total_amount'], 2) }}</div>
-                <div class="text-green-100 text-sm">Total Raised</div>
-                <div class="mt-2 text-xs text-green-100 opacity-80">Avg: €{{ number_format($stats['average_donation'], 2) }}</div>
+                <div>
+                    <p class="text-sm text-gray-600 font-medium">Total Raised</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">€{{ number_format($stats['total_amount'], 2) }}</p>
+                    <p class="mt-3 text-sm text-gray-600">Avg: €{{ number_format($stats['average_donation'], 2) }}</p>
+                </div>
             </div>
 
             <!-- Today's Stats -->
-            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-shadow">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-white bg-opacity-20 rounded-xl">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center shadow-sm">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold mb-1">{{ number_format($stats['today_donations']) }}</div>
-                <div class="text-purple-100 text-sm">Today's Donations</div>
-                <div class="mt-2 text-xs text-purple-100 opacity-80">€{{ number_format($stats['today_amount'], 2) }}</div>
+                <div>
+                    <p class="text-sm text-gray-600 font-medium">Today's Donations</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['today_donations']) }}</p>
+                    <p class="mt-3 text-sm text-gray-600">€{{ number_format($stats['today_amount'], 2) }}</p>
+                </div>
             </div>
 
             <!-- This Month -->
-            <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg p-6 text-white">
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-shadow">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-white bg-opacity-20 rounded-xl">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center shadow-sm">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold mb-1">{{ number_format($stats['this_month_donations']) }}</div>
-                <div class="text-orange-100 text-sm">This Month</div>
-                <div class="mt-2 text-xs text-orange-100 opacity-80">€{{ number_format($stats['this_month_amount'], 2) }}</div>
+                <div>
+                    <p class="text-sm text-gray-600 font-medium">This Month</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['this_month_donations']) }}</p>
+                    <p class="mt-3 text-sm text-gray-600">€{{ number_format($stats['this_month_amount'], 2) }}</p>
+                </div>
             </div>
         </div>
 
@@ -151,22 +159,82 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - 2/3 Width -->
             <div class="lg:col-span-2 space-y-8">
-                <!-- Device ID Card -->
+                <!-- Device Pairing Card -->
                 <div class="bg-gradient-to-br from-primary-500 to-blue-600 rounded-2xl shadow-lg p-8 text-white">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-1">Device Pairing ID</h3>
-                            <p class="text-blue-100 text-sm">Use this ID to connect your physical device</p>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-1">Device Pairing Credentials</h3>
+                        <p class="text-blue-100 text-sm">Use these credentials to connect your physical device or mobile app</p>
+                    </div>
+
+                    <!-- Device ID -->
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-sm font-medium text-blue-100">Device ID</label>
+                            <button onclick="copyDeviceId()" class="p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors text-xs">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copy
+                            </button>
                         </div>
-                        <button onclick="copyDeviceId()" class="p-3 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                        </button>
+                        <div class="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm">
+                            <p class="text-xl font-mono font-bold text-center tracking-wider">{{ $device->device_id }}</p>
+                        </div>
                     </div>
-                    <div class="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm mb-4">
-                        <p class="text-2xl font-mono font-bold text-center tracking-wider">{{ $device->device_id }}</p>
+
+                    <!-- Pairing PIN -->
+                    @if($device->pairing_pin && $device->isPairingPinValid())
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-sm font-medium text-blue-100">Pairing PIN</label>
+                            <button onclick="copyPin()" class="p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors text-xs">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copy
+                            </button>
+                        </div>
+                        <div class="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm mb-2">
+                            <p class="text-3xl font-mono font-bold text-center tracking-widest">{{ $device->pairing_pin }}</p>
+                        </div>
+                        <p class="text-xs text-blue-100 text-center">Expires: {{ $device->pairing_pin_expires_at->format('M d, Y H:i') }}</p>
                     </div>
+                    @elseif($device->is_paired)
+                    <div class="mb-6">
+                        <div class="bg-green-500 bg-opacity-30 border border-green-300 rounded-xl p-4 backdrop-blur-sm">
+                            <div class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="font-semibold">Device Already Paired</span>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{ route('organization.devices.regenerate-pin', $device) }}" class="mt-3">
+                            @csrf
+                            <button type="submit" class="w-full bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                                Unpair & Generate New PIN
+                            </button>
+                        </form>
+                    </div>
+                    @else
+                    <div class="mb-6">
+                        <div class="bg-yellow-500 bg-opacity-30 border border-yellow-300 rounded-xl p-4 backdrop-blur-sm mb-3">
+                            <div class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="font-semibold">PIN Expired</span>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{ route('organization.devices.regenerate-pin', $device) }}">
+                            @csrf
+                            <button type="submit" class="w-full bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                                Generate New PIN
+                            </button>
+                        </form>
+                    </div>
+                    @endif
+
                     <button onclick="togglePairingGuide()" class="w-full text-center text-blue-100 hover:text-white text-sm font-medium transition-colors">
                         View Pairing Instructions
                         <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,11 +254,11 @@
                         </h3>
                     </div>
                     <div class="p-6 space-y-6">
-                        <!-- API Endpoint Info -->
+                        <!-- API Base URL Info -->
                         <div>
-                            <h4 class="font-semibold text-gray-900 mb-3">API Endpoint</h4>
+                            <h4 class="font-semibold text-gray-900 mb-3">API Base URL</h4>
                             <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                <code class="text-sm text-gray-800 break-all">{{ url('/api/device/pair') }}</code>
+                                <code class="text-sm text-gray-800 break-all">{{ url('/api') }}</code>
                             </div>
                         </div>
 
@@ -201,13 +269,14 @@
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">1</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Send POST request to pairing endpoint</p>
+                                        <p class="text-gray-800 font-medium">Send POST request to pairing endpoint with Device ID and PIN</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                                            <pre class="text-xs text-green-400">POST {{ url('/api/device/pair') }}
+                                            <pre class="text-xs text-green-400">POST {{ url('/api/devices/pair') }}
 Content-Type: application/json
 
 {
-  "device_id": "{{ $device->device_id }}"
+  "device_id": "{{ $device->device_id }}",
+  "pairing_pin": "{{ $device->pairing_pin ?? 'YOUR_PIN' }}"
 }</pre>
                                         </div>
                                     </div>
@@ -217,6 +286,17 @@ Content-Type: application/json
                                     <div class="flex-1">
                                         <p class="text-gray-800 font-medium">Save the API token from response</p>
                                         <p class="text-sm text-gray-600 mt-1">The response will include an API token. Store this securely on your device.</p>
+                                        <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
+                                            <pre class="text-xs text-green-400">Response:
+{
+  "success": true,
+  "data": {
+    "api_token": "YOUR_SANCTUM_TOKEN_HERE",
+    "device_name": "{{ $device->name }}",
+    "organization": "{{ auth()->user()->organization->name }}"
+  }
+}</pre>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="flex items-start">
@@ -224,12 +304,12 @@ Content-Type: application/json
                                     <div class="flex-1">
                                         <p class="text-gray-800 font-medium">Send heartbeat every 60 seconds</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                                            <pre class="text-xs text-green-400">POST {{ url('/api/device/heartbeat') }}
+                                            <pre class="text-xs text-green-400">POST {{ url('/api/devices/heartbeat') }}
+Authorization: Bearer YOUR_API_TOKEN
 Content-Type: application/json
 
 {
-  "device_id": "{{ $device->device_id }}",
-  "api_token": "YOUR_API_TOKEN"
+  "device_id": "{{ $device->device_id }}"
 }</pre>
                                         </div>
                                     </div>
@@ -239,12 +319,25 @@ Content-Type: application/json
                                     <div class="flex-1">
                                         <p class="text-gray-800 font-medium">Fetch assigned campaigns</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                                            <pre class="text-xs text-green-400">POST {{ url('/api/device/status') }}
+                                            <pre class="text-xs text-green-400">GET {{ url('/api/campaigns/active') }}
+Authorization: Bearer YOUR_API_TOKEN
+Content-Type: application/json</pre>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">5</span>
+                                    <div class="flex-1">
+                                        <p class="text-gray-800 font-medium">Submit donations</p>
+                                        <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
+                                            <pre class="text-xs text-green-400">POST {{ url('/api/donations') }}
+Authorization: Bearer YOUR_API_TOKEN
 Content-Type: application/json
 
 {
-  "device_id": "{{ $device->device_id }}",
-  "api_token": "YOUR_API_TOKEN"
+  "campaign_id": 1,
+  "amount": 10.00,
+  "payment_method": "card"
 }</pre>
                                         </div>
                                     </div>
@@ -420,17 +513,27 @@ Content-Type: application/json
         function copyDeviceId() {
             const deviceId = '{{ $device->device_id }}';
             navigator.clipboard.writeText(deviceId).then(() => {
-                // Create toast notification
-                const toast = document.createElement('div');
-                toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-                toast.textContent = 'Device ID copied to clipboard!';
-                document.body.appendChild(toast);
-
-                // Remove after 3 seconds
-                setTimeout(() => {
-                    toast.remove();
-                }, 3000);
+                showToast('Device ID copied to clipboard!');
             });
+        }
+
+        function copyPin() {
+            const pin = '{{ $device->pairing_pin }}';
+            navigator.clipboard.writeText(pin).then(() => {
+                showToast('Pairing PIN copied to clipboard!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
         function togglePairingGuide() {
@@ -464,13 +567,16 @@ Content-Type: application/json
             resultDiv.classList.remove('hidden');
 
             try {
-                const response = await fetch('{{ url("/api/device/pair") }}', {
+                const response = await fetch('{{ url("/api/devices/pair") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ device_id: deviceId })
+                    body: JSON.stringify({
+                        device_id: deviceId,
+                        pairing_pin: '{{ $device->pairing_pin }}'
+                    })
                 });
 
                 const data = await response.json();
@@ -528,4 +634,4 @@ Content-Type: application/json
             }
         }
     </script>
-</x-organization-layout>
+</x-organization-sidebar-layout>

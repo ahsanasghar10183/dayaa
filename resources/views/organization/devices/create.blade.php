@@ -1,4 +1,4 @@
-<x-organization-layout>
+<x-organization-sidebar-layout>
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Navigation -->
         <div class="mb-6">
@@ -106,4 +106,4 @@
             </div>
         </form>
     </div>
-</x-organization-layout>
+</x-organization-sidebar-layout>
