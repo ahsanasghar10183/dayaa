@@ -112,13 +112,13 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <div class="pp-cta-content">
-                    <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                    <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
                         Ready to Transform Your Fundraising?
                     </h2>
-                    <p class="wow fadeInUp" data-wow-delay=".5s">
+                    <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
                         Join hundreds of organizations already using Dayaa to maximize their donation impact.
                     </p>
-                    <div class="pp-cta-button">
+                    <div class="pp-cta-button mt-4">
                         <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Get Started <i class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>

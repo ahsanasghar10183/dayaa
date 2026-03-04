@@ -93,6 +93,7 @@ class DonationController extends Controller
         $device = $request->user();
 
         $validator = Validator::make($request->all(), [
+            'transaction_id' => 'nullable|string',
             'sumup_transaction_id' => 'nullable|string',
             'sumup_transaction_code' => 'nullable|string',
         ]);
@@ -116,11 +117,26 @@ class DonationController extends Controller
             ], 404);
         }
 
-        $donation->update([
+        // Support both generic transaction_id and SumUp-specific fields
+        $updateData = [
             'payment_status' => 'completed',
-            'sumup_transaction_id' => $request->sumup_transaction_id,
-            'sumup_transaction_code' => $request->sumup_transaction_code,
-        ]);
+        ];
+
+        // If SumUp fields provided, use those
+        if ($request->has('sumup_transaction_id')) {
+            $updateData['sumup_transaction_id'] = $request->sumup_transaction_id;
+        }
+
+        if ($request->has('sumup_transaction_code')) {
+            $updateData['sumup_transaction_code'] = $request->sumup_transaction_code;
+        }
+
+        // Otherwise, use generic transaction_id
+        if ($request->has('transaction_id')) {
+            $updateData['transaction_id'] = $request->transaction_id;
+        }
+
+        $donation->update($updateData);
 
         return response()->json([
             'success' => true,

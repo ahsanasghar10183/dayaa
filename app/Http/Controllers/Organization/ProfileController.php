@@ -28,7 +28,7 @@ class ProfileController extends Controller
         $stats = [
             'total_campaigns' => $organization->campaigns()->count(),
             'total_devices' => $organization->devices()->count(),
-            'total_donations' => $organization->donations()->where('payment_status', 'success')->count(),
+            'total_donations' => $organization->donations()->where('payment_status', 'completed')->count(),
         ];
 
         return view('organization.profile.show', compact('organization', 'stats'));
@@ -93,7 +93,7 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('organization.pending')
-            ->with('success', 'Your organization profile has been submitted for approval.');
+            ->with('completed', 'Your organization profile has been submitted for approval.');
     }
 
     /**
@@ -165,6 +165,6 @@ class ProfileController extends Controller
             'user_agent' => request()->userAgent(),
         ]);
 
-        return back()->with('success', 'Organization profile updated successfully.');
+        return back()->with('completed', 'Organization profile updated successfully.');
     }
 }

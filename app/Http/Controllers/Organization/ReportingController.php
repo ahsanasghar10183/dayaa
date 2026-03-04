@@ -104,9 +104,9 @@ class ReportingController extends Controller
 
         $summary = $summaryQuery->selectRaw('
             COUNT(*) as total_count,
-            SUM(CASE WHEN payment_status = "success" THEN amount ELSE 0 END) as total_amount,
-            AVG(CASE WHEN payment_status = "success" THEN amount ELSE NULL END) as avg_amount,
-            SUM(CASE WHEN payment_status = "success" THEN 1 ELSE 0 END) as success_count,
+            SUM(CASE WHEN payment_status = "completed" THEN amount ELSE 0 END) as total_amount,
+            AVG(CASE WHEN payment_status = "completed" THEN amount ELSE NULL END) as avg_amount,
+            SUM(CASE WHEN payment_status = "completed" THEN 1 ELSE 0 END) as success_count,
             SUM(CASE WHEN payment_status = "failed" THEN 1 ELSE 0 END) as failed_count,
             SUM(CASE WHEN payment_status = "pending" THEN 1 ELSE 0 END) as pending_count
         ')->first();
@@ -129,7 +129,7 @@ class ReportingController extends Controller
 
         // Top campaign
         $topCampaign = Donation::where('donations.organization_id', $organization->id)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->select('campaign_id', DB::raw('SUM(amount) as total'))
             ->groupBy('campaign_id')
             ->orderByDesc('total')
@@ -138,7 +138,7 @@ class ReportingController extends Controller
 
         // Top device
         $topDevice = Donation::where('donations.organization_id', $organization->id)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->select('device_id', DB::raw('SUM(amount) as total'))
             ->groupBy('device_id')
             ->orderByDesc('total')
@@ -350,8 +350,8 @@ class ReportingController extends Controller
             ->whereBetween('created_at', [$start, $end])
             ->selectRaw('
                 COUNT(*) as count,
-                SUM(CASE WHEN payment_status = "success" THEN amount ELSE 0 END) as total,
-                AVG(CASE WHEN payment_status = "success" THEN amount ELSE NULL END) as avg
+                SUM(CASE WHEN payment_status = "completed" THEN amount ELSE 0 END) as total,
+                AVG(CASE WHEN payment_status = "completed" THEN amount ELSE NULL END) as avg
             ')
             ->first();
 
@@ -365,7 +365,7 @@ class ReportingController extends Controller
     private function getTrendData(int $orgId): array
     {
         $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->where('created_at', '>=', Carbon::now()->subDays(29)->startOfDay())
             ->selectRaw('DATE(created_at) as date, SUM(amount) as total, COUNT(*) as count')
             ->groupBy('date')
@@ -390,7 +390,7 @@ class ReportingController extends Controller
     private function getCampaignChartData(int $orgId): array
     {
         $rows = Donation::where('donations.organization_id', $orgId)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
             ->selectRaw('campaigns.name as campaign_name, SUM(donations.amount) as total, COUNT(*) as count')
             ->groupBy('campaigns.id', 'campaigns.name')
@@ -408,7 +408,7 @@ class ReportingController extends Controller
     private function getDeviceChartData(int $orgId): array
     {
         $rows = Donation::where('donations.organization_id', $orgId)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->join('devices', 'donations.device_id', '=', 'devices.id')
             ->selectRaw('devices.name as device_name, SUM(donations.amount) as total, COUNT(*) as count')
             ->groupBy('devices.id', 'devices.name')
@@ -426,7 +426,7 @@ class ReportingController extends Controller
     private function getHourlyData(int $orgId): array
     {
         $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->where('created_at', '>=', Carbon::now()->subDays(29))
             ->selectRaw('HOUR(created_at) as hour, SUM(amount) as total, COUNT(*) as count')
             ->groupBy('hour')
@@ -450,7 +450,7 @@ class ReportingController extends Controller
     private function getDayOfWeekData(int $orgId): array
     {
         $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->where('created_at', '>=', Carbon::now()->subDays(89))
             ->selectRaw('DAYOFWEEK(created_at) as dow, SUM(amount) as total, COUNT(*) as count')
             ->groupBy('dow')

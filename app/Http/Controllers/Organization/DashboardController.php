@@ -35,30 +35,30 @@ class DashboardController extends Controller
             'offline_devices' => $organization->devices()->where('status', 'offline')->count(),
 
             'total_donations' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereBetween('created_at', $dateRange)
                 ->count(),
             'total_amount' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereBetween('created_at', $dateRange)
                 ->sum('amount'),
 
             'donations_today' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->count(),
             'donations_today_amount' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->sum('amount'),
 
             'this_month_donations' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->count(),
             'this_month_amount' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->sum('amount'),
@@ -66,7 +66,7 @@ class DashboardController extends Controller
 
         // Get recent donations (filtered)
         $recentDonations = $organization->donations()
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->whereBetween('created_at', $dateRange)
             ->with(['campaign', 'device'])
             ->latest()
@@ -77,7 +77,7 @@ class DashboardController extends Controller
         $activeCampaigns = $organization->campaigns()
             ->where('status', 'active')
             ->withCount(['donations' => function ($query) use ($dateRange) {
-                $query->where('payment_status', 'success')
+                $query->where('payment_status', 'completed')
                     ->whereBetween('created_at', $dateRange);
             }])
             ->latest()
@@ -89,7 +89,7 @@ class DashboardController extends Controller
 
         // Get donation trends based on selected period
         $dailyDonations = $organization->donations()
-            ->where('payment_status', 'success')
+            ->where('payment_status', 'completed')
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(amount) as total')
             ->whereBetween('created_at', $dateRange)
             ->groupBy('date')

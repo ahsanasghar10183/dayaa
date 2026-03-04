@@ -23,10 +23,10 @@ class DeviceController extends Controller
 
         $query = $organization->devices()
             ->withCount(['campaigns', 'donations' => function ($query) {
-                $query->where('payment_status', 'success');
+                $query->where('payment_status', 'completed');
             }])
             ->withSum(['donations' => function ($query) {
-                $query->where('payment_status', 'success');
+                $query->where('payment_status', 'completed');
             }], 'amount');
 
         // Search
@@ -104,7 +104,7 @@ class DeviceController extends Controller
         ]);
 
         return redirect()->route('organization.devices.show', $device)
-            ->with('success', 'Device added successfully! Use the Device ID to pair your device.');
+            ->with('completed', 'Device added successfully! Use the Device ID to pair your device.');
     }
 
     /**
@@ -119,28 +119,28 @@ class DeviceController extends Controller
         }
 
         $device->load(['campaigns', 'donations' => function ($query) {
-            $query->where('payment_status', 'success')->latest()->limit(10);
+            $query->where('payment_status', 'completed')->latest()->limit(10);
         }]);
 
         // Get statistics
         $stats = [
-            'total_donations' => $device->donations()->where('payment_status', 'success')->count(),
-            'total_amount' => $device->donations()->where('payment_status', 'success')->sum('amount'),
-            'average_donation' => $device->donations()->where('payment_status', 'success')->avg('amount') ?? 0,
+            'total_donations' => $device->donations()->where('payment_status', 'completed')->count(),
+            'total_amount' => $device->donations()->where('payment_status', 'completed')->sum('amount'),
+            'average_donation' => $device->donations()->where('payment_status', 'completed')->avg('amount') ?? 0,
             'today_donations' => $device->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->count(),
             'today_amount' => $device->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->sum('amount'),
             'this_month_donations' => $device->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->count(),
             'this_month_amount' => $device->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->sum('amount'),
         ];
@@ -195,7 +195,7 @@ class DeviceController extends Controller
         ]);
 
         return redirect()->route('organization.devices.show', $device)
-            ->with('success', 'Device updated successfully!');
+            ->with('completed', 'Device updated successfully!');
     }
 
     /**
@@ -226,7 +226,7 @@ class DeviceController extends Controller
         $device->delete();
 
         return redirect()->route('organization.devices.index')
-            ->with('success', 'Device deleted successfully!');
+            ->with('completed', 'Device deleted successfully!');
     }
 
     /**
@@ -256,6 +256,6 @@ class DeviceController extends Controller
         ]);
 
         return redirect()->route('organization.devices.show', $device)
-            ->with('success', 'Pairing PIN regenerated successfully! The new PIN will expire in 24 hours.');
+            ->with('completed', 'Pairing PIN regenerated successfully! The new PIN will expire in 24 hours.');
     }
 }

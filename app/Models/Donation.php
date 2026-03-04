@@ -22,15 +22,18 @@ class Donation extends Model
         'donor_name',
         'donor_email',
         'donor_phone',
+        'anonymous',
         'payment_method',
         'payment_status',
         'transaction_id',
         'sumup_transaction_id',
+        'sumup_transaction_code',
         'sumup_fee',
         'net_amount',
         'currency',
         'error_message',
         'error_code',
+        'notes',
         'ip_address',
         'user_agent',
     ];
@@ -68,7 +71,15 @@ class Donation extends Model
      */
     public function isSuccessful(): bool
     {
-        return $this->payment_status === 'success';
+        return $this->payment_status === 'completed';
+    }
+
+    /**
+     * Check if donation payment is completed
+     */
+    public function isCompleted(): bool
+    {
+        return $this->payment_status === 'completed';
     }
 
     /**

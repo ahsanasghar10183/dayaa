@@ -118,6 +118,28 @@
     </div>
 </section>
 
+<!-- CTA Section -->
+<section class="pp-cta-section section-padding fix theme-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="pp-cta-content">
+                    <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
+                        Need Help Choosing the Right Device?
+                    </h2>
+                    <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
+                        Our team can help you select the perfect donation devices for your organization's needs. Get expert advice and personalized recommendations.
+                    </p>
+                    <div class="pp-cta-button mt-4">
+                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Contact Our Team <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">Start Free Trial <i class="fa-solid fa-arrow-right-long"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection
 
 @push('styles')

@@ -24,7 +24,7 @@ class DonationController extends Controller
         // Get donations with filters
         $query = $organization->donations()
             ->with(['campaign', 'device'])
-            ->where('payment_status', 'success');
+            ->where('payment_status', 'completed');
 
         // Filter by campaign if requested
         if ($request->has('campaign') && $request->campaign) {
@@ -49,23 +49,23 @@ class DonationController extends Controller
 
         // Get statistics
         $stats = [
-            'total_donations' => $organization->donations()->where('payment_status', 'success')->count(),
-            'total_amount' => $organization->donations()->where('payment_status', 'success')->sum('amount'),
+            'total_donations' => $organization->donations()->where('payment_status', 'completed')->count(),
+            'total_amount' => $organization->donations()->where('payment_status', 'completed')->sum('amount'),
             'today_donations' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->count(),
             'today_amount' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->sum('amount'),
             'this_month_donations' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->count(),
             'this_month_amount' => $organization->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->sum('amount'),

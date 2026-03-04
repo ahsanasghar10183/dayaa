@@ -159,6 +159,6 @@ class SubscriptionController extends Controller
         }
 
         return redirect()->route('organization.billing.index')
-            ->with('success', "Plan changed to {$planData['name']} successfully!");
+            ->with('completed', "Plan changed to {$planData['name']} successfully!");
     }
 }

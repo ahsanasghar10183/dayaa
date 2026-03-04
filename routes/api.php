@@ -20,11 +20,14 @@ Route::prefix('devices')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/heartbeat', [DeviceController::class, 'heartbeat']);
         Route::post('/unpair', [DeviceController::class, 'unpair']);
+        Route::get('/stats', [DeviceController::class, 'stats']);
+        Route::get('/donations', [DeviceController::class, 'donations']);
     });
 });
 
 // Campaign endpoints (protected)
 Route::middleware('auth:sanctum')->prefix('campaigns')->group(function () {
+    Route::get('/', [CampaignController::class, 'index']);
     Route::get('/active', [CampaignController::class, 'getActive']);
 });
 

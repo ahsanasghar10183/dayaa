@@ -96,7 +96,7 @@ class Campaign extends Model
      */
     public function getTotalDonationsAttribute(): float
     {
-        return $this->donations()->where('payment_status', 'success')->sum('amount');
+        return $this->donations()->where('payment_status', 'completed')->sum('amount');
     }
 
     /**
@@ -104,6 +104,6 @@ class Campaign extends Model
      */
     public function getDonationsCountAttribute(): int
     {
-        return $this->donations()->where('payment_status', 'success')->count();
+        return $this->donations()->where('payment_status', 'completed')->count();
     }
 }

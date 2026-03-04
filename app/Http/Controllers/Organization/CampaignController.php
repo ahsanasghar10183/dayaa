@@ -24,10 +24,10 @@ class CampaignController extends Controller
 
         $query = $organization->campaigns()
             ->withCount(['donations' => function ($query) {
-                $query->where('payment_status', 'success');
+                $query->where('payment_status', 'completed');
             }])
             ->withSum(['donations' => function ($query) {
-                $query->where('payment_status', 'success');
+                $query->where('payment_status', 'completed');
             }], 'amount')
             ->withCount('devices');
 
@@ -174,7 +174,7 @@ class CampaignController extends Controller
         ]);
 
         return redirect()->route('organization.campaigns.show', $campaign)
-            ->with('success', 'Campaign created successfully!');
+            ->with('completed', 'Campaign created successfully!');
     }
 
     /**
@@ -189,28 +189,28 @@ class CampaignController extends Controller
         }
 
         $campaign->load(['devices', 'donations' => function ($query) {
-            $query->where('payment_status', 'success')->latest()->limit(10);
+            $query->where('payment_status', 'completed')->latest()->limit(10);
         }]);
 
         // Get statistics
         $stats = [
-            'total_donations' => $campaign->donations()->where('payment_status', 'success')->count(),
-            'total_amount' => $campaign->donations()->where('payment_status', 'success')->sum('amount'),
-            'average_donation' => $campaign->donations()->where('payment_status', 'success')->avg('amount') ?? 0,
+            'total_donations' => $campaign->donations()->where('payment_status', 'completed')->count(),
+            'total_amount' => $campaign->donations()->where('payment_status', 'completed')->sum('amount'),
+            'average_donation' => $campaign->donations()->where('payment_status', 'completed')->avg('amount') ?? 0,
             'today_donations' => $campaign->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->count(),
             'today_amount' => $campaign->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereDate('created_at', today())
                 ->sum('amount'),
             'this_month_donations' => $campaign->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->count(),
             'this_month_amount' => $campaign->donations()
-                ->where('payment_status', 'success')
+                ->where('payment_status', 'completed')
                 ->whereMonth('created_at', now()->month)
                 ->sum('amount'),
         ];
@@ -400,7 +400,7 @@ class CampaignController extends Controller
         ]);
 
         return redirect()->route('organization.campaigns.show', $campaign)
-            ->with('success', 'Campaign updated successfully!');
+            ->with('completed', 'Campaign updated successfully!');
     }
 
     /**
@@ -439,7 +439,7 @@ class CampaignController extends Controller
         ]);
 
         return redirect()->route('organization.campaigns.edit', $duplicate)
-            ->with('success', 'Campaign duplicated successfully! You can now customize it.');
+            ->with('completed', 'Campaign duplicated successfully! You can now customize it.');
     }
 
     /**
@@ -470,7 +470,7 @@ class CampaignController extends Controller
         $campaign->delete();
 
         return redirect()->route('organization.campaigns.index')
-            ->with('success', 'Campaign deleted successfully!');
+            ->with('completed', 'Campaign deleted successfully!');
     }
 
     /**

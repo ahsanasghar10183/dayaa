@@ -328,7 +328,7 @@ class CampaignWizardController extends Controller
         session()->forget('campaign_wizard');
 
         return redirect()->route('organization.campaigns.show', $campaign)
-            ->with('success', 'Campaign created successfully! 🎉');
+            ->with('completed', 'Campaign created successfully! 🎉');
     }
 
     /**
