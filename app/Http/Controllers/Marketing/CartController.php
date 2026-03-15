@@ -40,10 +40,16 @@ class CartController extends Controller
         $product = Product::findOrFail($productId);
 
         if (!$product->isInStock()) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Product is out of stock'], 400);
+            }
             return back()->with('error', 'Product is out of stock');
         }
 
         if ($product->quantity < $request->quantity) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
+            }
             return back()->with('error', 'Not enough stock available');
         }
 
@@ -57,6 +63,9 @@ class CartController extends Controller
             $newQuantity = $cartItem->quantity + $request->quantity;
 
             if ($newQuantity > $product->quantity) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
+                }
                 return back()->with('error', 'Not enough stock available');
             }
 
@@ -69,7 +78,45 @@ class CartController extends Controller
             ]);
         }
 
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Product added to cart successfully']);
+        }
         return back()->with('success', 'Product added to cart successfully');
+    }
+
+    /**
+     * Buy product now (add to cart and redirect to checkout)
+     */
+    public function buyNow(Request $request, $productId)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:99'
+        ]);
+
+        $product = Product::findOrFail($productId);
+
+        if (!$product->isInStock()) {
+            return back()->with('error', 'Product is out of stock');
+        }
+
+        if ($product->quantity < $request->quantity) {
+            return back()->with('error', 'Not enough stock available');
+        }
+
+        $sessionId = $this->getSessionId();
+
+        // Clear existing cart for "Buy Now" functionality
+        CartItem::where('session_id', $sessionId)->delete();
+
+        // Add the product to cart
+        CartItem::create([
+            'session_id' => $sessionId,
+            'product_id' => $productId,
+            'quantity' => $request->quantity,
+        ]);
+
+        // Redirect directly to checkout
+        return redirect()->route('marketing.checkout.index');
     }
 
     /**

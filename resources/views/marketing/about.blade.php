@@ -1,7 +1,7 @@
 @extends('marketing.layouts.master')
 
-@section('title', 'About Us - Dayaa Digital Donations')
-@section('meta_description', 'Learn about Dayaa\'s mission to transform fundraising through innovative digital donation solutions for nonprofits and charities worldwide.')
+@section('title', __('marketing.about.title') . ' - Dayaa')
+@section('meta_description', __('marketing.about.page_subtitle'))
 
 @section('content')
 
@@ -10,9 +10,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 text-center">
-                <h1 class="wow fadeInUp" data-wow-delay=".3s">About Dayaa</h1>
+                <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.about.page_title') }}</h1>
                 <p class="wow fadeInUp" data-wow-delay=".5s">
-                    Empowering organizations to make a bigger impact through digital donations
+                    {{ __('marketing.about.page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -32,16 +32,16 @@
                 <div class="col-lg-6">
                     <div class="about-content">
                         <div class="pp-section-title mb-0">
-                            <span class="pp-sub-title wow fadeInUp">OUR MISSION</span>
+                            <span class="pp-sub-title wow fadeInUp">{{ __('marketing.about.mission_subtitle') }}</span>
                             <h2 class="wow fadeInUp" data-wow-delay=".3s">
-                                Revolutionizing Digital Fundraising
+                                {{ __('marketing.about.mission_title') }}
                             </h2>
                         </div>
                         <p class="pp-text wow fadeInUp" data-wow-delay=".5s">
-                            Dayaa was founded with a simple yet powerful mission: to make fundraising easier, more efficient, and more impactful for organizations of all sizes. We believe that technology should empower nonprofits to focus on their mission rather than struggling with complicated donation systems.
+                            {{ __('marketing.about.mission_text_1') }}
                         </p>
                         <p class="pp-text wow fadeInUp" data-wow-delay=".5s">
-                            Our platform combines cutting-edge payment technology with intuitive campaign management tools, enabling organizations to accept donations seamlessly across multiple channels and devices.
+                            {{ __('marketing.about.mission_text_2') }}
                         </p>
                     </div>
                 </div>
@@ -55,23 +55,23 @@
     <div class="container">
         <div class="pp-section-title text-center">
             <span class="pp-sub-title wow fadeInUp">
-                OUR VALUES
+                {{ __('marketing.about.values_subtitle') }}
                 <span class="pp-style-2"></span>
             </span>
             <h2 class="wow fadeInUp" data-wow-delay=".3s">
-               What Drives Us
+               {{ __('marketing.about.values_title') }}
             </h2>
          </div>
         <div class="row">
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
                 <div class="pp-offer-box-item">
                     <div class="pp-offer-icon">
-                        <img src="{{ asset('marketing/assets/img/home-1/icon/01.svg') }}" alt="Innovation">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/01.svg') }}" alt="{{ __('marketing.about.value_1_title') }}">
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Innovation</h3>
+                        <h3>{{ __('marketing.about.value_1_title') }}</h3>
                         <p>
-                            We continuously develop new features and improve our platform to stay ahead of fundraising trends.
+                            {{ __('marketing.about.value_1_desc') }}
                         </p>
                     </div>
                 </div>
@@ -79,12 +79,12 @@
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".5s">
                 <div class="pp-offer-box-item">
                     <div class="pp-offer-icon">
-                        <img src="{{ asset('marketing/assets/img/home-1/icon/02.svg') }}" alt="Simplicity">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/02.svg') }}" alt="{{ __('marketing.about.value_2_title') }}">
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Simplicity</h3>
+                        <h3>{{ __('marketing.about.value_2_title') }}</h3>
                         <p>
-                            Complex technology shouldn't mean complicated interfaces. We make powerful tools easy to use.
+                            {{ __('marketing.about.value_2_desc') }}
                         </p>
                     </div>
                 </div>
@@ -92,12 +92,12 @@
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".7s">
                 <div class="pp-offer-box-item">
                     <div class="pp-offer-icon">
-                        <img src="{{ asset('marketing/assets/img/home-1/icon/03.svg') }}" alt="Impact">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/03.svg') }}" alt="{{ __('marketing.about.value_3_title') }}">
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Impact</h3>
+                        <h3>{{ __('marketing.about.value_3_title') }}</h3>
                         <p>
-                            Every feature we build is designed to help organizations maximize their fundraising results.
+                            {{ __('marketing.about.value_3_desc') }}
                         </p>
                     </div>
                 </div>
@@ -113,13 +113,13 @@
             <div class="col-lg-8 text-center">
                 <div class="pp-cta-content">
                     <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
-                        Ready to Transform Your Fundraising?
+                        {{ __('marketing.about.cta_title') }}
                     </h2>
                     <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
-                        Join hundreds of organizations already using Dayaa to maximize their donation impact.
+                        {{ __('marketing.about.cta_text') }}
                     </p>
                     <div class="pp-cta-button mt-4">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Get Started <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.about.cta_button') }} <i class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>
             </div>

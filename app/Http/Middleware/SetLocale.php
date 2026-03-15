@@ -31,6 +31,11 @@ class SetLocale
 
         App::setLocale($locale);
 
+        // Also set the locale in the session if not already set
+        if (!session()->has('locale')) {
+            session(['locale' => $locale]);
+        }
+
         return $next($request);
     }
 }

@@ -36,4 +36,5 @@ Route::middleware('auth:sanctum')->prefix('donations')->group(function () {
     Route::post('/', [DonationController::class, 'store']);
     Route::patch('/{id}/complete', [DonationController::class, 'complete']);
     Route::patch('/{id}/fail', [DonationController::class, 'fail']);
+    Route::post('/{id}/send-receipt', [DonationController::class, 'sendReceipt']);
 });

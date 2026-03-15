@@ -10,8 +10,8 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('marketing.home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('marketing.shop.index') }}">Shop</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('marketing.home') }}">{{ __('marketing.shop.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('marketing.shop.index') }}">{{ __('marketing.shop.title') }}</a></li>
                 @if($product->category)
                 <li class="breadcrumb-item"><a href="{{ route('marketing.shop.category', $product->category->slug) }}">{{ $product->category->name }}</a></li>
                 @endif
@@ -50,7 +50,7 @@
 
                     @if($product->category)
                     <p class="text-muted mb-3">
-                        Category: <a href="{{ route('marketing.shop.category', $product->category->slug) }}">{{ $product->category->name }}</a>
+                        {{ __('marketing.shop.category') }}: <a href="{{ route('marketing.shop.category', $product->category->slug) }}">{{ $product->category->name }}</a>
                     </p>
                     @endif
 
@@ -59,31 +59,31 @@
                         @if($product->compare_price)
                         <p class="text-muted">
                             <del>€{{ number_format($product->compare_price, 2) }}</del>
-                            <span class="badge bg-danger ms-2">Save {{ $product->discount_percentage }}%</span>
+                            <span class="badge bg-danger ms-2">{{ __('marketing.shop.save_percentage', ['percentage' => $product->discount_percentage]) }}</span>
                         </p>
                         @endif
                     </div>
 
                     @if($product->sku)
-                    <p class="text-muted small mb-3">SKU: {{ $product->sku }}</p>
+                    <p class="text-muted small mb-3">{{ __('marketing.shop.sku') }}: {{ $product->sku }}</p>
                     @endif
 
                     <div class="availability mb-4">
                         @if($product->is_in_stock)
-                        <span class="badge bg-success">In Stock ({{ $product->quantity }} available)</span>
+                        <span class="badge bg-success">{{ __('marketing.shop.in_stock') }} ({{ $product->quantity }} {{ __('marketing.shop.available') }})</span>
                         @else
-                        <span class="badge bg-danger">Out of Stock</span>
+                        <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
                         @endif
                     </div>
 
                     <div class="description mb-4">
-                        <h4>Description</h4>
+                        <h4>{{ __('marketing.shop.description') }}</h4>
                         <p>{{ $product->description }}</p>
                     </div>
 
                     @if($product->specifications)
                     <div class="specifications mb-4">
-                        <h4>Specifications</h4>
+                        <h4>{{ __('marketing.shop.specifications') }}</h4>
                         <ul class="list-unstyled">
                             @foreach($product->specifications as $key => $value)
                             <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
@@ -93,30 +93,30 @@
                     @endif
 
                     @if($product->is_in_stock)
-                    <form action="{{ route('marketing.cart.add', $product->id) }}" method="POST" class="mb-4">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-auto">
-                                <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="{{ $product->quantity }}" style="width: 100px;">
-                            </div>
-                            <div class="col-auto d-flex align-items-end">
-                                <button type="submit" class="pp-theme-btn">
-                                    Add to Cart <i class="fa-solid fa-shopping-cart"></i>
-                                </button>
-                            </div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label">{{ __('marketing.shop.quantity') }}</label>
+                            <input type="number" class="form-control" id="product-quantity" value="1" min="1" max="{{ $product->quantity }}" style="width: 100px;">
                         </div>
-                    </form>
+                        <div class="col-auto d-flex align-items-end gap-2">
+                            <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn">
+                                <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
+                            </button>
+                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn">
+                                <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
+                            </button>
+                        </div>
+                    </div>
                     @else
                     <div class="alert alert-warning">
-                        This product is currently out of stock. Please check back later or contact us for availability.
+                        {{ __('marketing.shop.out_of_stock_message') }}
                     </div>
                     @endif
 
                     <div class="product-meta">
-                        <p class="mb-2"><i class="fa-solid fa-truck"></i> Free shipping on orders over €100</p>
-                        <p class="mb-2"><i class="fa-solid fa-shield-alt"></i> 2-year warranty included</p>
-                        <p class="mb-0"><i class="fa-solid fa-headset"></i> 24/7 customer support</p>
+                        <p class="mb-2"><i class="fa-solid fa-truck"></i> {{ __('marketing.shop.free_shipping') }}</p>
+                        <p class="mb-2"><i class="fa-solid fa-shield-alt"></i> {{ __('marketing.shop.warranty') }}</p>
+                        <p class="mb-0"><i class="fa-solid fa-headset"></i> {{ __('marketing.shop.customer_support') }}</p>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
 <section class="section-padding fix section-bg">
     <div class="container">
         <div class="pp-section-title text-center mb-5">
-            <h2>Related Products</h2>
+            <h2>{{ __('marketing.shop.related_products') }}</h2>
         </div>
         <div class="row g-4">
             @foreach($relatedProducts as $relatedProduct)
@@ -148,7 +148,7 @@
                         </h5>
                         <p class="mb-3">{{ $relatedProduct->formatted_price }}</p>
                         <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="pp-theme-btn w-100 text-center">
-                            View Details
+                            {{ __('marketing.shop.view_details') }}
                         </a>
                     </div>
                 </div>
@@ -159,27 +159,8 @@
 </section>
 @endif
 
-<!-- CTA Section -->
-<section class="pp-cta-section section-padding fix theme-bg">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="pp-cta-content">
-                    <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
-                        Ready to Transform Your Fundraising?
-                    </h2>
-                    <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
-                        Combine this device with our powerful platform to maximize your donation impact. Start your free trial and see how easy digital fundraising can be.
-                    </p>
-                    <div class="pp-cta-button mt-4">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Start Free Trial <i class="fa-solid fa-arrow-right-long"></i></a>
-                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">Request Demo <i class="fa-solid fa-arrow-right-long"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Shop Trust Section -->
+<x-shop-trust-section />
 
 @endsection
 
@@ -218,6 +199,78 @@ function changeMainImage(url) {
             img.classList.add('active');
         }
     });
+}
+
+function addToCart(productId) {
+    const quantity = document.getElementById('product-quantity').value;
+
+    // Use fetch to add to cart without page reload
+    fetch('{{ route("marketing.cart.add", ":productId") }}'.replace(':productId', productId), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ quantity: parseInt(quantity) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update cart count if function exists
+            if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+            // Show success message (you can customize this)
+            alert(data.message || 'Product added to cart successfully!');
+        } else {
+            alert(data.message || 'Failed to add product to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Fallback to form submission if AJAX fails
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("marketing.cart.add", ":productId") }}'.replace(':productId', productId);
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'hidden';
+        quantityInput.name = 'quantity';
+        quantityInput.value = quantity;
+
+        form.appendChild(csrfToken);
+        form.appendChild(quantityInput);
+        document.body.appendChild(form);
+        form.submit();
+    });
+}
+
+function buyNow(productId) {
+    const quantity = document.getElementById('product-quantity').value;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ route("marketing.cart.buy-now", ":productId") }}'.replace(':productId', productId);
+
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = '_token';
+    csrfToken.value = '{{ csrf_token() }}';
+
+    const quantityInput = document.createElement('input');
+    quantityInput.type = 'hidden';
+    quantityInput.name = 'quantity';
+    quantityInput.value = quantity;
+
+    form.appendChild(csrfToken);
+    form.appendChild(quantityInput);
+    document.body.appendChild(form);
+    form.submit();
 }
 </script>
 @endpush

@@ -18,6 +18,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::domain(config('app.marketing_domain'))->name('marketing.')->group(function () {
+    // Language Switcher (for marketing site)
+    Route::get('/language/{locale}', function (string $locale) {
+        $supported = ['en', 'de'];
+        if (in_array($locale, $supported)) {
+            session(['locale' => $locale]);
+        }
+        return redirect()->back();
+    })->name('language.switch');
+
     // Homepage
     Route::get('/', [MarketingController::class, 'home'])->name('home');
 
@@ -42,6 +51,7 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
+        Route::post('/buy-now/{product}', [CartController::class, 'buyNow'])->name('buy-now');
         Route::patch('/update/{cartItem}', [CartController::class, 'update'])->name('update');
         Route::delete('/remove/{cartItem}', [CartController::class, 'remove'])->name('remove');
         Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
@@ -53,7 +63,14 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
         Route::get('/', [CheckoutController::class, 'index'])->name('index');
         Route::post('/process', [CheckoutController::class, 'process'])->name('process');
         Route::get('/success/{orderNumber}', [CheckoutController::class, 'success'])->name('success');
+
+        // Stripe payment callbacks
+        Route::get('/stripe/success', [CheckoutController::class, 'stripeSuccess'])->name('stripe.success');
+        Route::get('/stripe/cancel', [CheckoutController::class, 'stripeCancel'])->name('stripe.cancel');
     });
+
+    // Stripe Webhook (must be excluded from CSRF protection)
+    Route::post('/webhook/stripe', [\App\Http\Controllers\Marketing\StripeWebhookController::class, 'handleWebhook'])->name('webhook.stripe');
 
     // Demo/Trial Signup - Redirects to platform
     Route::get('/get-started', function () {
@@ -70,7 +87,12 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
 Route::domain(config('app.platform_domain'))->group(function () {
 
 Route::get('/', function () {
-    return view('welcome');
+    // If user is authenticated, redirect to dashboard
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    // Otherwise, redirect to login page
+    return redirect()->route('login');
 });
 
 // Main dashboard route - redirects based on role

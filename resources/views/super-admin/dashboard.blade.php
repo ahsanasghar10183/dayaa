@@ -1,7 +1,7 @@
 <x-super-admin-sidebar-layout>
     <x-slot name="header">
-        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p class="text-sm text-gray-600 mt-1">Platform Overview & Analytics</p>
+        <h1 class="text-2xl font-bold text-gray-900">{{ __('admin.super_admin.dashboard') }}</h1>
+        <p class="text-sm text-gray-600 mt-1">{{ __('admin.dashboard.platform_overview') }}</p>
     </x-slot>
 
     <!-- Date Filter -->
@@ -13,29 +13,29 @@
                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                     </svg>
-                    Filter Period
+                    {{ __('admin.dashboard.filter_period') }}
                 </label>
                 <select name="period"
                         @change="if($el.value === 'custom') { customRange = true; } else { customRange = false; $el.form.submit(); }"
                         class="px-4 py-2.5 pr-10 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all bg-white text-sm font-medium text-gray-700 min-w-[200px]">
-                    <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Today</option>
-                    <option value="this_month" {{ request('period') == 'this_month' ? 'selected' : '' }}>This Month</option>
-                    <option value="last_month" {{ request('period') == 'last_month' ? 'selected' : '' }}>Last Month</option>
-                    <option value="last_6_months" {{ request('period', 'last_6_months') == 'last_6_months' ? 'selected' : '' }}>Last 6 Months</option>
-                    <option value="last_year" {{ request('period') == 'last_year' ? 'selected' : '' }}>Last Year</option>
-                    <option value="custom" {{ request('period') == 'custom' ? 'selected' : '' }}>Custom Range</option>
+                    <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>{{ __('admin.dashboard.today') }}</option>
+                    <option value="this_month" {{ request('period') == 'this_month' ? 'selected' : '' }}>{{ __('admin.dashboard.this_month') }}</option>
+                    <option value="last_month" {{ request('period') == 'last_month' ? 'selected' : '' }}>{{ __('admin.dashboard.last_month') }}</option>
+                    <option value="last_6_months" {{ request('period', 'last_6_months') == 'last_6_months' ? 'selected' : '' }}>{{ __('admin.dashboard.last_6_months') }}</option>
+                    <option value="last_year" {{ request('period') == 'last_year' ? 'selected' : '' }}>{{ __('admin.dashboard.last_year') }}</option>
+                    <option value="custom" {{ request('period') == 'custom' ? 'selected' : '' }}>{{ __('admin.dashboard.custom_range') }}</option>
                 </select>
             </div>
 
             <!-- Custom Date Range -->
             <div x-show="customRange" x-collapse class="flex flex-wrap items-end gap-3">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Start Date</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('admin.dashboard.start_date') }}</label>
                     <input type="date" name="start_date" value="{{ request('start_date') }}"
                            class="px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">End Date</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('admin.dashboard.end_date') }}</label>
                     <input type="date" name="end_date" value="{{ request('end_date') }}"
                            class="px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all text-sm">
                 </div>
@@ -43,7 +43,7 @@
                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    Apply Filter
+                    {{ __('admin.dashboard.apply_filter') }}
                 </button>
             </div>
 
@@ -53,7 +53,7 @@
                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                Clear Filter
+                {{ __('admin.dashboard.clear_filter') }}
             </a>
             @endif
         </form>
@@ -85,12 +85,12 @@
                 </div>
             </div>
             <div>
-                <p class="text-sm text-gray-600 font-medium">Organizations</p>
+                <p class="text-sm text-gray-600 font-medium">{{ __('admin.dashboard.total_organizations') }}</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['total_organizations'] }}</p>
                 <div class="mt-3 flex items-center text-sm">
-                    <span class="text-green-600 font-medium">{{ $stats['active_organizations'] }} active</span>
+                    <span class="text-green-600 font-medium">{{ $stats['active_organizations'] }} {{ __('admin.dashboard.active') }}</span>
                     <span class="mx-2 text-gray-400">•</span>
-                    <span class="text-yellow-600 font-medium">{{ $stats['pending_organizations'] }} pending</span>
+                    <span class="text-yellow-600 font-medium">{{ $stats['pending_organizations'] }} {{ __('admin.dashboard.pending') }}</span>
                 </div>
             </div>
         </div>
@@ -105,9 +105,9 @@
                 </div>
             </div>
             <div>
-                <p class="text-sm text-gray-600 font-medium">Total Revenue</p>
+                <p class="text-sm text-gray-600 font-medium">{{ __('admin.dashboard.total_revenue') }}</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">€{{ number_format($stats['total_donations_amount'], 2) }}</p>
-                <p class="mt-3 text-sm text-gray-600">{{ number_format($stats['total_donations']) }} donations</p>
+                <p class="mt-3 text-sm text-gray-600">{{ number_format($stats['total_donations']) }} {{ __('admin.dashboard.donations') }}</p>
             </div>
         </div>
 
@@ -121,9 +121,9 @@
                 </div>
             </div>
             <div>
-                <p class="text-sm text-gray-600 font-medium">Active Campaigns</p>
+                <p class="text-sm text-gray-600 font-medium">{{ __('admin.dashboard.active_campaigns') }}</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['active_campaigns'] }}</p>
-                <p class="mt-3 text-sm text-gray-600">{{ $stats['total_campaigns'] }} total</p>
+                <p class="mt-3 text-sm text-gray-600">{{ $stats['total_campaigns'] }} {{ __('admin.dashboard.total') }}</p>
             </div>
         </div>
 
@@ -137,9 +137,9 @@
                 </div>
             </div>
             <div>
-                <p class="text-sm text-gray-600 font-medium">Devices Online</p>
+                <p class="text-sm text-gray-600 font-medium">{{ __('admin.dashboard.devices_online') }}</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $stats['online_devices'] }}</p>
-                <p class="mt-3 text-sm text-gray-600">{{ $stats['total_devices'] }} total devices</p>
+                <p class="mt-3 text-sm text-gray-600">{{ $stats['total_devices'] }} {{ __('admin.dashboard.total_devices_label') }}</p>
             </div>
         </div>
     </div>
@@ -149,12 +149,12 @@
         <!-- Donations Trend Chart -->
         <div class="bg-white rounded-2xl shadow-sm p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Donations Trend</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.dashboard.donations_trend') }}</h3>
                 <p class="text-sm text-gray-600 mt-1">
                     @if(request('period') == 'custom')
                         {{ \Carbon\Carbon::parse(request('start_date'))->format('M d, Y') }} - {{ \Carbon\Carbon::parse(request('end_date'))->format('M d, Y') }}
                     @else
-                        {{ ucwords(str_replace('_', ' ', request('period', 'Last 6 months'))) }} activity
+                        {{ ucwords(str_replace('_', ' ', request('period', 'Last 6 months'))) }} {{ __('admin.dashboard.activity') }}
                     @endif
                 </p>
             </div>
@@ -166,8 +166,8 @@
         <!-- Revenue by Organization -->
         <div class="bg-white rounded-2xl shadow-sm p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Revenue Distribution</h3>
-                <p class="text-sm text-gray-600 mt-1">Top performing organizations</p>
+                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.dashboard.revenue_distribution') }}</h3>
+                <p class="text-sm text-gray-600 mt-1">{{ __('admin.dashboard.top_organizations') }}</p>
             </div>
             <div style="height: 300px;">
                 <canvas id="revenueDistributionChart"></canvas>
@@ -185,11 +185,11 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Pending Approvals</h3>
-                            <p class="text-sm text-gray-600 mt-1">{{ $pendingOrganizations->count() }} organizations awaiting review</p>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.dashboard.pending_approvals') }}</h3>
+                            <p class="text-sm text-gray-600 mt-1">{{ $pendingOrganizations->count() }} {{ __('admin.dashboard.awaiting_review') }}</p>
                         </div>
                         <a href="{{ route('super-admin.organizations.index', ['status' => 'pending']) }}" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
-                            View all →
+                            {{ __('admin.dashboard.view_all') }} →
                         </a>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <a href="{{ route('super-admin.organizations.show', $org) }}" class="btn-primary ml-4 text-sm">
-                            Review
+                            {{ __('admin.dashboard.review') }}
                         </a>
                     </div>
                     @endforeach
@@ -218,17 +218,17 @@
             <!-- Recent Donations -->
             <div class="bg-white rounded-2xl shadow-sm shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Recent Donations</h3>
-                    <p class="text-sm text-gray-600 mt-1">Latest 10 successful transactions</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.dashboard.recent_donations') }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">{{ __('admin.dashboard.latest_transactions') }}</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Organization</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Campaign</th>
-                                <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.dashboard.organization') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.dashboard.campaign') }}</th>
+                                <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.dashboard.amount') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.dashboard.date') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -258,14 +258,14 @@
         <div class="space-y-6">
             <!-- Today's Activity -->
             <div class="bg-gradient-dayaa rounded-2xl p-6 text-white shadow-lg">
-                <h3 class="text-lg font-semibold mb-4">Today's Activity</h3>
+                <h3 class="text-lg font-semibold mb-4">{{ __('admin.dashboard.todays_activity') }}</h3>
                 <div class="space-y-4">
                     <div>
-                        <p class="text-sm opacity-90">Donations</p>
+                        <p class="text-sm opacity-90">{{ __('admin.dashboard.donations_today') }}</p>
                         <p class="text-3xl font-bold">{{ $stats['donations_today'] }}</p>
                     </div>
                     <div class="border-t border-white border-opacity-20 pt-4">
-                        <p class="text-sm opacity-90">Revenue</p>
+                        <p class="text-sm opacity-90">{{ __('admin.dashboard.revenue_today') }}</p>
                         <p class="text-3xl font-bold">€{{ number_format($stats['donations_today_amount'], 2) }}</p>
                     </div>
                 </div>
@@ -273,20 +273,20 @@
 
             <!-- Subscription Tiers -->
             <div class="bg-white rounded-2xl shadow-sm p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Subscriptions</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('admin.dashboard.subscriptions') }}</h3>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between py-2">
-                        <span class="text-sm text-gray-600">Active</span>
+                        <span class="text-sm text-gray-600">{{ __('admin.dashboard.active_subscriptions') }}</span>
                         <span class="text-sm font-semibold text-gray-900">{{ $stats['active_subscriptions'] }}</span>
                     </div>
                     <div class="flex items-center justify-between py-2 border-t border-gray-100">
-                        <span class="text-sm text-gray-600">Premium</span>
+                        <span class="text-sm text-gray-600">{{ __('admin.dashboard.premium_subscriptions') }}</span>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
                             {{ $stats['premium_subscriptions'] }}
                         </span>
                     </div>
                     <div class="flex items-center justify-between py-2 border-t border-gray-100">
-                        <span class="text-sm text-gray-600">Basic</span>
+                        <span class="text-sm text-gray-600">{{ __('admin.dashboard.basic_subscriptions') }}</span>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
                             {{ $stats['basic_subscriptions'] }}
                         </span>
@@ -296,22 +296,22 @@
 
             <!-- Quick Actions -->
             <div class="bg-white rounded-2xl shadow-sm p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('admin.dashboard.quick_actions') }}</h3>
                 <div class="space-y-2">
                     <a href="{{ route('super-admin.organizations.index') }}" class="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group shadow-sm hover:shadow">
-                        <span class="text-sm font-medium text-gray-700">All Organizations</span>
+                        <span class="text-sm font-medium text-gray-700">{{ __('admin.dashboard.all_organizations') }}</span>
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </a>
                     <a href="{{ route('super-admin.shop.products.index') }}" class="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group shadow-sm hover:shadow">
-                        <span class="text-sm font-medium text-gray-700">Shop Products</span>
+                        <span class="text-sm font-medium text-gray-700">{{ __('admin.dashboard.shop_products') }}</span>
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </a>
                     <a href="{{ route('super-admin.shop.orders.index') }}" class="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group shadow-sm hover:shadow">
-                        <span class="text-sm font-medium text-gray-700">Shop Orders</span>
+                        <span class="text-sm font-medium text-gray-700">{{ __('admin.dashboard.shop_orders') }}</span>
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>

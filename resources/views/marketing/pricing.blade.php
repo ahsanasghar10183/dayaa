@@ -1,7 +1,7 @@
 @extends('marketing.layouts.master')
 
-@section('title', 'Pricing - Dayaa Digital Donations')
-@section('meta_description', 'Flexible pricing plans for organizations of all sizes. Start with our free tier or choose a plan that fits your fundraising needs.')
+@section('title', __('marketing.pricing.title') . ' - Dayaa')
+@section('meta_description', __('marketing.pricing.page_subtitle'))
 
 @section('content')
 
@@ -10,9 +10,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 text-center">
-                <h1 class="wow fadeInUp" data-wow-delay=".3s">Pricing Plans</h1>
+                <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.pricing.title') }}</h1>
                 <p class="wow fadeInUp" data-wow-delay=".5s">
-                    Choose the perfect plan for your organization
+                    {{ __('marketing.pricing.page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -29,9 +29,9 @@
                     <div class="pp-pricing-card-item">
                         <div class="pp-pricing-header">
                             <h5>{{ $tier->name }}</h5>
-                            <h2>€{{ number_format($tier->price_monthly, 2) }}<span>/ Per Month</span></h2>
+                            <h2>€{{ number_format($tier->price_monthly, 2) }}<span>{{ __('marketing.pricing.per_month') }}</span></h2>
                             @if($tier->price_annually)
-                            <p class="text-muted small">Or €{{ number_format($tier->price_annually, 2) }}/year (save 17%)</p>
+                            <p class="text-muted small">{{ __('marketing.pricing.or') }} €{{ number_format($tier->price_annually, 2) }}/{{ __('marketing.pricing.year') }} ({{ __('marketing.pricing.save_17') }})</p>
                             @endif
                         </div>
                         @if($tier->features)
@@ -46,21 +46,21 @@
                         @endif
                         @if($tier->limits)
                         <div class="mt-3 mb-3">
-                            <h6>Plan Limits:</h6>
+                            <h6>{{ __('marketing.pricing.plan_limits') }}:</h6>
                             <ul class="pp-pricing-list">
                                 @if(isset($tier->limits['max_campaigns']))
                                 <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    Up to {{ $tier->limits['max_campaigns'] }} campaigns
+                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_campaigns'] }} {{ __('marketing.pricing.campaigns') }}
                                 </li>
                                 @endif
                                 @if(isset($tier->limits['max_devices']))
                                 <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    Up to {{ $tier->limits['max_devices'] }} devices
+                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_devices'] }} {{ __('marketing.pricing.devices') }}
                                 </li>
                                 @endif
                                 @if(isset($tier->limits['max_users']))
                                 <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    Up to {{ $tier->limits['max_users'] }} users
+                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_users'] }} {{ __('marketing.pricing.users') }}
                                 </li>
                                 @endif
                             </ul>
@@ -68,7 +68,7 @@
                         @endif
                     </div>
                     <div class="pricing-button">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">Get Started</a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">{{ __('marketing.pricing.get_started') }}</a>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                         </ul>
                     </div>
                     <div class="pricing-button">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">Get Started</a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">{{ __('marketing.pricing.get_started') }}</a>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                         </ul>
                     </div>
                     <div class="pricing-button">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">Get Started</a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">{{ __('marketing.pricing.get_started') }}</a>
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                         </ul>
                     </div>
                     <div class="pricing-button">
-                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn">Contact Sales</a>
+                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn">{{ __('marketing.pricing.contact_sales') }}</a>
                     </div>
                 </div>
             </div>
@@ -144,11 +144,11 @@
     <div class="container">
         <div class="pp-section-title text-center">
             <span class="pp-sub-title wow fadeInUp">
-                PRICING FAQ
+                {{ __('marketing.pricing.faq_subtitle') }}
                 <span class="pp-style-2"></span>
             </span>
             <h2 class="wow fadeInUp" data-wow-delay=".3s">
-               Common Questions
+               {{ __('marketing.pricing.faq_title') }}
             </h2>
          </div>
          <div class="row justify-content-center">
@@ -157,36 +157,36 @@
                      <div class="accordion-item mb-3">
                          <h3 class="accordion-header">
                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                 Can I change plans later?
+                                 {{ __('marketing.pricing.faq_1_q') }}
                              </button>
                          </h3>
                          <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
                              <div class="accordion-body">
-                                 Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate the charges.
+                                 {{ __('marketing.pricing.faq_1_a') }}
                              </div>
                          </div>
                      </div>
                      <div class="accordion-item mb-3">
                          <h3 class="accordion-header">
                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                 Are there any setup fees?
+                                 {{ __('marketing.pricing.faq_2_q') }}
                              </button>
                          </h3>
                          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
                              <div class="accordion-body">
-                                 No, there are no setup fees. You only pay the monthly or annual subscription fee for your chosen plan.
+                                 {{ __('marketing.pricing.faq_2_a') }}
                              </div>
                          </div>
                      </div>
                      <div class="accordion-item mb-3">
                          <h3 class="accordion-header">
                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                 What payment methods do you accept?
+                                 {{ __('marketing.pricing.faq_3_q') }}
                              </button>
                          </h3>
                          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
                              <div class="accordion-body">
-                                 We accept all major credit cards, SEPA direct debit, and bank transfers for annual plans.
+                                 {{ __('marketing.pricing.faq_3_a') }}
                              </div>
                          </div>
                      </div>
@@ -203,13 +203,13 @@
             <div class="col-lg-8 text-center">
                 <div class="pp-cta-content">
                     <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
-                        Ready to Get Started?
+                        {{ __('marketing.pricing.cta_title') }}
                     </h2>
                     <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
-                        Start your free trial today. No credit card required.
+                        {{ __('marketing.pricing.cta_text') }}
                     </p>
                     <div class="pp-cta-button mt-4">
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Start Free Trial <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.pricing.cta_button') }} <i class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>
             </div>

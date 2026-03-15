@@ -1398,7 +1398,7 @@ span {
 }
 
 .pp-offer-box-item {
-  padding: 40px 32px 64px 32px;
+  padding: 16px 16px 16px 16px;
   border-radius: 32px;
   border: 1.5px solid rgba(155, 154, 165, 0.24);
   background-color: var(--pp-white);
@@ -1417,16 +1417,18 @@ span {
 .pp-offer-box-item .pp-offer-icon img {
   transition: all 0.4s ease-in-out;
   display: inline-block;
+  border-radius: 24px;
 }
 .pp-offer-box-item .pp-offer-content p {
   max-width: 355px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 .pp-offer-box-item:hover {
   border: 1px solid var(--pp-theme);
 }
 .pp-offer-box-item:hover .pp-offer-icon img {
   transform: scaleX(-1) !important;
+  border-radius: 24px !important;
 }
 
 .pp-how-work-items {

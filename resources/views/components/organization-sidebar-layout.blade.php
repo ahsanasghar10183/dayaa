@@ -82,7 +82,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Dashboard</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.dashboard') }}</span>
                         </a>
 
                         <!-- Profile -->
@@ -91,7 +91,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Profile</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.profile') }}</span>
                         </a>
 
                         <!-- Campaigns -->
@@ -100,7 +100,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Campaigns</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.campaigns') }}</span>
                         </a>
 
                         <!-- Devices -->
@@ -109,7 +109,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Devices</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.devices') }}</span>
                         </a>
 
                         <!-- Donations -->
@@ -118,7 +118,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Donations</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.donations') }}</span>
                         </a>
 
                         <!-- Reports -->
@@ -127,7 +127,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Reports</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.reports') }}</span>
                         </a>
 
                         <!-- Billing -->
@@ -136,7 +136,7 @@
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Billing</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.billing') }}</span>
                         </a>
                     </nav>
 
@@ -166,13 +166,13 @@
                                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
-                                    User Settings
+                                    {{ __('auth.user_settings') }}
                                 </a>
                                 <a href="{{ route('organization.profile.show') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
-                                    Organization Profile
+                                    {{ __('admin.organization.profile') }}
                                 </a>
                                 <div class="border-t border-gray-100 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -181,7 +181,7 @@
                                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                         </svg>
-                                        Sign Out
+                                        {{ __('auth.sign_out') }}
                                     </button>
                                 </form>
                             </div>
@@ -212,6 +212,24 @@
 
                         <!-- Right Side Actions -->
                         <div class="flex items-center space-x-3">
+                            <!-- Language Toggle -->
+                            <div x-data="{ langOpen: false }" class="relative">
+                                <button @click="langOpen = !langOpen" class="flex items-center space-x-2 p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                                    </svg>
+                                    <span class="text-sm font-medium">{{ strtoupper(app()->getLocale()) }}</span>
+                                </button>
+                                <div x-show="langOpen" @click.away="langOpen = false" x-cloak class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
+                                    <a href="{{ route('language.switch', 'de') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'de' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                        🇩🇪 Deutsch
+                                    </a>
+                                    <a href="{{ route('language.switch', 'en') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'en' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                        🇬🇧 English
+                                    </a>
+                                </div>
+                            </div>
+
                             <!-- Notifications -->
                             <button class="p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all relative hover:shadow-sm">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

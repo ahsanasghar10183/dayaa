@@ -33,6 +33,11 @@ class ProductImage extends Model
      */
     public function getUrlAttribute(): string
     {
+        // Check if the image_path is an external URL (http/https)
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
+        // Otherwise, treat as local storage path
         return asset('storage/' . $this->image_path);
     }
 

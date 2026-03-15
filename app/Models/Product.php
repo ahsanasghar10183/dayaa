@@ -112,6 +112,14 @@ class Product extends Model
     }
 
     /**
+     * Get is_in_stock attribute (accessor for views)
+     */
+    public function getIsInStockAttribute(): bool
+    {
+        return $this->isInStock();
+    }
+
+    /**
      * Check if product is on sale
      */
     public function isOnSale(): bool
@@ -167,6 +175,11 @@ class Product extends Model
         $primaryImage = $this->primaryImage;
 
         if ($primaryImage) {
+            // Check if the image_path is an external URL (http/https)
+            if (filter_var($primaryImage->image_path, FILTER_VALIDATE_URL)) {
+                return $primaryImage->image_path;
+            }
+            // Otherwise, treat as local storage path
             return asset('storage/' . $primaryImage->image_path);
         }
 

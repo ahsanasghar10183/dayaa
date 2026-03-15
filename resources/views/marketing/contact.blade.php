@@ -1,7 +1,7 @@
 @extends('marketing.layouts.master')
 
-@section('title', 'Contact Us - Dayaa Digital Donations')
-@section('meta_description', 'Get in touch with Dayaa. Contact our team for support, demos, or questions about our digital donation platform.')
+@section('title', __('marketing.contact.title') . ' - Dayaa')
+@section('meta_description', __('marketing.contact.page_subtitle'))
 
 @section('content')
 
@@ -10,9 +10,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 text-center">
-                <h1 class="wow fadeInUp" data-wow-delay=".3s">Contact Us</h1>
+                <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.contact.title') }}</h1>
                 <p class="wow fadeInUp" data-wow-delay=".5s">
-                    We're here to help. Get in touch with our team.
+                    {{ __('marketing.contact.page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -29,10 +29,10 @@
                         <i class="fa-solid fa-envelope" style="font-size: 48px; color: #0F69F3;"></i>
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Email Us</h3>
-                        <p class="mb-2">For general inquiries:</p>
+                        <h3>{{ __('marketing.contact.email_us') }}</h3>
+                        <p class="mb-2">{{ __('marketing.contact.email_general') }}</p>
                         <a href="mailto:info@dayaatech.de" class="d-block mb-2">info@dayaatech.de</a>
-                        <p class="mb-2">For support:</p>
+                        <p class="mb-2">{{ __('marketing.contact.email_support_label') }}</p>
                         <a href="mailto:support@dayaatech.de" class="d-block">support@dayaatech.de</a>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
                         <i class="fa-solid fa-phone" style="font-size: 48px; color: #0F69F3;"></i>
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Call Us</h3>
-                        <p class="mb-2">Monday - Friday<br>09:00 - 17:00 CET</p>
+                        <h3>{{ __('marketing.contact.call_us') }}</h3>
+                        <p class="mb-2">{!! __('marketing.contact.hours') !!}</p>
                         <a href="tel:+491234567890" class="d-block h4">+49 123 456 7890</a>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <i class="fa-solid fa-map-marker-alt" style="font-size: 48px; color: #0F69F3;"></i>
                     </div>
                     <div class="pp-offer-content">
-                        <h3>Visit Us</h3>
+                        <h3>{{ __('marketing.contact.visit_us') }}</h3>
                         <p class="mb-0">Dayaa Technologies GmbH<br>
                         Berliner Straße 123<br>
                         10115 Berlin<br>
@@ -73,8 +73,8 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="pp-section-title text-center">
-                    <span class="pp-sub-title wow fadeInUp">GET IN TOUCH</span>
-                    <h2 class="wow fadeInUp" data-wow-delay=".3s">Send Us a Message</h2>
+                    <span class="pp-sub-title wow fadeInUp">{{ __('marketing.contact.get_in_touch') }}</span>
+                    <h2 class="wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.contact.send_message_title') }}</h2>
                 </div>
 
                 @if(session('success'))
@@ -94,7 +94,7 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="form-label">Your Name *</label>
+                                <label for="name" class="form-label">{{ __('marketing.contact.name') }} {{ __('marketing.contact.required') }}</label>
                                 <input type="text"
                                        class="form-control @error('name') is-invalid @enderror"
                                        id="name"
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email" class="form-label">Your Email *</label>
+                                <label for="email" class="form-label">{{ __('marketing.contact.email') }} {{ __('marketing.contact.required') }}</label>
                                 <input type="email"
                                        class="form-control @error('email') is-invalid @enderror"
                                        id="email"
@@ -122,7 +122,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone" class="form-label">Phone Number</label>
+                                <label for="phone" class="form-label">{{ __('marketing.contact.phone') }}</label>
                                 <input type="tel"
                                        class="form-control @error('phone') is-invalid @enderror"
                                        id="phone"
@@ -135,7 +135,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="subject" class="form-label">Subject *</label>
+                                <label for="subject" class="form-label">{{ __('marketing.contact.subject') }} {{ __('marketing.contact.required') }}</label>
                                 <input type="text"
                                        class="form-control @error('subject') is-invalid @enderror"
                                        id="subject"
@@ -149,7 +149,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="message" class="form-label">Your Message *</label>
+                                <label for="message" class="form-label">{{ __('marketing.contact.message') }} {{ __('marketing.contact.required') }}</label>
                                 <textarea class="form-control @error('message') is-invalid @enderror"
                                           id="message"
                                           name="message"
@@ -162,7 +162,7 @@
                         </div>
                         <div class="col-12 text-center">
                             <button type="submit" class="pp-theme-btn">
-                                Send Message <i class="fa-solid fa-arrow-right-long"></i>
+                                {{ __('marketing.contact.send') }} <i class="fa-solid fa-arrow-right-long"></i>
                             </button>
                         </div>
                     </div>

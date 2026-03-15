@@ -18,8 +18,8 @@
                 @endif
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{{ route('marketing.home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('marketing.shop.index') }}">Shop</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('marketing.home') }}">{{ __('marketing.shop.home') }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('marketing.shop.index') }}">{{ __('marketing.shop.title') }}</a></li>
                         <li class="breadcrumb-item active">{{ $category->name }}</li>
                     </ol>
                 </nav>
@@ -35,11 +35,11 @@
             <!-- Sidebar -->
             <div class="col-lg-3 mb-4">
                 <div class="shop-sidebar">
-                    <h4 class="mb-3">Categories</h4>
+                    <h4 class="mb-3">{{ __('marketing.shop.categories') }}</h4>
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <a href="{{ route('marketing.shop.index') }}" class="text-decoration-none">
-                                All Products
+                                {{ __('marketing.shop.all_products') }}
                             </a>
                         </li>
                         @foreach($categories as $cat)
@@ -59,11 +59,11 @@
                 <div class="row mb-4">
                     <div class="col-md-6 ms-auto">
                         <form action="{{ route('marketing.shop.category', $category->slug) }}" method="GET">
-                            <select name="sort" class="form-select" onchange="this.form.submit()">
-                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                                <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                                <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
-                                <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name A-Z</option>
+                            <select name="sort" class="shop-sort-select form-select" onchange="this.form.submit()">
+                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('marketing.shop.newest_first') }}</option>
+                                <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>{{ __('marketing.shop.price_low_high') }}</option>
+                                <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>{{ __('marketing.shop.price_high_low') }}</option>
+                                <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>{{ __('marketing.shop.name_az') }}</option>
                             </select>
                         </form>
                     </div>
@@ -90,13 +90,13 @@
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <span class="h5 mb-0 text-primary">{{ $product->formatted_price }}</span>
                                     @if($product->is_in_stock)
-                                        <span class="badge bg-success">In Stock</span>
+                                        <span class="badge bg-success">{{ __('marketing.shop.in_stock') }}</span>
                                     @else
-                                        <span class="badge bg-danger">Out of Stock</span>
+                                        <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
                                     @endif
                                 </div>
                                 <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn mt-3 w-100 text-center">
-                                    View Details
+                                    {{ __('marketing.shop.view_details') }}
                                 </a>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                 </div>
                 @else
                 <div class="alert alert-info">
-                    No products found in this category.
+                    {{ __('marketing.shop.no_products_category') }}
                 </div>
                 @endif
             </div>
@@ -125,14 +125,14 @@
             <div class="col-lg-8 text-center">
                 <div class="pp-cta-content">
                     <h2 class="wow fadeInUp mb-4" data-wow-delay=".3s" style="line-height: 1.4;">
-                        Need Help Choosing the Right Device?
+                        {{ __('marketing.shop.need_help_title') }}
                     </h2>
                     <p class="wow fadeInUp mb-4" data-wow-delay=".5s" style="line-height: 1.8; font-size: 17px;">
-                        Our team can help you select the perfect donation devices for your organization's needs. Get expert advice and personalized recommendations.
+                        {{ __('marketing.shop.need_help_text') }}
                     </p>
                     <div class="pp-cta-button mt-4">
-                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">Contact Our Team <i class="fa-solid fa-arrow-right-long"></i></a>
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">Start Free Trial <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.contact') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.shop.contact_team') }} <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">{{ __('marketing.shop.start_trial') }} <i class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>
             </div>
@@ -144,10 +144,63 @@
 
 @push('styles')
 <style>
-.shop-sidebar a:hover {
-    color: #0F69F3 !important;
+/* Sidebar Styling */
+.shop-sidebar {
+    background: linear-gradient(135deg, rgba(15, 105, 243, 0.05) 0%, rgba(23, 10, 181, 0.05) 100%);
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid rgba(15, 105, 243, 0.1);
 }
 
+.shop-sidebar h4 {
+    color: #170AB5;
+    font-weight: 600;
+    border-bottom: 2px solid #0F69F3;
+    padding-bottom: 10px;
+}
+
+.shop-sidebar a {
+    color: #333;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    display: block;
+    border-radius: 6px;
+}
+
+.shop-sidebar a:hover {
+    color: #0F69F3 !important;
+    background: rgba(15, 105, 243, 0.08);
+    padding-left: 20px;
+}
+
+.shop-sidebar a.fw-bold {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
+    color: white !important;
+    font-weight: 600;
+}
+
+/* Sort Dropdown Styling */
+.shop-sort-select {
+    border: 2px solid rgba(15, 105, 243, 0.2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    background: white;
+    cursor: pointer;
+}
+
+.shop-sort-select:focus {
+    border-color: #0F69F3;
+    box-shadow: 0 0 0 0.2rem rgba(15, 105, 243, 0.15);
+    outline: none;
+}
+
+.shop-sort-select option {
+    padding: 10px;
+}
+
+/* Product Image Hover Effect */
 .product-image img {
     transition: transform 0.3s ease;
 }
@@ -156,8 +209,23 @@
     transform: scale(1.05);
 }
 
+/* Breadcrumb Styling */
 .breadcrumb {
     background-color: transparent;
+}
+
+.breadcrumb a {
+    color: #0F69F3;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: #170AB5;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #666;
 }
 </style>
 @endpush

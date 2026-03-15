@@ -1,7 +1,7 @@
 @extends('marketing.layouts.master')
 
-@section('title', 'Shopping Cart - Dayaa Shop')
-@section('meta_description', 'Review your cart and proceed to checkout for Dayaa donation devices and equipment.')
+@section('title', __('marketing.cart.title') . ' - Dayaa')
+@section('meta_description', __('marketing.cart.page_subtitle'))
 
 @section('content')
 
@@ -10,9 +10,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 text-center">
-                <h1 class="wow fadeInUp" data-wow-delay=".3s">Shopping Cart</h1>
+                <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.cart.title') }}</h1>
                 <p class="wow fadeInUp" data-wow-delay=".5s">
-                    Review your items before checkout
+                    {{ __('marketing.cart.page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -43,10 +43,10 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                                <th>{{ __('marketing.cart.product') }}</th>
+                                <th>{{ __('marketing.cart.price') }}</th>
+                                <th>{{ __('marketing.cart.quantity') }}</th>
+                                <th>{{ __('marketing.cart.total') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -82,7 +82,7 @@
                                     <form action="{{ route('marketing.cart.remove', $item->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove this item from cart?')">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{{ __('marketing.cart.remove_confirm') }}')">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
@@ -95,13 +95,13 @@
 
                 <div class="d-flex justify-content-between mt-3">
                     <a href="{{ route('marketing.shop.index') }}" class="pp-theme-btn pp-style-2">
-                        <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+                        <i class="fa-solid fa-arrow-left"></i> {{ __('marketing.cart.continue_shopping') }}
                     </a>
                     <form action="{{ route('marketing.cart.clear') }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Clear entire cart?')">
-                            <i class="fa-solid fa-trash"></i> Clear Cart
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('{{ __('marketing.cart.clear_confirm') }}')">
+                            <i class="fa-solid fa-trash"></i> {{ __('marketing.cart.clear_cart') }}
                         </button>
                     </form>
                 </div>
@@ -110,22 +110,22 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Order Summary</h4>
+                        <h4 class="mb-0">{{ __('marketing.cart.order_summary') }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Subtotal:</span>
+                            <span>{{ __('marketing.cart.subtotal') }}:</span>
                             <strong>€{{ number_format($subtotal, 2) }}</strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Tax (19%):</span>
+                            <span>{{ __('marketing.cart.tax_percentage') }}:</span>
                             <strong>€{{ number_format($tax, 2) }}</strong>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
-                            <span>Shipping:</span>
+                            <span>{{ __('marketing.cart.shipping') }}:</span>
                             <strong>
                                 @if($shipping == 0)
-                                <span class="text-success">FREE</span>
+                                <span class="text-success">{{ __('marketing.cart.free') }}</span>
                                 @else
                                 €{{ number_format($shipping, 2) }}
                                 @endif
@@ -133,26 +133,26 @@
                         </div>
                         @if($subtotal < 100 && $subtotal > 0)
                         <div class="alert alert-info small">
-                            Add €{{ number_format(100 - $subtotal, 2) }} more for free shipping!
+                            {{ __('marketing.cart.free_shipping_threshold', ['amount' => number_format(100 - $subtotal, 2)]) }}
                         </div>
                         @endif
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
-                            <h5>Total:</h5>
+                            <h5>{{ __('marketing.cart.grand_total') }}:</h5>
                             <h5 class="text-primary">€{{ number_format($total, 2) }}</h5>
                         </div>
                         <a href="{{ route('marketing.checkout.index') }}" class="pp-theme-btn w-100 text-center">
-                            Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+                            {{ __('marketing.cart.proceed_checkout') }} <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
 
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h6 class="mb-3"><i class="fa-solid fa-shield-alt text-primary"></i> Secure Checkout</h6>
-                        <p class="small mb-2"><i class="fa-solid fa-check text-success"></i> SSL Encrypted Payment</p>
-                        <p class="small mb-2"><i class="fa-solid fa-check text-success"></i> 2-Year Warranty</p>
-                        <p class="small mb-0"><i class="fa-solid fa-check text-success"></i> 30-Day Returns</p>
+                        <h6 class="mb-3"><i class="fa-solid fa-shield-alt text-primary"></i> {{ __('marketing.cart.secure_checkout') }}</h6>
+                        <p class="small mb-2"><i class="fa-solid fa-check text-success"></i> {{ __('marketing.cart.ssl_encrypted') }}</p>
+                        <p class="small mb-2"><i class="fa-solid fa-check text-success"></i> {{ __('marketing.cart.warranty_included') }}</p>
+                        <p class="small mb-0"><i class="fa-solid fa-check text-success"></i> {{ __('marketing.cart.returns') }}</p>
                     </div>
                 </div>
             </div>
@@ -162,10 +162,10 @@
             <div class="col-lg-6 text-center">
                 <div class="empty-cart py-5">
                     <i class="fa-solid fa-shopping-cart" style="font-size: 80px; color: #ddd;"></i>
-                    <h3 class="mt-4 mb-3">Your cart is empty</h3>
-                    <p class="text-muted mb-4">Start shopping to add items to your cart.</p>
+                    <h3 class="mt-4 mb-3">{{ __('marketing.cart.empty_cart') }}</h3>
+                    <p class="text-muted mb-4">{{ __('marketing.cart.empty_cart_text') }}</p>
                     <a href="{{ route('marketing.shop.index') }}" class="pp-theme-btn">
-                        Browse Products <i class="fa-solid fa-arrow-right"></i>
+                        {{ __('marketing.cart.browse_products') }} <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -173,5 +173,8 @@
         @endif
     </div>
 </section>
+
+<!-- Shop Trust Section -->
+<x-shop-trust-section />
 
 @endsection

@@ -102,7 +102,7 @@
                         </p>
                         <div class="mobile-menu fix mb-3"></div>
                         <div class="offcanvas__contact">
-                            <h4>Contact Info</h4>
+                            <h4>{{ __('marketing.footer.contact_info') }}</h4>
                             <ul>
                                 <li class="d-flex align-items-center">
                                     <div class="offcanvas__contact-icon">
@@ -175,37 +175,52 @@
                                 <nav id="mobile-menu">
                                     <ul>
                                         <li class="{{ request()->routeIs('marketing.home') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.home') }}">Home</a>
+                                            <a href="{{ route('marketing.home') }}">{{ __('marketing.nav.home') }}</a>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.about') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.about') }}">About Us</a>
+                                            <a href="{{ route('marketing.about') }}">{{ __('marketing.nav.about') }}</a>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.features') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.features') }}">Features</a>
+                                            <a href="{{ route('marketing.features') }}">{{ __('marketing.nav.features') }}</a>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.shop.*') ? 'active' : '' }} has-dropdown">
-                                            <a href="{{ route('marketing.shop.index') }}">Shop</a>
+                                            <a href="{{ route('marketing.shop.index') }}">{{ __('marketing.nav.shop') }}</a>
                                             <ul class="submenu">
-                                                <li><a href="{{ route('marketing.shop.index') }}">All Products</a></li>
-                                                <li><a href="{{ route('marketing.cart.index') }}">Shopping Cart</a></li>
+                                                <li><a href="{{ route('marketing.shop.index') }}">{{ __('marketing.shop.all_products') }}</a></li>
+                                                <li><a href="{{ route('marketing.cart.index') }}">{{ __('marketing.cart.title') }}</a></li>
                                             </ul>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.pricing') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.pricing') }}">Pricing</a>
+                                            <a href="{{ route('marketing.pricing') }}">{{ __('marketing.nav.pricing') }}</a>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.faq') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.faq') }}">FAQ</a>
+                                            <a href="{{ route('marketing.faq') }}">{{ __('marketing.nav.faq') }}</a>
                                         </li>
                                         <li class="{{ request()->routeIs('marketing.contact') ? 'active' : '' }}">
-                                            <a href="{{ route('marketing.contact') }}">Contact Us</a>
+                                            <a href="{{ route('marketing.contact') }}">{{ __('marketing.nav.contact') }}</a>
                                         </li>
                                     </ul>
                                 </nav>
                             </div>
                         </div>
-                        <div class="header-right d-flex justify-content-end align-items-center">
+                        <div class="header-right d-flex justify-content-end align-items-center gap-3">
+                            <!-- Language Switcher -->
+                            <div class="language-switcher">
+                                <x-language-switcher type="simple" />
+                            </div>
+
+                            <!-- Cart Icon with Badge -->
+                            <div class="cart-icon-wrapper position-relative" id="cartIconWrapper" style="display: none;">
+                                <a href="{{ route('marketing.cart.index') }}" class="cart-icon-link">
+                                    <i class="fa-solid fa-shopping-cart" style="font-size: 20px; color: #0F69F3;"></i>
+                                    <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge">
+                                        0
+                                    </span>
+                                </a>
+                            </div>
+
                             <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">
-                                Get Started <i class="fa-solid fa-arrow-right-long"></i>
+                                {{ __('marketing.nav.get_started') }} <i class="fa-solid fa-arrow-right-long"></i>
                             </a>
                             <div class="header__hamburger d-xl-none my-auto">
                                 <div class="sidebar__toggle">
@@ -236,12 +251,12 @@
                             <div class="pp-footer-widget-items">
                                 <div class="pp-widget-head">
                                     <a href="{{ route('marketing.home') }}" class="pp-footer-logo">
-                                        <img src="{{ asset('marketing/assets/img/logo/dayaa-logo-transparent.png') }}" alt="Dayaa Logo" style="max-height: 50px;">
+                                        <img src="{{ asset('marketing/assets/img/logo/dayaa-logo-transparent.png') }}" alt="Dayaa Logo" style="max-height: 250px;">
                                     </a>
                                 </div>
                                 <div class="pp-footer-content">
                                     <p>
-                                        Empowering organizations with innovative digital donation solutions. Join thousands of nonprofits transforming their fundraising.
+                                        {{ __('marketing.footer.tagline') }}
                                     </p>
                                     <div class="social-icon d-flex align-items-center">
                                         <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -255,23 +270,23 @@
                         <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6 ps-lg-5 wow fadeInUp" data-wow-delay=".4s">
                             <div class="pp-footer-widget-items">
                                 <div class="pp-widget-head">
-                                    <h3>Quick Links</h3>
+                                    <h3>{{ __('marketing.footer.quick_links') }}</h3>
                                 </div>
                                 <ul class="pp-list-area">
                                     <li>
-                                        <a href="{{ route('marketing.home') }}">Home</a>
+                                        <a href="{{ route('marketing.home') }}">{{ __('marketing.footer.home') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.about') }}">About Us</a>
+                                        <a href="{{ route('marketing.about') }}">{{ __('marketing.footer.about') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.features') }}">Features</a>
+                                        <a href="{{ route('marketing.features') }}">{{ __('marketing.footer.features') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.pricing') }}">Pricing</a>
+                                        <a href="{{ route('marketing.pricing') }}">{{ __('marketing.footer.pricing') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.shop.index') }}">Shop</a>
+                                        <a href="{{ route('marketing.shop.index') }}">{{ __('marketing.footer.shop') }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -279,23 +294,23 @@
                         <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6 ps-lg-5 wow fadeInUp" data-wow-delay=".6s">
                             <div class="pp-footer-widget-items">
                                 <div class="pp-widget-head">
-                                    <h3>Resources</h3>
+                                    <h3>{{ __('marketing.footer.resources') }}</h3>
                                 </div>
                                 <ul class="pp-list-area">
                                     <li>
-                                        <a href="{{ route('marketing.faq') }}">FAQ</a>
+                                        <a href="{{ route('marketing.faq') }}">{{ __('marketing.footer.faq') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.contact') }}">Support</a>
+                                        <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.support') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.contact') }}">Documentation</a>
+                                        <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.documentation') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.contact') }}">Contact Us</a>
+                                        <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.contact_us') }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('marketing.get-started') }}">Get Started</a>
+                                        <a href="{{ route('marketing.get-started') }}">{{ __('marketing.footer.get_started') }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -303,7 +318,7 @@
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ps-lg-2 wow fadeInUp" data-wow-delay=".8s">
                             <div class="pp-footer-widget-items">
                                 <div class="pp-widget-head">
-                                    <h3>Ready to Get Started?</h3>
+                                    <h3>{{ __('marketing.footer.ready_to_start') }}</h3>
                                 </div>
                                 <div class="pp-contact-info">
                                     <div class="pp-icon">
@@ -334,16 +349,16 @@
             <div class="footer-bottom3">
                 <div class="container">
                     <div class="pp-footer-bottom-wrapper">
-                        <p class="wow fadeInUp" data-wow-delay=".3s">Copyright &copy; {{ date('Y') }} <b>Dayaa</b>. All rights reserved.</p>
+                        <p class="wow fadeInUp" data-wow-delay=".3s">Copyright &copy; {{ date('Y') }} <b>Dayaa</b>. {{ __('marketing.footer.rights') }}</p>
                         <ul class="pp-footer-list wow fadeInUp" data-wow-delay=".5s">
                             <li>
-                                <a href="{{ route('marketing.contact') }}">Terms & Conditions</a>
+                                <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.terms_conditions') }}</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.contact') }}">Privacy Policy</a>
+                                <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.privacy') }}</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.contact') }}">Contact Us</a>
+                                <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.contact_us') }}</a>
                             </li>
                         </ul>
                     </div>
@@ -373,6 +388,31 @@
         <script src="{{ asset('marketing/assets/js/wow.min.js') }}"></script>
         <!--<< Main.js >>-->
         <script src="{{ asset('marketing/assets/js/main.js') }}"></script>
+
+        <!-- Cart Count Update Script -->
+        <script>
+        function updateCartCount() {
+            fetch('{{ route("marketing.cart.count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const cartWrapper = document.getElementById('cartIconWrapper');
+                    const cartBadge = document.getElementById('cartBadge');
+
+                    if (data.count > 0) {
+                        cartWrapper.style.display = 'block';
+                        cartBadge.textContent = data.count;
+                    } else {
+                        cartWrapper.style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error fetching cart count:', error));
+        }
+
+        // Update cart count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+        </script>
 
         @stack('scripts')
     </body>

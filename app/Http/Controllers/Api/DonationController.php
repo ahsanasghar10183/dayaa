@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DonationReceipt;
 use App\Models\Campaign;
 use App\Models\Donation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -194,5 +196,63 @@ class DonationController extends Controller
                 'updated_at' => $donation->updated_at->toIso8601String(),
             ]
         ]);
+    }
+
+    /**
+     * Send donation receipt via email
+     */
+    public function sendReceipt(Request $request, $id): JsonResponse
+    {
+        $device = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $donation = Donation::with(['campaign', 'organization'])
+            ->where('id', $id)
+            ->where('device_id', $device->id)
+            ->where('payment_status', 'completed')
+            ->first();
+
+        if (!$donation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Donation not found, does not belong to this device, or is not completed'
+            ], 404);
+        }
+
+        try {
+            // Send the receipt email
+            Mail::to($request->email)->send(new DonationReceipt($donation));
+
+            // Update donation with email if not already set
+            if (!$donation->donor_email) {
+                $donation->update(['donor_email' => $request->email]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Receipt sent successfully',
+                'data' => [
+                    'email' => $request->email,
+                    'receipt_number' => $donation->receipt_number,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send receipt',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
