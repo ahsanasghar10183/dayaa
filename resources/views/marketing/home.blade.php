@@ -75,6 +75,45 @@
     </div>
 </div>
 
+<!-- Featured Donation Devices Section -->
+@if($featuredProducts->isNotEmpty())
+<section class="pp-product-showcase section-padding fix section-bg">
+    <div class="container">
+        <div class="pp-section-title text-center">
+            <span class="pp-sub-title wow fadeInUp">
+                {{ __('marketing.home.shop_subtitle') }}
+                <span class="pp-style-2"></span>
+            </span>
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">
+               {{ __('marketing.home.shop_title') }}
+            </h2>
+         </div>
+        <div class="row">
+            @foreach($featuredProducts as $index => $product)
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.2) }}s">
+                <div class="pp-device-card">
+                    <div class="pp-device-image-wrapper">
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                    </div>
+                    <div class="pp-device-content">
+                        <h3>{{ $product->name }}</h3>
+                        <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn">
+                            {{ __('marketing.home.shop_view_details') }} <i class="fa-solid fa-arrow-right-long"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ route('marketing.shop.index') }}" class="pp-theme-btn pp-style-2 wow fadeInUp" data-wow-delay=".5s">
+                {{ __('marketing.home.shop_view_all') }} <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Pp-About Section Start -->
 <section class="pp-about-section section-padding fix">
     <div class="container">
@@ -336,46 +375,6 @@
         </div>
     </div>
 </section>
-
-<!-- Featured Products Section -->
-@if($featuredProducts->isNotEmpty())
-<section class="pp-offer-section section-padding fix section-bg">
-    <div class="container">
-        <div class="pp-section-title text-center">
-            <span class="pp-sub-title wow fadeInUp">
-                {{ __('marketing.home.shop_subtitle') }}
-                <span class="pp-style-2"></span>
-            </span>
-            <h2 class="wow fadeInUp" data-wow-delay=".3s">
-               {{ __('marketing.home.shop_title') }}
-            </h2>
-         </div>
-        <div class="row">
-            @foreach($featuredProducts as $index => $product)
-            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.2) }}s">
-                <div class="pp-offer-box-item h-100">
-                    <div class="pp-offer-content">
-                        <h3>{{ $product->name }}</h3>
-                        <p>{{ Str::limit($product->description, 100) }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="h4 mb-0 text-primary">{{ $product->formatted_price }}</span>
-                            <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn">
-                                {{ __('marketing.home.shop_view_details') }} <i class="fa-solid fa-arrow-right-long"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('marketing.shop.index') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".5s">
-                {{ __('marketing.home.shop_view_all') }} <i class="fa-solid fa-arrow-right-long"></i>
-            </a>
-        </div>
-    </div>
-</section>
-@endif
 
 <!-- Pp-testimonial Section Start -->
 <section class="pp-testimonial-section section-padding fix">
