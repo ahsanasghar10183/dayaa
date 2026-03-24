@@ -25,8 +25,8 @@
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
-                    <div class="pp-offer-icon">
-                        <i class="fa-solid fa-envelope" style="font-size: 48px; color: #0F69F3;"></i>
+                    <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-envelope" style="font-size: 40px; color: #ffffff;"></i>
                     </div>
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.email_us') }}</h3>
@@ -39,8 +39,8 @@
             </div>
             <div class="col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
-                    <div class="pp-offer-icon">
-                        <i class="fa-solid fa-phone" style="font-size: 48px; color: #0F69F3;"></i>
+                    <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-phone" style="font-size: 40px; color: #ffffff;"></i>
                     </div>
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.call_us') }}</h3>
@@ -51,8 +51,8 @@
             </div>
             <div class="col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
-                    <div class="pp-offer-icon">
-                        <i class="fa-solid fa-map-marker-alt" style="font-size: 48px; color: #0F69F3;"></i>
+                    <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-map-marker-alt" style="font-size: 40px; color: #ffffff;"></i>
                     </div>
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.visit_us') }}</h3>
@@ -68,7 +68,7 @@
 </section>
 
 <!-- Contact Form -->
-<section class="section-padding fix section-bg">
+<section class="section-padding fix section-bg" style="margin-bottom: 120px;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">

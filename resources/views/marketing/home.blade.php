@@ -88,17 +88,32 @@
                {{ __('marketing.home.shop_title') }}
             </h2>
          </div>
-        <div class="row">
+        <div class="row g-4">
             @foreach($featuredProducts as $index => $product)
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.2) }}s">
-                <div class="pp-device-card">
-                    <div class="pp-device-image-wrapper">
-                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                <div class="pp-offer-box-item d-flex flex-column">
+                    <div class="product-image mb-3" style="height: 300px; overflow: hidden;">
+                        <a href="{{ route('marketing.shop.product', $product->slug) }}">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
+                        </a>
                     </div>
-                    <div class="pp-device-content">
-                        <h3>{{ $product->name }}</h3>
-                        <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn">
-                            {{ __('marketing.home.shop_view_details') }} <i class="fa-solid fa-arrow-right-long"></i>
+                    <div class="pp-offer-content flex-grow-1 d-flex flex-column">
+                        <h4>
+                            <a href="{{ route('marketing.shop.product', $product->slug) }}" class="text-decoration-none">
+                                {{ $product->name }}
+                            </a>
+                        </h4>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 text-primary">{{ $product->formatted_price }}</span>
+                            @if($product->is_in_stock)
+                                <span class="badge bg-success">{{ __('marketing.shop.in_stock') }}</span>
+                            @else
+                                <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
+                            @endif
+                        </div>
+                        <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn mt-3 w-100 text-center">
+                            {{ __('marketing.home.shop_view_details') }}
                         </a>
                     </div>
                 </div>
@@ -471,3 +486,16 @@
 </section>
 
 @endsection
+
+@push('styles')
+<style>
+/* Product Image Hover Effect */
+.product-image img {
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover img {
+    transform: scale(1.05);
+}
+</style>
+@endpush

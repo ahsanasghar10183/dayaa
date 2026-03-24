@@ -179,12 +179,12 @@ class Product extends Model
             if (filter_var($primaryImage->image_path, FILTER_VALIDATE_URL)) {
                 return $primaryImage->image_path;
             }
-            // Otherwise, treat as local storage path
-            return asset('storage/' . $primaryImage->image_path);
+            // Otherwise, treat as local storage path - use relative path with leading slash
+            return '/' . 'storage/' . $primaryImage->image_path;
         }
 
         // Return placeholder if no image
-        return asset('marketing/assets/img/placeholder-product.svg');
+        return '/' . 'marketing/assets/img/placeholder-product.svg';
     }
 
     /**

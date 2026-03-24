@@ -37,8 +37,8 @@ class ProductImage extends Model
         if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
             return $this->image_path;
         }
-        // Otherwise, treat as local storage path
-        return asset('storage/' . $this->image_path);
+        // Otherwise, treat as local storage path - use relative path with leading slash
+        return '/' . 'storage/' . $this->image_path;
     }
 
     /**
