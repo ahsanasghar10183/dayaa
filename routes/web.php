@@ -40,6 +40,11 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
     Route::get('/contact', [MarketingController::class, 'contact'])->name('contact');
     Route::post('/contact', [MarketingController::class, 'submitContact'])->name('contact.submit');
 
+    // Legal Pages
+    Route::get('/agb', [MarketingController::class, 'agb'])->name('agb');
+    Route::get('/impressum', [MarketingController::class, 'impressum'])->name('impressum');
+    Route::get('/datenschutz', [MarketingController::class, 'privacy'])->name('privacy');
+
     // Shop
     Route::prefix('shop')->name('shop.')->group(function () {
         Route::get('/', [ShopController::class, 'index'])->name('index');

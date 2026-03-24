@@ -104,7 +104,7 @@
                         </h1>
 
                         @if($message)
-                            <p class="text-3xl max-w-4xl mx-auto" style="color: {{ $layoutType === 'full_background' || ($layoutType === 'dual_color' && $buttonPosition !== 'bottom') ? '#FFFFFF' : '#374151' }};">
+                            <p class="text-4xl max-w-4xl mx-auto leading-relaxed" style="color: {{ $layoutType === 'full_background' || ($layoutType === 'dual_color' && $buttonPosition !== 'bottom') ? '#FFFFFF' : '#374151' }};">
                                 {{ $message }}
                             </p>
                         @endif
@@ -114,15 +114,15 @@
                     <!-- Amount Selection -->
                     <div class="w-full max-w-5xl mx-auto">
                         <!-- Amount Buttons Grid -->
-                        <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="grid grid-cols-3 gap-8 mb-8">
                             @foreach($amounts as $amount)
                                 @if($amount)
                                     <button
                                         onclick="selectAmount({{ $amount }})"
-                                        class="touch-btn bg-white hover:bg-gray-50 border-4 rounded-3xl p-8 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-2xl group"
+                                        class="touch-btn bg-white hover:bg-gray-50 border-4 rounded-[32px] p-10 min-w-[200px] transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-2xl group"
                                         style="border-color: {{ $primaryColor }};"
                                     >
-                                        <div class="text-5xl font-bold" style="color: {{ $primaryColor }};">
+                                        <div class="text-[64px] font-bold leading-tight" style="color: {{ $primaryColor }};">
                                             €{{ number_format($amount, 0) }}
                                         </div>
                                     </button>
@@ -134,7 +134,7 @@
                         @if($showCustom)
                             <button
                                 onclick="showCustomAmount()"
-                                class="w-full touch-btn text-white text-3xl font-bold py-6 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                                class="w-full touch-btn text-white text-3xl font-bold py-7 rounded-[32px] shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
                                 style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);"
                             >
                                 <svg class="w-10 h-10 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@
                         </h1>
 
                         @if($message)
-                            <p class="text-3xl max-w-4xl mx-auto" style="color: {{ $layoutType === 'full_background' ? '#FFFFFF' : ($layoutType === 'dual_color' ? '#FFFFFF' : '#374151') }};">
+                            <p class="text-4xl max-w-4xl mx-auto leading-relaxed" style="color: {{ $layoutType === 'full_background' ? '#FFFFFF' : ($layoutType === 'dual_color' ? '#FFFFFF' : '#374151') }};">
                                 {{ $message }}
                             </p>
                         @endif

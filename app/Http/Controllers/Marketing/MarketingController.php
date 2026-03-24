@@ -97,4 +97,28 @@ class MarketingController extends Controller
 
         return back()->with('success', 'Thank you for contacting us! We will get back to you soon.');
     }
+
+    /**
+     * Show the AGB (Terms & Conditions) page
+     */
+    public function agb()
+    {
+        return view('marketing.legal.agb');
+    }
+
+    /**
+     * Show the Impressum (Imprint) page
+     */
+    public function impressum()
+    {
+        return view('marketing.legal.impressum');
+    }
+
+    /**
+     * Show the Privacy Policy page
+     */
+    public function privacy()
+    {
+        return view('marketing.legal.privacy');
+    }
 }

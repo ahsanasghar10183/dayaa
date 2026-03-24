@@ -352,10 +352,13 @@
                         <p class="wow fadeInUp" data-wow-delay=".3s">Copyright &copy; {{ date('Y') }} <b>Dayaa</b>. {{ __('marketing.footer.rights') }}</p>
                         <ul class="pp-footer-list wow fadeInUp" data-wow-delay=".5s">
                             <li>
-                                <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.terms_conditions') }}</a>
+                                <a href="{{ route('marketing.agb') }}">AGB</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.privacy') }}</a>
+                                <a href="{{ route('marketing.privacy') }}">Datenschutz</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('marketing.impressum') }}">Impressum</a>
                             </li>
                             <li>
                                 <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.contact_us') }}</a>
