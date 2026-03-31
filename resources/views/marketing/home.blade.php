@@ -92,9 +92,9 @@
             @foreach($featuredProducts as $index => $product)
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.2) }}s">
                 <div class="pp-offer-box-item d-flex flex-column">
-                    <div class="product-image mb-3" style="height: 300px; overflow: hidden;">
+                    <div class="product-image mb-3" style="aspect-ratio: 1/1; overflow: hidden; position: relative;">
                         <a href="{{ route('marketing.shop.product', $product->slug) }}">
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; position: absolute; top: 0; left: 0;">
                         </a>
                     </div>
                     <div class="pp-offer-content flex-grow-1 d-flex flex-column">

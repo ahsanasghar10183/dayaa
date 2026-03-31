@@ -98,4 +98,11 @@ return [
     // User Menu
     'user_settings' => 'User Settings',
     'sign_out' => 'Sign Out',
+
+    // Features (Auth Page)
+    'features' => [
+        'contactless_donations' => 'Contactless tablet donations',
+        'realtime_analytics' => 'Real-time analytics & reports',
+        'secure_payment' => 'Secure payment processing',
+    ],
 ];

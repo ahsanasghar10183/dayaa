@@ -73,7 +73,7 @@ class ShopProductController extends Controller
             'specifications' => 'nullable|array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $product = Product::create([
@@ -150,7 +150,7 @@ class ShopProductController extends Controller
             'specifications' => 'nullable|array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'exists:product_images,id',
         ]);

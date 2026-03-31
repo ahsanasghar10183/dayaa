@@ -135,18 +135,24 @@ class CartController extends Controller
             ->firstOrFail();
 
         if ($cartItem->product->quantity < $request->quantity) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
+            }
             return back()->with('error', 'Not enough stock available');
         }
 
         $cartItem->update(['quantity' => $request->quantity]);
 
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Cart updated successfully']);
+        }
         return back()->with('success', 'Cart updated successfully');
     }
 
     /**
      * Remove item from cart
      */
-    public function remove($cartItemId)
+    public function remove(Request $request, $cartItemId)
     {
         $sessionId = $this->getSessionId();
 
@@ -156,6 +162,9 @@ class CartController extends Controller
 
         $cartItem->delete();
 
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Item removed from cart']);
+        }
         return back()->with('success', 'Item removed from cart');
     }
 
@@ -179,6 +188,63 @@ class CartController extends Controller
         $count = $this->getCartItems()->sum('quantity');
 
         return response()->json(['count' => $count]);
+    }
+
+    /**
+     * Get cart data for sidebar
+     */
+    public function data()
+    {
+        $cartItems = $this->getCartItems();
+
+        $subtotal = $cartItems->sum(function($item) {
+            return $item->product->price * $item->quantity;
+        });
+
+        $tax = $subtotal * 0.19; // 19% VAT in Germany
+        $shipping = $subtotal > 100 ? 0 : 9.99; // Free shipping over €100
+        $total = $subtotal + $tax + $shipping;
+
+        // Format cart items for JSON response
+        $items = $cartItems->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->product->name,
+                'price' => '€' . number_format($item->product->price, 2),
+                'quantity' => $item->quantity,
+                'image' => $item->product->image_url,
+                'subtotal' => '€' . number_format($item->product->price * $item->quantity, 2),
+            ];
+        });
+
+        // Get related products (random products from same categories)
+        $categoryIds = $cartItems->pluck('product.category_id')->unique()->filter();
+        $relatedProducts = Product::whereIn('category_id', $categoryIds)
+            ->whereNotIn('id', $cartItems->pluck('product_id'))
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->limit(10)
+            ->get()
+            ->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->formatted_price,
+                    'image' => $product->image_url,
+                    'url' => route('marketing.shop.product', $product->slug),
+                ];
+            });
+
+        return response()->json([
+            'items' => $items,
+            'totals' => [
+                'subtotal' => '€' . number_format($subtotal, 2),
+                'tax' => '€' . number_format($tax, 2),
+                'shipping' => $shipping > 0 ? '€' . number_format($shipping, 2) : __('marketing.cart.free'),
+                'total' => '€' . number_format($total, 2),
+            ],
+            'relatedProducts' => $relatedProducts,
+        ]);
     }
 
     /**

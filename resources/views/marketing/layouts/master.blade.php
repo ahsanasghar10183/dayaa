@@ -77,8 +77,9 @@
         </button>
 
         <!-- pp MouseCursor Start -->
-        <div class="mouseCursor cursor-outer"></div>
-        <div class="mouseCursor cursor-inner"></div>
+        <!-- Disabled for better UX -->
+        <!-- <div class="mouseCursor cursor-outer"></div>
+        <div class="mouseCursor cursor-inner"></div> -->
 
         <!-- Offcanvas Area Start -->
          <div class="fix-area">
@@ -140,7 +141,7 @@
                             <div class="header-button mt-4">
                                 <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">
                                     <span class="pp-text-btn">
-                                        <span class="pp-text-2">GET STARTED</span>
+                                        <span class="pp-text-2">{{ strtoupper(__('marketing.nav.get_started')) }}</span>
                                     </span>
                                 </a>
                             </div>
@@ -211,7 +212,7 @@
 
                             <!-- Cart Icon with Badge -->
                             <div class="cart-icon-wrapper position-relative" id="cartIconWrapper" style="display: none;">
-                                <a href="{{ route('marketing.cart.index') }}" class="cart-icon-link">
+                                <a href="javascript:void(0);" onclick="openCartSidebar()" class="cart-icon-link" style="cursor: pointer;">
                                     <i class="fa-solid fa-shopping-cart" style="font-size: 20px; color: #0F69F3;"></i>
                                     <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge">
                                         0
@@ -235,6 +236,9 @@
                 </div>
             </div>
         </header>
+
+        <!-- Cart Sidebar -->
+        <x-cart-sidebar />
 
         <!-- Main Content -->
         @yield('content')
@@ -352,13 +356,13 @@
                         <p class="wow fadeInUp" data-wow-delay=".3s">Copyright &copy; {{ date('Y') }} <b>Dayaa</b>. {{ __('marketing.footer.rights') }}</p>
                         <ul class="pp-footer-list wow fadeInUp" data-wow-delay=".5s">
                             <li>
-                                <a href="{{ route('marketing.agb') }}">AGB</a>
+                                <a href="{{ route('marketing.agb') }}">Terms & Conditions</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.privacy') }}">Datenschutz</a>
+                                <a href="{{ route('marketing.privacy') }}">Privacy Policy</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.impressum') }}">Impressum</a>
+                                <a href="{{ route('marketing.impressum') }}">Imprint</a>
                             </li>
                             <li>
                                 <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.contact_us') }}</a>

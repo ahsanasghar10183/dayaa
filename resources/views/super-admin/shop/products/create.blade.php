@@ -125,7 +125,7 @@
 
                     <!-- Upload Button -->
                     <div class="relative">
-                        <input type="file" id="images" name="images[]" multiple accept="image/*"
+                        <input type="file" id="images" name="images[]" multiple accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
                                @change="handleFileSelect($event)" class="hidden">
                         <label for="images"
                                class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-primary-500 transition-all group">
@@ -134,7 +134,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                                 <p class="mb-2 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB (Max 10 images)</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 2MB (Max 10 images)</p>
                             </div>
                         </label>
                     </div>
@@ -174,21 +174,33 @@
                                             preview: e.target.result,
                                             name: file.name
                                         });
+                                        this.updateFileInput();
                                     };
                                     reader.readAsDataURL(file);
                                 });
-
-                                // Reset input
-                                event.target.value = '';
                             },
 
                             removeImage(index) {
                                 this.images.splice(index, 1);
+                                this.updateFileInput();
                             },
 
                             setPrimary(index) {
                                 const [image] = this.images.splice(index, 1);
                                 this.images.unshift(image);
+                                this.updateFileInput();
+                            },
+
+                            updateFileInput() {
+                                // Update the file input with current images
+                                const input = document.getElementById('images');
+                                const dataTransfer = new DataTransfer();
+
+                                this.images.forEach(image => {
+                                    dataTransfer.items.add(image.file);
+                                });
+
+                                input.files = dataTransfer.files;
                             }
                         }
                     }

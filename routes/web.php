@@ -61,6 +61,7 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
         Route::delete('/remove/{cartItem}', [CartController::class, 'remove'])->name('remove');
         Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
         Route::get('/count', [CartController::class, 'count'])->name('count');
+        Route::get('/data', [CartController::class, 'data'])->name('data');
     });
 
     // Checkout

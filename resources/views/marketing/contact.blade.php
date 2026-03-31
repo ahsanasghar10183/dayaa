@@ -68,7 +68,7 @@
 </section>
 
 <!-- Contact Form -->
-<section class="section-padding fix section-bg" style="margin-bottom: 120px;">
+<section class="section-padding fix section-bg" style="margin-bottom: 350px !important;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">

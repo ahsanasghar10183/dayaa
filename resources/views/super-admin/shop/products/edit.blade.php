@@ -123,15 +123,11 @@
 
                                 <!-- Set Primary Button -->
                                 @if(!$existingImage->is_primary)
-                                <form action="{{ route('super-admin.shop.products.set-primary-image', [$product, $existingImage]) }}"
-                                      method="POST" class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit"
-                                            class="w-full bg-white/90 hover:bg-white text-gray-700 text-xs font-medium px-2 py-1.5 rounded-lg shadow-md transition-colors">
-                                        Set as Primary
-                                    </button>
-                                </form>
+                                <button type="button"
+                                        onclick="setPrimaryImage({{ $product->id }}, {{ $existingImage->id }})"
+                                        class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity w-full bg-white/90 hover:bg-white text-gray-700 text-xs font-medium px-2 py-1.5 rounded-lg shadow-md transition-colors">
+                                    Set as Primary
+                                </button>
                                 @endif
                             </div>
                         </div>
@@ -144,7 +140,7 @@
 
                     <!-- Upload Button -->
                     <div class="relative">
-                        <input type="file" id="new-images" name="images[]" multiple accept="image/*"
+                        <input type="file" id="new-images" name="images[]" multiple accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
                                onchange="previewImages(event)" class="hidden">
                         <label for="new-images"
                                class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-500 transition-all group">
@@ -153,7 +149,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                                 <p class="mb-2 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB (Max 10 images total)</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 2MB (Max 10 images total)</p>
                             </div>
                         </label>
                     </div>
@@ -219,6 +215,31 @@
                                 imageElement.querySelector('.aspect-square').appendChild(badge);
                             }
                         }
+                    }
+
+                    function setPrimaryImage(productId, imageId) {
+                        // Create a temporary form to submit
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/super-admin/shop/products/${productId}/images/${imageId}/set-primary`;
+
+                        // Add CSRF token
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = '{{ csrf_token() }}';
+                        form.appendChild(csrfInput);
+
+                        // Add method spoofing for PATCH
+                        const methodInput = document.createElement('input');
+                        methodInput.type = 'hidden';
+                        methodInput.name = '_method';
+                        methodInput.value = 'PATCH';
+                        form.appendChild(methodInput);
+
+                        // Append to body and submit
+                        document.body.appendChild(form);
+                        form.submit();
                     }
                 </script>
 

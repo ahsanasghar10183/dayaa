@@ -485,10 +485,33 @@ hr.gradient {
     color: #ffffff !important;
 }
 
-/* Feature list checkmarks */
+/* Feature list checkmarks - Dayaa Gradient */
 .pp-feature-list li::before,
 .feature-list li::before {
-    color: #0F69F3 !important;
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 600 !important;
+}
+
+/* Testimonial Navigation Buttons - Dayaa Gradient */
+.pp-array-buttons button,
+.array-buttons button,
+.pp-array-buttons .array-prev,
+.pp-array-buttons .array-next {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.pp-array-buttons button:hover,
+.array-buttons button:hover,
+.pp-array-buttons .array-prev:hover,
+.pp-array-buttons .array-next:hover {
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+    transform: scale(1.05) !important;
 }
 
 /* Pricing plan popular badge */
@@ -698,5 +721,58 @@ hr.gradient {
     .pp-device-content h3 {
         font-size: 18px;
         margin-bottom: 15px;
+    }
+}
+
+/* ============================================
+   MOBILE VIEW FIXES - Remove Black Space Above Footer
+   ============================================ */
+
+@media (max-width: 991px) {
+    /* Remove extra padding/margin from sections in mobile view */
+    section.section-padding {
+        padding-bottom: 60px !important;
+    }
+
+    /* Specifically target the last section before footer */
+    section.section-padding:last-of-type,
+    section.pp-cta-section {
+        padding-bottom: 60px !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Remove any extra space from footer top */
+    .pp-footer-section,
+    footer {
+        margin-top: 0 !important;
+        padding-top: 60px !important;
+    }
+
+    /* Fix any section background issues */
+    .section-bg,
+    .section-bg-2 {
+        padding-bottom: 60px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Further reduce padding on smaller screens */
+    section.section-padding {
+        padding-bottom: 40px !important;
+    }
+
+    section.section-padding:last-of-type,
+    section.pp-cta-section {
+        padding-bottom: 40px !important;
+    }
+
+    .pp-footer-section,
+    footer {
+        padding-top: 40px !important;
+    }
+
+    .section-bg,
+    .section-bg-2 {
+        padding-bottom: 40px !important;
     }
 }

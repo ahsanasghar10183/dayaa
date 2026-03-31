@@ -90,7 +90,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-white text-opacity-90">Contactless tablet donations</span>
+                                <span class="text-white text-opacity-90">{{ __('auth.features.contactless_donations') }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
@@ -98,7 +98,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-white text-opacity-90">Real-time analytics & reports</span>
+                                <span class="text-white text-opacity-90">{{ __('auth.features.realtime_analytics') }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
@@ -106,7 +106,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-white text-opacity-90">Secure payment processing</span>
+                                <span class="text-white text-opacity-90">{{ __('auth.features.secure_payment') }}</span>
                             </div>
                         </div>
                     </div>

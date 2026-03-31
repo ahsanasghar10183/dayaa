@@ -55,10 +55,27 @@
                     @endif
 
                     <div class="mb-4">
-                        <h2 class="text-primary">{{ $product->formatted_price }}</h2>
+                        @php
+                            $taxRate = 0.19; // 19% VAT in Germany
+                            $priceExclTax = $product->price;
+                            $taxAmount = $priceExclTax * $taxRate;
+                            $priceInclTax = $priceExclTax + $taxAmount;
+                        @endphp
+
+                        <h2 class="text-primary mb-2">€{{ number_format($priceInclTax, 2) }}</h2>
+                        <p class="text-muted small mb-0">
+                            inkl. MwSt. €{{ number_format($taxAmount, 2) }} (19%)
+                        </p>
+                        <p class="text-muted small">
+                            zzgl. <a href="#" class="text-decoration-none">Versandkosten</a>
+                        </p>
+
                         @if($product->compare_price)
-                        <p class="text-muted">
-                            <del>€{{ number_format($product->compare_price, 2) }}</del>
+                        @php
+                            $comparePriceInclTax = $product->compare_price + ($product->compare_price * $taxRate);
+                        @endphp
+                        <p class="text-muted mt-2">
+                            <del>€{{ number_format($comparePriceInclTax, 2) }}</del>
                             <span class="badge bg-danger ms-2">{{ __('marketing.shop.save_percentage', ['percentage' => $product->discount_percentage]) }}</span>
                         </p>
                         @endif
@@ -221,8 +238,10 @@ function addToCart(productId) {
             if (typeof updateCartCount === 'function') {
                 updateCartCount();
             }
-            // Show success message (you can customize this)
-            alert(data.message || 'Product added to cart successfully!');
+            // Open cart sidebar
+            if (typeof openCartSidebar === 'function') {
+                openCartSidebar();
+            }
         } else {
             alert(data.message || 'Failed to add product to cart');
         }

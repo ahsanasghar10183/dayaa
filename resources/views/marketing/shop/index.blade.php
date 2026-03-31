@@ -26,8 +26,11 @@
             <!-- Sidebar -->
             <div class="col-lg-3 mb-4">
                 <div class="shop-sidebar">
-                    <h4 class="mb-3">{{ __('marketing.shop.categories') }}</h4>
-                    <ul class="list-unstyled">
+                    <h4 class="mb-3 categories-toggle d-lg-block" onclick="toggleCategories()">
+                        {{ __('marketing.shop.categories') }}
+                        <i class="fa-solid fa-chevron-down d-lg-none float-end" id="categoriesIcon"></i>
+                    </h4>
+                    <ul class="list-unstyled categories-list">
                         <li class="mb-2">
                             <a href="{{ route('marketing.shop.index') }}" class="text-decoration-none {{ !request('category') ? 'fw-bold text-primary' : '' }}">
                                 {{ __('marketing.shop.all_products') }}
@@ -47,14 +50,17 @@
             <!-- Products -->
             <div class="col-lg-9">
                 <!-- Sort & Search -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <form action="{{ route('marketing.shop.index') }}" method="GET" class="d-flex">
+                <div class="row mb-4 g-2">
+                    <div class="col-12 col-md-6">
+                        <form action="{{ route('marketing.shop.index') }}" method="GET" class="d-flex search-form-wrapper">
                             <input type="text" name="search" class="shop-search-input form-control" placeholder="{{ __('marketing.shop.search_products') }}" value="{{ request('search') }}">
-                            <button type="submit" class="shop-search-btn pp-theme-btn ms-2">{{ __('marketing.shop.search') }}</button>
+                            <button type="submit" class="shop-search-btn pp-theme-btn ms-2">
+                                <i class="fa-solid fa-search d-md-none"></i>
+                                <span class="d-none d-md-inline">{{ __('marketing.shop.search') }}</span>
+                            </button>
                         </form>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <form action="{{ route('marketing.shop.index') }}" method="GET">
                             @if(request('search'))
                             <input type="hidden" name="search" value="{{ request('search') }}">
@@ -234,5 +240,95 @@
 .product-image:hover img {
     transform: scale(1.05);
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 991px) {
+    /* Collapsible Categories */
+    .categories-toggle {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .categories-list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .categories-list.open {
+        max-height: 1000px;
+    }
+
+    .categories-toggle i {
+        transition: transform 0.3s ease;
+    }
+
+    .categories-toggle i.rotate {
+        transform: rotate(180deg);
+    }
+
+    /* Compact Search Bar */
+    .shop-search-input {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .shop-search-btn {
+        padding: 10px 16px !important;
+        font-size: 14px;
+        min-width: 44px;
+    }
+
+    .shop-sort-select {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .search-form-wrapper {
+        align-items: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .shop-search-input {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .shop-search-btn {
+        padding: 8px 12px !important;
+        font-size: 13px;
+        min-width: 40px;
+    }
+
+    .shop-sort-select {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
 </style>
+@endpush
+
+@push('scripts')
+<script>
+function toggleCategories() {
+    if (window.innerWidth < 992) {
+        const categoriesList = document.querySelector('.categories-list');
+        const icon = document.getElementById('categoriesIcon');
+
+        categoriesList.classList.toggle('open');
+        icon.classList.toggle('rotate');
+    }
+}
+
+// Initialize categories as collapsed on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth < 992) {
+        const categoriesList = document.querySelector('.categories-list');
+        if (categoriesList && !categoriesList.classList.contains('open')) {
+            // Categories are collapsed by default
+        }
+    }
+});
+</script>
 @endpush
