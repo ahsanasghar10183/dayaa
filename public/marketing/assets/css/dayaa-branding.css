@@ -775,4 +775,14 @@ hr.gradient {
     .section-bg-2 {
         padding-bottom: 40px !important;
     }
+
+    /* Reduce footer logo size on mobile to save space */
+    .pp-footer-logo img {
+        max-height: 80px !important;
+    }
+
+    /* Reduce footer widget padding */
+    .pp-footer-widget-items {
+        margin-bottom: 30px !important;
+    }
 }

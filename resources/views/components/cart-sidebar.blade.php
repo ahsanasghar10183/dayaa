@@ -398,11 +398,24 @@
 
 .cart-total-row .label {
     font-weight: 500;
+    color: #4b5563;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    background-clip: unset !important;
 }
 
 .cart-total-row .value {
     font-weight: 700;
     color: #0F69F3;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    background-clip: unset !important;
+}
+
+.cart-total-row.grand-total .label {
+    color: #1a1a2e;
 }
 
 .cart-total-row.grand-total .value {

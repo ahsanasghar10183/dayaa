@@ -241,6 +241,19 @@
     transform: scale(1.05);
 }
 
+/* Ensure product images maintain square aspect ratio */
+.product-image {
+    height: 300px !important;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 991px) {
     /* Collapsible Categories */
@@ -304,6 +317,11 @@
     .shop-sort-select {
         padding: 8px 12px;
         font-size: 13px;
+    }
+
+    /* Maintain product image square ratio on small mobile */
+    .product-image {
+        height: 250px !important;
     }
 }
 </style>

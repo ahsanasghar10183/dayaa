@@ -81,21 +81,26 @@
                 <!-- Customer Information -->
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Information</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
                         <div>
                             <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Contact Details</h4>
                             <div class="space-y-1">
-                                <p class="text-sm text-gray-900">{{ $order->customer_name }}</p>
-                                <p class="text-sm text-gray-600">{{ $order->customer_email }}</p>
-                                <p class="text-sm text-gray-600">{{ $order->customer_phone }}</p>
+                                <p class="text-sm font-semibold text-gray-900">{{ $order->customer_name }}</p>
+                                <p class="text-sm text-gray-600"><i class="fa-solid fa-envelope text-gray-400 mr-2"></i>{{ $order->customer_email }}</p>
+                                @if($order->customer_phone)
+                                <p class="text-sm text-gray-600"><i class="fa-solid fa-phone text-gray-400 mr-2"></i>{{ $order->customer_phone }}</p>
+                                @endif
                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Shipping Address</h4>
-                            <div class="space-y-1">
-                                <p class="text-sm text-gray-900">{{ $order->shipping_address }}</p>
-                                <p class="text-sm text-gray-600">{{ $order->shipping_city }}, {{ $order->shipping_state }} {{ $order->shipping_zip }}</p>
-                                <p class="text-sm text-gray-600">{{ $order->shipping_country }}</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Billing Address</h4>
+                                <div class="text-sm text-gray-700 whitespace-pre-line bg-gray-50 p-3 rounded-lg">{{ $order->billing_address }}</div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Shipping Address</h4>
+                                <div class="text-sm text-gray-700 whitespace-pre-line bg-gray-50 p-3 rounded-lg">{{ $order->shipping_address }}</div>
                             </div>
                         </div>
                     </div>

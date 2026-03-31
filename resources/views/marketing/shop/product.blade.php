@@ -62,9 +62,12 @@
                             $priceInclTax = $priceExclTax + $taxAmount;
                         @endphp
 
-                        <h2 class="text-primary mb-2">€{{ number_format($priceInclTax, 2) }}</h2>
-                        <p class="text-muted small mb-0">
-                            inkl. MwSt. €{{ number_format($taxAmount, 2) }} (19%)
+                        <h2 class="text-primary mb-1">€{{ number_format($priceExclTax, 2) }}</h2>
+                        <p class="text-muted small mb-2">
+                            zzgl. MwSt. €{{ number_format($taxAmount, 2) }} (19%)
+                        </p>
+                        <p class="small mb-2">
+                            <strong>€{{ number_format($priceInclTax, 2) }} inkl. MwSt.</strong>
                         </p>
                         <p class="text-muted small">
                             zzgl. <a href="#" class="text-decoration-none">Versandkosten</a>
@@ -72,18 +75,15 @@
 
                         @if($product->compare_price)
                         @php
-                            $comparePriceInclTax = $product->compare_price + ($product->compare_price * $taxRate);
+                            $comparePriceExclTax = $product->compare_price;
+                            $comparePriceInclTax = $comparePriceExclTax + ($comparePriceExclTax * $taxRate);
                         @endphp
                         <p class="text-muted mt-2">
-                            <del>€{{ number_format($comparePriceInclTax, 2) }}</del>
+                            <del>€{{ number_format($comparePriceExclTax, 2) }}</del>
                             <span class="badge bg-danger ms-2">{{ __('marketing.shop.save_percentage', ['percentage' => $product->discount_percentage]) }}</span>
                         </p>
                         @endif
                     </div>
-
-                    @if($product->sku)
-                    <p class="text-muted small mb-3">{{ __('marketing.shop.sku') }}: {{ $product->sku }}</p>
-                    @endif
 
                     <div class="availability mb-4">
                         @if($product->is_in_stock)
@@ -151,20 +151,28 @@
         <div class="row g-4">
             @foreach($relatedProducts as $relatedProduct)
             <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="pp-offer-box-item h-100">
-                    <div class="product-image mb-3" style="height: 150px; overflow: hidden;">
+                <div class="pp-offer-box-item d-flex flex-column">
+                    <div class="product-image mb-3" style="height: 300px; overflow: hidden;">
                         <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}">
-                            <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
                         </a>
                     </div>
-                    <div class="pp-offer-content">
-                        <h5>
+                    <div class="pp-offer-content flex-grow-1 d-flex flex-column">
+                        <h4>
                             <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="text-decoration-none">
                                 {{ $relatedProduct->name }}
                             </a>
-                        </h5>
-                        <p class="mb-3">{{ $relatedProduct->formatted_price }}</p>
-                        <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="pp-theme-btn w-100 text-center">
+                        </h4>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 text-primary">{{ $relatedProduct->formatted_price }}</span>
+                            @if($relatedProduct->is_in_stock)
+                                <span class="badge bg-success">{{ __('marketing.shop.in_stock') }}</span>
+                            @else
+                                <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
+                            @endif
+                        </div>
+                        <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="pp-theme-btn mt-3 w-100 text-center">
                             {{ __('marketing.shop.view_details') }}
                         </a>
                     </div>

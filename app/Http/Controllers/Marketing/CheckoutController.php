@@ -44,14 +44,33 @@ class CheckoutController extends Controller
      */
     public function process(Request $request)
     {
-        $request->validate([
-            'customer_name' => 'required|string|max:255',
+        // Validation rules for Shopify-style checkout
+        $rules = [
             'customer_email' => 'required|email|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'company' => 'nullable|string|max:255',
+            'address' => 'required|string|max:500',
+            'apartment' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:2',
+            'postal_code' => 'required|string|max:20',
             'customer_phone' => 'nullable|string|max:50',
-            'billing_address' => 'required|string|max:1000',
-            'shipping_address' => 'nullable|string|max:1000',
-            'payment_method' => 'required|in:stripe,paypal,bank_transfer',
-        ]);
+        ];
+
+        // Add shipping address validation if not same as billing
+        if (!$request->has('same_as_billing')) {
+            $rules['shipping_first_name'] = 'required|string|max:255';
+            $rules['shipping_last_name'] = 'required|string|max:255';
+            $rules['shipping_company'] = 'nullable|string|max:255';
+            $rules['shipping_address'] = 'required|string|max:500';
+            $rules['shipping_apartment'] = 'nullable|string|max:255';
+            $rules['shipping_city'] = 'required|string|max:255';
+            $rules['shipping_country'] = 'required|string|max:2';
+            $rules['shipping_postal_code'] = 'required|string|max:20';
+        }
+
+        $request->validate($rules);
 
         $cartItems = $this->getCartItems();
 
@@ -75,20 +94,48 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create order
+            // Format billing address
+            $billingAddress = $this->formatAddress(
+                $request->first_name,
+                $request->last_name,
+                $request->company,
+                $request->address,
+                $request->apartment,
+                $request->city,
+                $request->country,
+                $request->postal_code
+            );
+
+            // Format shipping address
+            if ($request->has('same_as_billing')) {
+                $shippingAddress = $billingAddress;
+            } else {
+                $shippingAddress = $this->formatAddress(
+                    $request->shipping_first_name,
+                    $request->shipping_last_name,
+                    $request->shipping_company,
+                    $request->shipping_address,
+                    $request->shipping_apartment,
+                    $request->shipping_city,
+                    $request->shipping_country,
+                    $request->shipping_postal_code
+                );
+            }
+
+            // Create order (always use Stripe as payment method)
             $order = Order::create([
                 'order_number' => Order::generateOrderNumber(),
-                'customer_name' => $request->customer_name,
+                'customer_name' => $request->first_name . ' ' . $request->last_name,
                 'customer_email' => $request->customer_email,
                 'customer_phone' => $request->customer_phone,
-                'billing_address' => $request->billing_address,
-                'shipping_address' => $request->shipping_address ?? $request->billing_address,
+                'billing_address' => $billingAddress,
+                'shipping_address' => $shippingAddress,
                 'subtotal' => $subtotal,
                 'tax_amount' => $tax,
                 'shipping_amount' => $shipping,
                 'discount_amount' => 0,
                 'total_amount' => $total,
-                'payment_method' => $request->payment_method,
+                'payment_method' => 'stripe', // Always Stripe
                 'payment_status' => 'pending',
                 'order_status' => 'pending',
                 'ip_address' => $request->ip(),
@@ -124,15 +171,8 @@ class CheckoutController extends Controller
             $adminEmail = config('mail.from.address');
             Mail::to($adminEmail)->send(new NewOrderNotification($order));
 
-            // Process payment based on payment method
-            if ($request->payment_method === 'stripe') {
-                // For Stripe, create checkout session and redirect
-                return $this->createStripeCheckoutSession($order);
-            } else {
-                // For other payment methods (PayPal, Bank Transfer), just show success page
-                return redirect()->route('marketing.checkout.success', $order->order_number)
-                    ->with('success', 'Your order has been placed successfully!');
-            }
+            // Always redirect to Stripe Checkout
+            return $this->createStripeCheckoutSession($order);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -141,6 +181,31 @@ class CheckoutController extends Controller
                 ->withInput()
                 ->with('error', 'Failed to process order. Please try again.');
         }
+    }
+
+    /**
+     * Format address from individual fields
+     */
+    protected function formatAddress($firstName, $lastName, $company, $address, $apartment, $city, $country, $postalCode)
+    {
+        $addressParts = [
+            $firstName . ' ' . $lastName,
+        ];
+
+        if ($company) {
+            $addressParts[] = $company;
+        }
+
+        $addressParts[] = $address;
+
+        if ($apartment) {
+            $addressParts[] = $apartment;
+        }
+
+        $addressParts[] = $postalCode . ' ' . $city;
+        $addressParts[] = $country;
+
+        return implode("\n", $addressParts);
     }
 
     /**
