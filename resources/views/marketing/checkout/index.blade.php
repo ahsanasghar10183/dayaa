@@ -359,8 +359,6 @@
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 0, 0, 0.06);
-    position: sticky;
-    top: 100px;
 }
 
 .order-summary-card .card-header {
@@ -508,13 +506,6 @@
 }
 
 /* Mobile Responsive */
-@media (max-width: 991px) {
-    .order-summary-card {
-        position: static;
-        margin-top: 24px;
-    }
-}
-
 @media (max-width: 767px) {
     .checkout-card .card-header,
     .checkout-card .card-body,
