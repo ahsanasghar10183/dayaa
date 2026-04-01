@@ -216,6 +216,9 @@
 
 <!-- CTA Section (covers footer overlap) -->
 <section class="pp-cta-section section-padding fix theme-bg">
+    <div class="top-shape">
+        <img src="{{ asset('marketing/assets/img/home-1/cta/bg.png') }}" alt="img">
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">

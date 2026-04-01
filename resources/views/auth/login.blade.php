@@ -45,7 +45,7 @@
                 autofocus
                 autocomplete="username"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-300 @enderror"
-                placeholder="you@example.com"
+                placeholder="{{ __('auth.login.email_placeholder') }}"
             />
             @error('email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -64,7 +64,7 @@
                 required
                 autocomplete="current-password"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-300 @enderror"
-                placeholder="{{ __('auth.login.password') }}"
+                placeholder="{{ __('auth.login.password_placeholder') }}"
             />
             @error('password')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

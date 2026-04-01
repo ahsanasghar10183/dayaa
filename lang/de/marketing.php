@@ -148,9 +148,9 @@ return [
         'detail_2_list_2' => 'Benutzerdefinierte Datumsbereichsberichte',
         'detail_2_list_3' => 'Export nach PDF, Excel, CSV',
         'detail_2_list_4' => 'Spender-Demografie-Analyse',
-        'cta_title' => 'Sehen Sie Dayaa in Aktion',
-        'cta_text' => 'Fordern Sie eine Demo an und entdecken Sie, wie Dayaa Ihre Fundraising-Operationen transformieren kann.',
-        'cta_button' => 'Demo anfordern',
+        'cta_title' => 'Bereit, Ihr Fundraising zu transformieren?',
+        'cta_text' => 'Starten Sie noch heute mit Dayaa und erleben Sie die Kraft des modernen Spendenmanagements.',
+        'cta_button' => 'Jetzt loslegen',
     ],
 
     // Pricing Page
@@ -233,6 +233,9 @@ return [
         'need_help_text' => 'Unser Team steht Ihnen bei Fragen zu unseren Produkten zur Verfügung',
         'contact_team' => 'Team kontaktieren',
         'start_trial' => 'Testversion starten',
+        'transform_title' => 'Bereit, Ihr Fundraising zu transformieren?',
+        'transform_text' => 'Kombinieren Sie dieses Gerät mit unserer leistungsstarken Plattform, um Ihre Spendenwirkung zu maximieren. Starten Sie Ihre kostenlose Testversion und sehen Sie, wie einfach digitales Fundraising sein kann.',
+        'get_started_now' => 'Jetzt loslegen',
     ],
 
     // Cart
@@ -443,6 +446,7 @@ return [
         'terms' => 'Nutzungsbedingungen',
         'terms_conditions' => 'Allgemeine Geschäftsbedingungen',
         'cookies' => 'Cookie-Richtlinie',
+        'imprint' => 'Impressum',
 
         'newsletter' => 'Newsletter',
         'newsletter_text' => 'Abonnieren Sie für Updates',

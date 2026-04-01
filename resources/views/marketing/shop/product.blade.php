@@ -46,7 +46,7 @@
             <!-- Product Info -->
             <div class="col-lg-6">
                 <div class="product-info">
-                    <h1 class="mb-3">{{ $product->name }}</h1>
+                    <h1 class="mb-3">{{ $product->localized_name }}</h1>
 
                     @if($product->category)
                     <p class="text-muted mb-3">
@@ -95,7 +95,7 @@
 
                     <div class="description mb-4">
                         <h4>{{ __('marketing.shop.description') }}</h4>
-                        <p>{{ $product->description }}</p>
+                        <p>{{ $product->localized_description }}</p>
                     </div>
 
                     @if($product->specifications)

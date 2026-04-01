@@ -18,9 +18,27 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Product Name -->
                 <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name (Default) *</label>
                     <input type="text" name="name" id="name" value="{{ old('name') }}" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name') border-red-500 @enderror">
                     @error('name')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Product Name English -->
+                <div>
+                    <label for="name_en" class="block text-sm font-medium text-gray-700 mb-1">Product Name (English)</label>
+                    <input type="text" name="name_en" id="name_en" value="{{ old('name_en') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name_en') border-red-500 @enderror">
+                    @error('name_en')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Product Name German -->
+                <div>
+                    <label for="name_de" class="block text-sm font-medium text-gray-700 mb-1">Product Name (German)</label>
+                    <input type="text" name="name_de" id="name_de" value="{{ old('name_de') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name_de') border-red-500 @enderror">
+                    @error('name_de')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -81,9 +99,27 @@
 
                 <!-- Description -->
                 <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description (Default) *</label>
                     <textarea name="description" id="description" rows="4" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
                     @error('description')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Description English -->
+                <div class="md:col-span-2">
+                    <label for="description_en" class="block text-sm font-medium text-gray-700 mb-1">Description (English)</label>
+                    <textarea name="description_en" id="description_en" rows="4" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description_en') border-red-500 @enderror">{{ old('description_en') }}</textarea>
+                    @error('description_en')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Description German -->
+                <div class="md:col-span-2">
+                    <label for="description_de" class="block text-sm font-medium text-gray-700 mb-1">Description (German)</label>
+                    <textarea name="description_de" id="description_de" rows="4" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description_de') border-red-500 @enderror">{{ old('description_de') }}</textarea>
+                    @error('description_de')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>

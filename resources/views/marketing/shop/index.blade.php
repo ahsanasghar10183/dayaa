@@ -55,7 +55,7 @@
                         <form action="{{ route('marketing.shop.index') }}" method="GET" class="d-flex search-form-wrapper">
                             <input type="text" name="search" class="shop-search-input form-control" placeholder="{{ __('marketing.shop.search_products') }}" value="{{ request('search') }}">
                             <button type="submit" class="shop-search-btn pp-theme-btn ms-2">
-                                <i class="fa-solid fa-search d-md-none"></i>
+                                <i class="fa-solid fa-search"></i>
                                 <span class="d-none d-md-inline">{{ __('marketing.shop.search') }}</span>
                             </button>
                         </form>
@@ -126,6 +126,9 @@
 
 <!-- CTA Section -->
 <section class="pp-cta-section section-padding fix theme-bg">
+    <div class="top-shape">
+        <img src="{{ asset('marketing/assets/img/home-1/cta/bg.png') }}" alt="img">
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
@@ -207,8 +210,78 @@
 /* Search Button Styling */
 .shop-search-btn {
     white-space: nowrap;
-    padding: 12px 24px !important;
+    padding: 12px 28px !important;
     font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    box-shadow: 0 4px 12px rgba(15, 105, 243, 0.25);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.shop-search-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.shop-search-btn:hover::before {
+    left: 100%;
+}
+
+.shop-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(15, 105, 243, 0.35);
+    background: linear-gradient(135deg, #0d5ad4 0%, #140998 100%) !important;
+}
+
+.shop-search-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(15, 105, 243, 0.3);
+}
+
+.shop-search-btn i {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.shop-search-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* Desktop: Show icon and text */
+@media (min-width: 768px) {
+    .shop-search-btn i {
+        margin-right: 0;
+    }
+
+    .shop-search-btn span {
+        margin-left: 0;
+    }
+}
+
+/* Mobile: Icon only, centered */
+@media (max-width: 767px) {
+    .shop-search-btn {
+        padding: 11px 16px !important;
+        min-width: 46px;
+    }
+
+    .shop-search-btn i {
+        margin: 0;
+    }
 }
 
 /* Sort Dropdown Styling */
@@ -287,9 +360,13 @@
     }
 
     .shop-search-btn {
-        padding: 10px 16px !important;
+        padding: 11px 20px !important;
         font-size: 14px;
         min-width: 44px;
+    }
+
+    .shop-search-btn i {
+        font-size: 15px;
     }
 
     .shop-sort-select {
@@ -309,9 +386,13 @@
     }
 
     .shop-search-btn {
-        padding: 8px 12px !important;
+        padding: 9px 16px !important;
         font-size: 13px;
-        min-width: 40px;
+        min-width: 42px;
+    }
+
+    .shop-search-btn i {
+        font-size: 14px;
     }
 
     .shop-sort-select {

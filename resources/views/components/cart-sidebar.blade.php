@@ -44,9 +44,9 @@
             <a href="{{ route('marketing.checkout.index') }}" class="pp-theme-btn w-100 text-center">
                 <i class="fa-solid fa-lock"></i> {{ __('marketing.cart.proceed_checkout') }}
             </a>
-            <a href="{{ route('marketing.cart.index') }}" class="pp-theme-btn pp-style-2 w-100 text-center mt-2">
-                {{ __('marketing.cart.title') }}
-            </a>
+            <button onclick="closeCartSidebar()" class="pp-theme-btn pp-style-2 w-100 text-center mt-2" style="cursor: pointer;">
+                <i class="fa-solid fa-shopping-bag"></i> {{ __('marketing.cart.continue_shopping') }}
+            </button>
         </div>
     </div>
 </div>
@@ -384,13 +384,13 @@
     align-items: center;
     padding: 8px 0;
     font-size: 14px;
-    color: #666;
+    color: #333 !important;
 }
 
 .cart-total-row.grand-total {
     font-size: 18px;
     font-weight: 700;
-    color: #1a1a2e;
+    color: #1a1a2e !important;
     padding-top: 12px;
     border-top: 2px solid #ddd;
     margin-top: 8px;
@@ -398,28 +398,30 @@
 
 .cart-total-row .label {
     font-weight: 500;
-    color: #4b5563;
+    color: #1a1a2e !important;
     background: none !important;
     -webkit-background-clip: unset !important;
-    -webkit-text-fill-color: unset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
     background-clip: unset !important;
 }
 
 .cart-total-row .value {
     font-weight: 700;
-    color: #0F69F3;
+    color: #1a1a2e !important;
     background: none !important;
     -webkit-background-clip: unset !important;
-    -webkit-text-fill-color: unset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
     background-clip: unset !important;
 }
 
 .cart-total-row.grand-total .label {
-    color: #1a1a2e;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }
 
 .cart-total-row.grand-total .value {
-    color: #1a1a2e;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }
 
 /* Responsive */

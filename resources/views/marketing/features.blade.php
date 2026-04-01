@@ -121,7 +121,7 @@
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="pp-key-feature-image">
-                        <img src="{{ asset('marketing/assets/img/home-1/feature/02.jpg') }}" alt="Dashboard">
+                        <img src="{{ asset('marketing/assets/img/home-1/feature/campaign-builder.png') }}" alt="Dashboard">
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -173,7 +173,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="pp-key-feature-image">
-                        <img src="{{ asset('marketing/assets/img/home-1/feature/06.jpg') }}" alt="Reports">
+                        <img src="{{ asset('marketing/assets/img/home-1/feature/analytics.png') }}" alt="Reports">
                     </div>
                 </div>
             </div>
@@ -183,6 +183,9 @@
 
 <!-- CTA -->
 <section class="pp-cta-section section-padding fix theme-bg">
+    <div class="top-shape">
+        <img src="{{ asset('marketing/assets/img/home-1/cta/bg.png') }}" alt="img">
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">

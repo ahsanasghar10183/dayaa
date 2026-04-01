@@ -113,7 +113,7 @@
 
                     <!-- Footer -->
                     <div class="text-sm text-white text-opacity-75">
-                        <p>© {{ date('Y') }} DAYAA. All rights reserved.</p>
+                        <p>© {{ date('Y') }} DAYAA. {{ __('auth.footer.all_rights_reserved') }}</p>
                     </div>
                 </div>
             </div>

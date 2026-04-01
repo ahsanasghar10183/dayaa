@@ -13,6 +13,10 @@ class Product extends Model
         'name',
         'slug',
         'description',
+        'name_en',
+        'name_de',
+        'description_en',
+        'description_de',
         'specifications',
         'price',
         'compare_price',
@@ -201,5 +205,39 @@ class Product extends Model
     public function increaseQuantity(int $amount): void
     {
         $this->increment('quantity', $amount);
+    }
+
+    /**
+     * Get localized product name based on current locale
+     */
+    public function getLocalizedNameAttribute(): string
+    {
+        $locale = app()->getLocale();
+
+        if ($locale === 'de' && $this->name_de) {
+            return $this->name_de;
+        } elseif ($locale === 'en' && $this->name_en) {
+            return $this->name_en;
+        }
+
+        // Fallback to base name
+        return $this->name;
+    }
+
+    /**
+     * Get localized product description based on current locale
+     */
+    public function getLocalizedDescriptionAttribute(): ?string
+    {
+        $locale = app()->getLocale();
+
+        if ($locale === 'de' && $this->description_de) {
+            return $this->description_de;
+        } elseif ($locale === 'en' && $this->description_en) {
+            return $this->description_en;
+        }
+
+        // Fallback to base description
+        return $this->description;
     }
 }

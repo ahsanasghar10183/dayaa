@@ -130,7 +130,7 @@
 @endif
 
 <!-- Pp-About Section Start -->
-<section class="pp-about-section section-padding fix">
+<section class="pp-about-section section-padding fix" >
     <div class="container">
         <div class="pp-about-wrapper">
             <div class="row g-4">
@@ -148,11 +148,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" >
                     <div class="about-content">
-                        <div class="pp-section-title mb-0">
-                            <span class="pp-sub-title wow fadeInUp">{{ __('marketing.home.about_subtitle') }}</span>
-                            <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                        <div class="pp-section-title mb-0" >
+                            <span class="pp-sub-title wow fadeInUp" >{{ __('marketing.home.about_subtitle') }}</span>
+                            <h2 class="wow fadeInUp" data-wow-delay=".3s" >
                                 {{ __('marketing.home.about_title') }}
                             </h2>
                         </div>

@@ -119,7 +119,49 @@ return [
     'features' => [
         'title' => 'Platform Features',
         'subtitle' => 'Everything you need to manage donations effectively',
-        // Add more as needed
+        'page_title' => 'Powerful Features for Modern Fundraising',
+        'page_subtitle' => 'Comprehensive tools designed to maximize your donation impact and streamline operations',
+
+        'core_subtitle' => 'CORE FEATURES',
+        'core_title' => 'Everything You Need to Succeed',
+
+        'feature_1_title' => 'Campaign Management',
+        'feature_1_desc' => 'Create and manage unlimited fundraising campaigns with our intuitive builder. Track performance, customize branding, and optimize for maximum donations.',
+
+        'feature_2_title' => 'Multi-Device Support',
+        'feature_2_desc' => 'Accept donations on kiosks, tablets, mobile devices, and online. All devices sync seamlessly with your central dashboard.',
+
+        'feature_3_title' => 'Real-Time Analytics',
+        'feature_3_desc' => 'Monitor donation performance with comprehensive reports and insights. Make data-driven decisions to improve your fundraising.',
+
+        'feature_4_title' => 'Secure Payments',
+        'feature_4_desc' => 'Bank-level security with PCI-DSS compliant payment processing. Support for all major payment methods and mobile wallets.',
+
+        'feature_5_title' => 'Donor Management',
+        'feature_5_desc' => 'Build and maintain relationships with donors. Track giving history, send receipts, and engage with personalized communications.',
+
+        'feature_6_title' => 'Custom Branding',
+        'feature_6_desc' => 'Customize donation forms, receipts, and kiosk displays with your organization\'s logo, colors, and messaging.',
+
+        'detail_1_subtitle' => 'CAMPAIGN BUILDER',
+        'detail_1_title' => 'Intuitive Campaign Creation',
+        'detail_1_text' => 'Launch professional fundraising campaigns in minutes with our step-by-step wizard. Configure donation amounts, payment methods, and custom branding without any technical expertise.',
+        'detail_1_list_1' => 'Multi-step campaign creation wizard',
+        'detail_1_list_2' => 'Flexible donation amount configurations',
+        'detail_1_list_3' => 'Custom branding and themes',
+        'detail_1_list_4' => 'QR code generation for quick access',
+
+        'detail_2_subtitle' => 'ANALYTICS & REPORTING',
+        'detail_2_title' => 'Advanced Insights Dashboard',
+        'detail_2_text' => 'Gain deep insights into your fundraising performance with comprehensive analytics. Track donations by campaign, device, time period, and demographics to continuously optimize your strategy.',
+        'detail_2_list_1' => 'Real-time donation tracking',
+        'detail_2_list_2' => 'Customizable reporting dashboard',
+        'detail_2_list_3' => 'Donor engagement metrics',
+        'detail_2_list_4' => 'Export data for external analysis',
+
+        'cta_title' => 'Ready to Transform Your Fundraising?',
+        'cta_text' => 'Start using Dayaa today and experience the power of modern donation management.',
+        'cta_button' => 'Get Started Now',
     ],
 
     // Pricing Page
@@ -208,7 +250,7 @@ return [
         'start_trial' => 'Start Free Trial',
         'transform_title' => 'Ready to Transform Your Fundraising?',
         'transform_text' => 'Combine this device with our powerful platform to maximize your donation impact. Start your free trial and see how easy digital fundraising can be.',
-        'request_demo' => 'Request Demo',
+        'get_started_now' => 'Get Started Now',
         'home' => 'Home',
     ],
 
@@ -433,6 +475,7 @@ return [
         'terms' => 'Terms of Service',
         'terms_conditions' => 'Terms & Conditions',
         'cookies' => 'Cookie Policy',
+        'imprint' => 'Imprint',
 
         'newsletter' => 'Newsletter',
         'newsletter_text' => 'Subscribe to get updates',

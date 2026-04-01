@@ -42,16 +42,10 @@
         <!-- Preloader Start -->
         <div id="preloader" class="preloader">
             <div class="animation-preloader">
-                <div class="spinner">
+                <div class="preloader-logo-wrapper">
+                    <img src="{{ asset('marketing/assets/img/logo/dayaa-logo-transparent.png') }}" alt="Dayaa Logo" class="preloader-logo">
                 </div>
-                <div class="txt-loading">
-                    <span data-text-preloader="D" class="letters-loading">D</span>
-                    <span data-text-preloader="A" class="letters-loading">A</span>
-                    <span data-text-preloader="Y" class="letters-loading">Y</span>
-                    <span data-text-preloader="A" class="letters-loading">A</span>
-                    <span data-text-preloader="A" class="letters-loading">A</span>
-                </div>
-                <p class="text-center">Loading</p>
+                <p class="text-center loading-text">Loading</p>
             </div>
             <div class="loader">
                 <div class="row">
@@ -191,9 +185,10 @@
                                                 <li><a href="{{ route('marketing.cart.index') }}">{{ __('marketing.cart.title') }}</a></li>
                                             </ul>
                                         </li>
-                                        <li class="{{ request()->routeIs('marketing.pricing') ? 'active' : '' }}">
+                                        {{-- Pricing page hidden temporarily --}}
+                                        {{-- <li class="{{ request()->routeIs('marketing.pricing') ? 'active' : '' }}">
                                             <a href="{{ route('marketing.pricing') }}">{{ __('marketing.nav.pricing') }}</a>
-                                        </li>
+                                        </li> --}}
                                         <li class="{{ request()->routeIs('marketing.faq') ? 'active' : '' }}">
                                             <a href="{{ route('marketing.faq') }}">{{ __('marketing.nav.faq') }}</a>
                                         </li>
@@ -286,9 +281,10 @@
                                     <li>
                                         <a href="{{ route('marketing.features') }}">{{ __('marketing.footer.features') }}</a>
                                     </li>
-                                    <li>
+                                    {{-- Pricing page hidden temporarily --}}
+                                    {{-- <li>
                                         <a href="{{ route('marketing.pricing') }}">{{ __('marketing.footer.pricing') }}</a>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a href="{{ route('marketing.shop.index') }}">{{ __('marketing.footer.shop') }}</a>
                                     </li>
@@ -356,13 +352,13 @@
                         <p class="wow fadeInUp" data-wow-delay=".3s">Copyright &copy; {{ date('Y') }} <b>Dayaa</b>. {{ __('marketing.footer.rights') }}</p>
                         <ul class="pp-footer-list wow fadeInUp" data-wow-delay=".5s">
                             <li>
-                                <a href="{{ route('marketing.agb') }}">Terms & Conditions</a>
+                                <a href="{{ route('marketing.agb') }}">{{ __('marketing.footer.terms_conditions') }}</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.privacy') }}">Privacy Policy</a>
+                                <a href="{{ route('marketing.privacy') }}">{{ __('marketing.footer.privacy') }}</a>
                             </li>
                             <li>
-                                <a href="{{ route('marketing.impressum') }}">Imprint</a>
+                                <a href="{{ route('marketing.impressum') }}">{{ __('marketing.footer.imprint') }}</a>
                             </li>
                             <li>
                                 <a href="{{ route('marketing.contact') }}">{{ __('marketing.footer.contact_us') }}</a>

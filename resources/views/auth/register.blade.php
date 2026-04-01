@@ -38,7 +38,7 @@
                 autofocus
                 autocomplete="organization"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-300 @enderror"
-                placeholder="Your Organization Name"
+                placeholder="{{ __('auth.register.organization_name_placeholder') }}"
             />
             @error('name')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -58,7 +58,7 @@
                 required
                 autocomplete="username"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-300 @enderror"
-                placeholder="admin@organization.com"
+                placeholder="{{ __('auth.register.email_placeholder') }}"
             />
             @error('email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -77,7 +77,7 @@
                 required
                 autocomplete="new-password"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-300 @enderror"
-                placeholder="At least 8 characters"
+                placeholder="{{ __('auth.register.password_placeholder') }}"
             />
             @error('password')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -96,7 +96,7 @@
                 required
                 autocomplete="new-password"
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Confirm your password"
+                placeholder="{{ __('auth.register.confirm_password_placeholder') }}"
             />
         </div>
 
@@ -110,10 +110,10 @@
                 class="w-4 h-4 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
             <label for="terms" class="ml-2 text-sm text-gray-700">
-                I agree to the
-                <a href="#" class="text-blue-600 hover:text-blue-700">Terms and Conditions</a>
-                and
-                <a href="#" class="text-blue-600 hover:text-blue-700">Privacy Policy</a>
+                {{ __('auth.register.terms') }}
+                <a href="#" class="text-blue-600 hover:text-blue-700">{{ __('auth.register.terms_and_conditions') }}</a>
+                {{ __('auth.register.and') }}
+                <a href="#" class="text-blue-600 hover:text-blue-700">{{ __('auth.register.privacy_policy') }}</a>
             </label>
         </div>
 
