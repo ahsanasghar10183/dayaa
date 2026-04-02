@@ -436,15 +436,15 @@ return [
         'pricing' => 'Preise',
         'shop' => 'Shop',
 
-        'support' => 'Support',
+        'support' => 'Unterstützung',
         'help_center' => 'Hilfe-Center',
         'contact' => 'Kontakt',
-        'faq' => 'FAQ',
+        'faq' => 'Häufig gestellte Fragen',
 
         'legal' => 'Rechtliches',
         'privacy' => 'Datenschutzerklärung',
         'terms' => 'Nutzungsbedingungen',
-        'terms_conditions' => 'Allgemeine Geschäftsbedingungen',
+        'terms_conditions' => 'Geschäftsbedingungen',
         'cookies' => 'Cookie-Richtlinie',
         'imprint' => 'Impressum',
 
