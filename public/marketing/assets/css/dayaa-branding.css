@@ -1144,3 +1144,33 @@ hr.gradient {
         padding: 20px 15px !important;
     }
 }
+
+/* ============================================
+   CARD SPACING - Add Margin Bottom to All Cards
+   ============================================ */
+
+/* Add margin-bottom to all offer box items (cards) for proper spacing */
+.pp-offer-box-item {
+    margin-bottom: 30px !important;
+}
+
+/* Tablet view - Slightly reduce margin */
+@media (max-width: 991px) {
+    .pp-offer-box-item {
+        margin-bottom: 25px !important;
+    }
+}
+
+/* Mobile view - Standard spacing */
+@media (max-width: 767px) {
+    .pp-offer-box-item {
+        margin-bottom: 20px !important;
+    }
+}
+
+/* Small mobile view - Compact spacing */
+@media (max-width: 576px) {
+    .pp-offer-box-item {
+        margin-bottom: 20px !important;
+    }
+}

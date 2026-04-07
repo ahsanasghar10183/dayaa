@@ -42,9 +42,9 @@
                 <!-- Totals will be loaded via JavaScript -->
             </div>
             <a href="{{ route('marketing.checkout.index') }}" class="pp-theme-btn w-100 text-center">
-                <i class="fa-solid fa-lock"></i> {{ __('marketing.cart.proceed_checkout') }}
+                {{ __('marketing.cart.proceed_checkout') }}
             </a>
-            <button onclick="closeCartSidebar()" class="pp-theme-btn pp-style-2 w-100 text-center mt-2" style="cursor: pointer;">
+            <button onclick="closeCartSidebar()" class="pp-theme-btn-bordered w-100 text-center mt-2" style="cursor: pointer; background: transparent; border: 2px solid #0F69F3; color: #0F69F3;">
                 <i class="fa-solid fa-shopping-bag"></i> {{ __('marketing.cart.continue_shopping') }}
             </button>
         </div>
@@ -479,8 +479,9 @@ function renderCartItems(items) {
             <div class="cart-empty">
                 <i class="fa-solid fa-shopping-cart"></i>
                 <p>{{ __('marketing.cart.empty_cart') }}</p>
+                <p class="text-muted">{{ __('marketing.cart.empty_cart_text') }}</p>
                 <a href="{{ route('marketing.shop.index') }}" class="pp-theme-btn mt-3">
-                    {{ __('marketing.cart.continue_shopping') }}
+                    {{ __('marketing.cart.browse_products') }}
                 </a>
             </div>
         `;

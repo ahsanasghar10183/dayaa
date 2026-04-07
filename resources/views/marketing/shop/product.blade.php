@@ -12,9 +12,6 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('marketing.home') }}">{{ __('marketing.shop.home') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('marketing.shop.index') }}">{{ __('marketing.shop.title') }}</a></li>
-                @if($product->category)
-                <li class="breadcrumb-item"><a href="{{ route('marketing.shop.category', $product->category->slug) }}">{{ $product->category->name }}</a></li>
-                @endif
                 <li class="breadcrumb-item active">{{ $product->name }}</li>
             </ol>
         </nav>
@@ -47,12 +44,6 @@
             <div class="col-lg-6">
                 <div class="product-info">
                     <h1 class="mb-3">{{ $product->localized_name }}</h1>
-
-                    @if($product->category)
-                    <p class="text-muted mb-3">
-                        {{ __('marketing.shop.category') }}: <a href="{{ route('marketing.shop.category', $product->category->slug) }}">{{ $product->category->name }}</a>
-                    </p>
-                    @endif
 
                     <div class="mb-4">
                         @php
@@ -93,6 +84,27 @@
                         @endif
                     </div>
 
+                    @if($product->is_in_stock)
+                    <div class="row g-3 mb-4">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label">{{ __('marketing.shop.quantity') }}</label>
+                            <input type="number" class="form-control" id="product-quantity" value="1" min="1" max="{{ $product->quantity }}" style="width: 100px;">
+                        </div>
+                        <div class="col-auto d-flex align-items-end gap-2">
+                            <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn">
+                                <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
+                            </button>
+                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" style="background: transparent; border: 2px solid #0F69F3; color: #0F69F3; padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
+                                <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
+                            </button>
+                        </div>
+                    </div>
+                    @else
+                    <div class="alert alert-warning">
+                        {{ __('marketing.shop.out_of_stock_message') }}
+                    </div>
+                    @endif
+
                     <div class="description mb-4">
                         <h4>{{ __('marketing.shop.description') }}</h4>
                         <p>{{ $product->localized_description }}</p>
@@ -106,27 +118,6 @@
                             <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
                             @endforeach
                         </ul>
-                    </div>
-                    @endif
-
-                    @if($product->is_in_stock)
-                    <div class="row g-3 mb-4">
-                        <div class="col-auto">
-                            <label for="quantity" class="form-label">{{ __('marketing.shop.quantity') }}</label>
-                            <input type="number" class="form-control" id="product-quantity" value="1" min="1" max="{{ $product->quantity }}" style="width: 100px;">
-                        </div>
-                        <div class="col-auto d-flex align-items-end gap-2">
-                            <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn">
-                                <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
-                            </button>
-                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn">
-                                <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
-                            </button>
-                        </div>
-                    </div>
-                    @else
-                    <div class="alert alert-warning">
-                        {{ __('marketing.shop.out_of_stock_message') }}
                     </div>
                     @endif
 
@@ -208,6 +199,12 @@
 
 .breadcrumb {
     background-color: transparent;
+}
+
+.pp-theme-btn-bordered:hover {
+    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%) !important;
+    color: white !important;
+    border-color: transparent !important;
 }
 </style>
 @endpush

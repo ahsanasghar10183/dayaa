@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
     protected $fillable = [
-        'category_id',
         'name',
         'slug',
         'description',
@@ -42,14 +40,6 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
     ];
-
-    /**
-     * Get the category
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
-    }
 
     /**
      * Get product images

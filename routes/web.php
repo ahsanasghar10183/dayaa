@@ -48,7 +48,6 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
     // Shop
     Route::prefix('shop')->name('shop.')->group(function () {
         Route::get('/', [ShopController::class, 'index'])->name('index');
-        Route::get('/category/{slug}', [ShopController::class, 'category'])->name('category');
         Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product');
     });
 
@@ -128,9 +127,6 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
         Route::resource('products', \App\Http\Controllers\SuperAdmin\ShopProductController::class);
         Route::post('products/{product}/toggle-status', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'toggleStatus'])->name('products.toggle-status');
         Route::patch('products/{product}/images/{image}/set-primary', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
-
-        // Categories
-        Route::resource('categories', \App\Http\Controllers\SuperAdmin\ShopCategoryController::class)->except(['show']);
 
         // Orders
         Route::resource('orders', \App\Http\Controllers\SuperAdmin\ShopOrderController::class)->except(['create', 'store', 'edit']);

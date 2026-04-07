@@ -102,20 +102,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="country" class="form-label">{{ __('marketing.checkout.country') }} *</label>
-                                    <select class="form-select @error('country') is-invalid @enderror" id="country" name="country" required>
-                                        <option value="">{{ __('marketing.checkout.select_country') }}</option>
-                                        <option value="DE" {{ old('country') == 'DE' ? 'selected' : '' }}>Germany</option>
-                                        <option value="AT" {{ old('country') == 'AT' ? 'selected' : '' }}>Austria</option>
-                                        <option value="CH" {{ old('country') == 'CH' ? 'selected' : '' }}>Switzerland</option>
-                                        <option value="FR" {{ old('country') == 'FR' ? 'selected' : '' }}>France</option>
-                                        <option value="NL" {{ old('country') == 'NL' ? 'selected' : '' }}>Netherlands</option>
-                                        <option value="BE" {{ old('country') == 'BE' ? 'selected' : '' }}>Belgium</option>
-                                        <option value="IT" {{ old('country') == 'IT' ? 'selected' : '' }}>Italy</option>
-                                        <option value="ES" {{ old('country') == 'ES' ? 'selected' : '' }}>Spain</option>
-                                        <option value="PL" {{ old('country') == 'PL' ? 'selected' : '' }}>Poland</option>
-                                        <option value="GB" {{ old('country') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
-                                        <option value="US" {{ old('country') == 'US' ? 'selected' : '' }}>United States</option>
-                                    </select>
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country') }}" required>
                                     @error('country')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -176,20 +163,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="shipping_country" class="form-label">{{ __('marketing.checkout.country') }} *</label>
-                                    <select class="form-select" id="shipping_country" name="shipping_country">
-                                        <option value="">{{ __('marketing.checkout.select_country') }}</option>
-                                        <option value="DE" {{ old('shipping_country') == 'DE' ? 'selected' : '' }}>Germany</option>
-                                        <option value="AT" {{ old('shipping_country') == 'AT' ? 'selected' : '' }}>Austria</option>
-                                        <option value="CH" {{ old('shipping_country') == 'CH' ? 'selected' : '' }}>Switzerland</option>
-                                        <option value="FR" {{ old('shipping_country') == 'FR' ? 'selected' : '' }}>France</option>
-                                        <option value="NL" {{ old('shipping_country') == 'NL' ? 'selected' : '' }}>Netherlands</option>
-                                        <option value="BE" {{ old('shipping_country') == 'BE' ? 'selected' : '' }}>Belgium</option>
-                                        <option value="IT" {{ old('shipping_country') == 'IT' ? 'selected' : '' }}>Italy</option>
-                                        <option value="ES" {{ old('shipping_country') == 'ES' ? 'selected' : '' }}>Spain</option>
-                                        <option value="PL" {{ old('shipping_country') == 'PL' ? 'selected' : '' }}>Poland</option>
-                                        <option value="GB" {{ old('shipping_country') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
-                                        <option value="US" {{ old('shipping_country') == 'US' ? 'selected' : '' }}>United States</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="shipping_country" name="shipping_country" value="{{ old('shipping_country') }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="shipping_postal_code" class="form-label">{{ __('marketing.checkout.postal_code') }} *</label>
@@ -505,6 +479,53 @@
     font-size: 16px;
 }
 
+/* Google Places Autocomplete Styling */
+.pac-container {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
+    font-family: inherit;
+    z-index: 9999;
+}
+
+.pac-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-top: 1px solid #f3f4f6;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.pac-item:first-child {
+    border-top: none;
+}
+
+.pac-item:hover {
+    background-color: rgba(15, 105, 243, 0.05);
+}
+
+.pac-item-selected,
+.pac-item-selected:hover {
+    background-color: rgba(15, 105, 243, 0.1);
+}
+
+.pac-icon {
+    margin-right: 12px;
+    margin-top: 2px;
+}
+
+.pac-item-query {
+    color: #1a1a2e;
+    font-weight: 500;
+}
+
+.pac-matched {
+    font-weight: 600;
+    color: #0F69F3;
+}
+
 /* Mobile Responsive */
 @media (max-width: 767px) {
     .checkout-card .card-header,
@@ -514,12 +535,163 @@
     .whats-included-card .card-body {
         padding: 16px;
     }
+
+    .pac-container {
+        width: 100% !important;
+        left: 0 !important;
+    }
 }
 </style>
 @endpush
 
 @push('scripts')
+<!-- Google Maps JavaScript API with Places Library -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.places_api_key') }}&libraries=places&callback=initAutocomplete" async defer></script>
+
 <script>
+// Country code mapping for form population
+const countryMapping = {
+    'Germany': 'DE',
+    'Austria': 'AT',
+    'Switzerland': 'CH',
+    'France': 'FR',
+    'Netherlands': 'NL',
+    'Belgium': 'BE',
+    'Italy': 'IT',
+    'Spain': 'ES',
+    'Poland': 'PL',
+    'United Kingdom': 'GB',
+    'United States': 'US'
+};
+
+// Global autocomplete variables
+let billingAutocomplete;
+let shippingAutocomplete;
+
+// Initialize autocomplete when Google Maps API is loaded
+function initAutocomplete() {
+    // Options for autocomplete - restrict to European countries
+    const options = {
+        types: ['address'],
+        componentRestrictions: { country: ['de', 'at', 'ch', 'fr', 'nl', 'be', 'it', 'es', 'pl', 'gb', 'us'] }
+    };
+
+    // Initialize billing address autocomplete
+    const billingAddressInput = document.getElementById('address');
+    if (billingAddressInput) {
+        billingAutocomplete = new google.maps.places.Autocomplete(billingAddressInput, options);
+        billingAutocomplete.addListener('place_changed', function() {
+            fillInAddress('billing');
+        });
+    }
+
+    // Initialize shipping address autocomplete
+    const shippingAddressInput = document.getElementById('shipping_address');
+    if (shippingAddressInput) {
+        shippingAutocomplete = new google.maps.places.Autocomplete(shippingAddressInput, options);
+        shippingAutocomplete.addListener('place_changed', function() {
+            fillInAddress('shipping');
+        });
+    }
+}
+
+// Fill in address fields based on Google Places selection
+function fillInAddress(type) {
+    // Determine which autocomplete instance to use
+    const autocomplete = type === 'billing' ? billingAutocomplete : shippingAutocomplete;
+    const place = autocomplete.getPlace();
+
+    // Check if place has address components
+    if (!place.address_components) {
+        console.log('No address components found');
+        return;
+    }
+
+    // Initialize variables for address components
+    let streetNumber = '';
+    let route = '';
+    let city = '';
+    let postalCode = '';
+    let country = '';
+    let countryCode = '';
+
+    // Extract address components
+    for (const component of place.address_components) {
+        const componentType = component.types[0];
+
+        switch (componentType) {
+            case 'street_number':
+                streetNumber = component.long_name;
+                break;
+            case 'route':
+                route = component.long_name;
+                break;
+            case 'locality':
+                city = component.long_name;
+                break;
+            case 'postal_code':
+                postalCode = component.long_name;
+                break;
+            case 'country':
+                country = component.long_name;
+                countryCode = component.short_name;
+                break;
+            // Fallback for some countries that use different locality types
+            case 'administrative_area_level_1':
+                if (!city) {
+                    city = component.long_name;
+                }
+                break;
+            case 'postal_town':
+                if (!city) {
+                    city = component.long_name;
+                }
+                break;
+        }
+    }
+
+    // Construct full street address
+    const fullAddress = `${streetNumber} ${route}`.trim();
+
+    // Determine field prefix based on type
+    const prefix = type === 'billing' ? '' : 'shipping_';
+
+    // Fill in the address field with street address only
+    const addressField = document.getElementById(prefix + 'address');
+    if (addressField && fullAddress) {
+        addressField.value = fullAddress;
+    }
+
+    // Fill in city
+    const cityField = document.getElementById(prefix + 'city');
+    if (cityField && city) {
+        cityField.value = city;
+    }
+
+    // Fill in postal code
+    const postalCodeField = document.getElementById(prefix + 'postal_code');
+    if (postalCodeField && postalCode) {
+        postalCodeField.value = postalCode;
+    }
+
+    // Fill in country
+    const countryField = document.getElementById(prefix + 'country');
+    if (countryField && countryCode) {
+        // Try to set country using the short code (e.g., 'DE', 'AT', etc.)
+        countryField.value = countryCode.toUpperCase();
+
+        // If that doesn't work, try the mapping
+        if (!countryField.value && country && countryMapping[country]) {
+            countryField.value = countryMapping[country];
+        }
+    }
+
+    // Trigger change events to update any dependent fields
+    if (cityField) cityField.dispatchEvent(new Event('change'));
+    if (postalCodeField) postalCodeField.dispatchEvent(new Event('change'));
+    if (countryField) countryField.dispatchEvent(new Event('change'));
+}
+
 function toggleShippingAddress() {
     const checkbox = document.getElementById('sameAsBilling');
     const shippingFields = document.getElementById('shippingAddressFields');

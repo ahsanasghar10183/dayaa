@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Marketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\ProductCategory;
 
 class ShopController extends Controller
 {
@@ -15,7 +14,7 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $query = Product::active()
-            ->with('category', 'primaryImage')
+            ->with('primaryImage')
             ->inStock();
 
         // Search
@@ -48,55 +47,7 @@ class ShopController extends Controller
 
         $products = $query->paginate(12);
 
-        $categories = ProductCategory::active()
-            ->root()
-            ->ordered()
-            ->withCount('activeProducts')
-            ->get();
-
-        return view('marketing.shop.index', compact('products', 'categories'));
-    }
-
-    /**
-     * Show products by category
-     */
-    public function category(Request $request, $slug)
-    {
-        $category = ProductCategory::where('slug', $slug)
-            ->active()
-            ->firstOrFail();
-
-        $query = $category->activeProducts()
-            ->with('category', 'primaryImage')
-            ->inStock();
-
-        // Sort
-        $sort = $request->get('sort', 'newest');
-        switch ($sort) {
-            case 'price_low':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'name':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'newest':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-
-        $products = $query->paginate(12);
-
-        $categories = ProductCategory::active()
-            ->root()
-            ->ordered()
-            ->withCount('activeProducts')
-            ->get();
-
-        return view('marketing.shop.category', compact('category', 'products', 'categories'));
+        return view('marketing.shop.index', compact('products'));
     }
 
     /**
@@ -106,16 +57,16 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->active()
-            ->with('category', 'images')
+            ->with('images')
             ->firstOrFail();
 
-        // Related products from same category
+        // Related products - just get other available products
         $relatedProducts = Product::active()
-            ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->inStock()
             ->with('primaryImage')
             ->limit(4)
+            ->inRandomOrder()
             ->get();
 
         return view('marketing.shop.product', compact('product', 'relatedProducts'));

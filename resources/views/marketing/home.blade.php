@@ -199,7 +199,7 @@
                {{ __('marketing.home.offer_title') }}
             </h2>
          </div>
-        <div class="row">
+        <div class="row g-4">
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
                 <div class="pp-offer-box-item">
                     <div class="pp-offer-icon">
@@ -267,7 +267,7 @@
                {{ __('marketing.home.how_works_title') }}
             </h2>
          </div>
-        <div class="row">
+        <div class="row g-4">
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
                 <div class="pp-how-work-items">
                     <h6>{{ __('marketing.home.step_1_label') }}</h6>

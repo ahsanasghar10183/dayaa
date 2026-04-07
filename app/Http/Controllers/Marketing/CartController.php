@@ -217,11 +217,10 @@ class CartController extends Controller
             ];
         });
 
-        // Get related products (random products from same categories)
-        $categoryIds = $cartItems->pluck('product.category_id')->unique()->filter();
-        $relatedProducts = Product::whereIn('category_id', $categoryIds)
+        // Get related products (random products)
+        $relatedProducts = Product::active()
             ->whereNotIn('id', $cartItems->pluck('product_id'))
-            ->where('is_active', true)
+            ->inStock()
             ->inRandomOrder()
             ->limit(10)
             ->get()

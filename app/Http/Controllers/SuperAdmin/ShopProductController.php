@@ -4,7 +4,6 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductCategory;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,7 +16,7 @@ class ShopProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('category', 'primaryImage');
+        $query = Product::with('primaryImage');
 
         // Search
         if ($request->has('search')) {
@@ -29,20 +28,14 @@ class ShopProductController extends Controller
             });
         }
 
-        // Filter by category
-        if ($request->has('category') && $request->category != '') {
-            $query->where('category_id', $request->category);
-        }
-
         // Filter by status
         if ($request->has('status') && $request->status != '') {
             $query->where('is_active', $request->status);
         }
 
         $products = $query->latest()->paginate(20);
-        $categories = ProductCategory::active()->ordered()->get();
 
-        return view('super-admin.shop.products.index', compact('products', 'categories'));
+        return view('super-admin.shop.products.index', compact('products'));
     }
 
     /**
@@ -50,8 +43,7 @@ class ShopProductController extends Controller
      */
     public function create()
     {
-        $categories = ProductCategory::active()->ordered()->get();
-        return view('super-admin.shop.products.create', compact('categories'));
+        return view('super-admin.shop.products.create');
     }
 
     /**
@@ -63,7 +55,6 @@ class ShopProductController extends Controller
             'name' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'name_de' => 'nullable|string|max:255',
-            'category_id' => 'required|exists:product_categories,id',
             'description' => 'required|string',
             'description_en' => 'nullable|string',
             'description_de' => 'nullable|string',
@@ -81,7 +72,6 @@ class ShopProductController extends Controller
         ]);
 
         $product = Product::create([
-            'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
@@ -125,7 +115,7 @@ class ShopProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('category', 'images');
+        $product->load('images');
         return view('super-admin.shop.products.show', compact('product'));
     }
 
@@ -134,9 +124,8 @@ class ShopProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories = ProductCategory::active()->ordered()->get();
         $product->load('images');
-        return view('super-admin.shop.products.edit', compact('product', 'categories'));
+        return view('super-admin.shop.products.edit', compact('product'));
     }
 
     /**
@@ -148,7 +137,6 @@ class ShopProductController extends Controller
             'name' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'name_de' => 'nullable|string|max:255',
-            'category_id' => 'required|exists:product_categories,id',
             'description' => 'required|string',
             'description_en' => 'nullable|string',
             'description_de' => 'nullable|string',
@@ -168,7 +156,6 @@ class ShopProductController extends Controller
         ]);
 
         $product->update([
-            'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,

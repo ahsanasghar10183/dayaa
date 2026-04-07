@@ -23,32 +23,8 @@
 <section class="section-padding fix">
     <div class="container">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-3 mb-4">
-                <div class="shop-sidebar">
-                    <h4 class="mb-3 categories-toggle d-lg-block" onclick="toggleCategories()">
-                        {{ __('marketing.shop.categories') }}
-                        <i class="fa-solid fa-chevron-down d-lg-none float-end" id="categoriesIcon"></i>
-                    </h4>
-                    <ul class="list-unstyled categories-list">
-                        <li class="mb-2">
-                            <a href="{{ route('marketing.shop.index') }}" class="text-decoration-none {{ !request('category') ? 'fw-bold text-primary' : '' }}">
-                                {{ __('marketing.shop.all_products') }}
-                            </a>
-                        </li>
-                        @foreach($categories as $category)
-                        <li class="mb-2">
-                            <a href="{{ route('marketing.shop.category', $category->slug) }}" class="text-decoration-none">
-                                {{ $category->name }} <span class="text-muted">({{ $category->active_products_count }})</span>
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-
             <!-- Products -->
-            <div class="col-lg-9">
+            <div class="col-12">
                 <!-- Sort & Search -->
                 <div class="row mb-4 g-2">
                     <div class="col-12 col-md-6">
@@ -153,41 +129,6 @@
 
 @push('styles')
 <style>
-/* Sidebar Styling */
-.shop-sidebar {
-    background: linear-gradient(135deg, rgba(15, 105, 243, 0.05) 0%, rgba(23, 10, 181, 0.05) 100%);
-    border-radius: 10px;
-    padding: 25px;
-    border: 1px solid rgba(15, 105, 243, 0.1);
-}
-
-.shop-sidebar h4 {
-    color: #170AB5;
-    font-weight: 600;
-    border-bottom: 2px solid #0F69F3;
-    padding-bottom: 10px;
-}
-
-.shop-sidebar a {
-    color: #333;
-    transition: all 0.3s ease;
-    padding: 8px 12px;
-    display: block;
-    border-radius: 6px;
-}
-
-.shop-sidebar a:hover {
-    color: #0F69F3 !important;
-    background: rgba(15, 105, 243, 0.08);
-    padding-left: 20px;
-}
-
-.shop-sidebar a.fw-bold {
-    background: linear-gradient(135deg, #0F69F3 0%, #170AB5 100%);
-    color: white !important;
-    font-weight: 600;
-}
-
 /* Search Input Styling */
 .shop-search-input {
     border: 2px solid rgba(15, 105, 243, 0.2);
@@ -329,30 +270,6 @@
 
 /* Mobile Responsive Styles */
 @media (max-width: 991px) {
-    /* Collapsible Categories */
-    .categories-toggle {
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .categories-list {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-
-    .categories-list.open {
-        max-height: 1000px;
-    }
-
-    .categories-toggle i {
-        transition: transform 0.3s ease;
-    }
-
-    .categories-toggle i.rotate {
-        transform: rotate(180deg);
-    }
-
     /* Compact Search Bar */
     .shop-search-input {
         padding: 10px 14px;
@@ -410,24 +327,6 @@
 
 @push('scripts')
 <script>
-function toggleCategories() {
-    if (window.innerWidth < 992) {
-        const categoriesList = document.querySelector('.categories-list');
-        const icon = document.getElementById('categoriesIcon');
-
-        categoriesList.classList.toggle('open');
-        icon.classList.toggle('rotate');
-    }
-}
-
-// Initialize categories as collapsed on mobile
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth < 992) {
-        const categoriesList = document.querySelector('.categories-list');
-        if (categoriesList && !categoriesList.classList.contains('open')) {
-            // Categories are collapsed by default
-        }
-    }
-});
+// No additional scripts needed
 </script>
 @endpush

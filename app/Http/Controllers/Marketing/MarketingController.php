@@ -20,7 +20,7 @@ class MarketingController extends Controller
         $featuredProducts = Product::active()
             ->featured()
             ->inStock()
-            ->with('category', 'primaryImage')
+            ->with('primaryImage')
             ->limit(3)
             ->get();
 
