@@ -94,7 +94,7 @@
                             <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn">
                                 <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
                             </button>
-                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" style="background: transparent; border: 2px solid #0F69F3; color: #0F69F3; padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
+                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" style="background: white; border: 2px solid #0F69F3; color: #0F69F3; border-radius: 100px; padding: 17px 24px; font-weight: 600; font-size: 16px; line-height: 1; transition: all 0.3s ease;">
                                 <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
                             </button>
                         </div>

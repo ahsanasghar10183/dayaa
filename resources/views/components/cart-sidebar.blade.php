@@ -44,7 +44,7 @@
             <a href="{{ route('marketing.checkout.index') }}" class="pp-theme-btn w-100 text-center">
                 {{ __('marketing.cart.proceed_checkout') }}
             </a>
-            <button onclick="closeCartSidebar()" class="pp-theme-btn-bordered w-100 text-center mt-2" style="cursor: pointer; background: transparent; border: 2px solid #0F69F3; color: #0F69F3;">
+            <button onclick="closeCartSidebar()" class="pp-theme-btn-bordered w-100 text-center mt-2" style="cursor: pointer; background: white; border: 2px solid #0F69F3; color: #0F69F3; border-radius: 100px; padding: 19px 24px; font-weight: 600; transition: all 0.3s ease;">
                 <i class="fa-solid fa-shopping-bag"></i> {{ __('marketing.cart.continue_shopping') }}
             </button>
         </div>
