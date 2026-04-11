@@ -16,7 +16,7 @@ class ShopProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('primaryImage');
+        $query = Product::with('primaryImage')->withCount('variations');
 
         // Search
         if ($request->has('search')) {
