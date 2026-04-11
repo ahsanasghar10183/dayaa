@@ -11,6 +11,8 @@ class CartItem extends Model
         'session_id',
         'user_id',
         'product_id',
+        'product_variation_id',
+        'variation_name',
         'quantity',
     ];
 
@@ -35,11 +37,29 @@ class CartItem extends Model
     }
 
     /**
+     * Get the product variation (if applicable)
+     */
+    public function variation(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariation::class, 'product_variation_id');
+    }
+
+    /**
      * Get subtotal for this cart item
+     * Uses variation price if variation is selected, otherwise product price
      */
     public function getSubtotalAttribute(): float
     {
-        return $this->quantity * $this->product->price;
+        $price = $this->variation ? $this->variation->effective_price : $this->product->price;
+        return $this->quantity * $price;
+    }
+
+    /**
+     * Get the price for this cart item
+     */
+    public function getPriceAttribute(): float
+    {
+        return $this->variation ? $this->variation->effective_price : $this->product->price;
     }
 
     /**

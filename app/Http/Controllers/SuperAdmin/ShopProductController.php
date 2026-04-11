@@ -124,7 +124,7 @@ class ShopProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load('images');
+        $product->load('images', 'variations');
         return view('super-admin.shop.products.edit', compact('product'));
     }
 

@@ -58,17 +58,26 @@
                                         <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" style="width: 80px; height: 80px; object-fit: cover;" class="me-3">
                                         <div>
                                             <h5 class="mb-1">{{ $item->product->name }}</h5>
-                                            <p class="mb-0 text-muted small">SKU: {{ $item->product->sku }}</p>
+                                            @if($item->variation_name)
+                                            <p class="mb-1 text-primary small"><strong>{{ $item->variation_name }}</strong></p>
+                                            @endif
+                                            <p class="mb-0 text-muted small">SKU: {{ $item->variation ? $item->variation->sku ?? $item->product->sku : $item->product->sku }}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="align-middle">{{ $item->product->formatted_price }}</td>
+                                <td class="align-middle">
+                                    @if($item->variation)
+                                        €{{ number_format($item->variation->effective_price, 2) }}
+                                    @else
+                                        {{ $item->product->formatted_price }}
+                                    @endif
+                                </td>
                                 <td class="align-middle">
                                     <form action="{{ route('marketing.cart.update', $item->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('PATCH')
                                         <div class="input-group" style="width: 130px;">
-                                            <input type="number" name="quantity" class="form-control" value="{{ $item->quantity }}" min="1" max="{{ $item->product->quantity }}">
+                                            <input type="number" name="quantity" class="form-control" value="{{ $item->quantity }}" min="1" max="{{ $item->variation ? $item->variation->quantity : $item->product->quantity }}">
                                             <button type="submit" class="btn btn-outline-primary btn-sm">
                                                 <i class="fa-solid fa-sync"></i>
                                             </button>

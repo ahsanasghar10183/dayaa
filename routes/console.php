@@ -9,5 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // Scheduled Tasks
-Schedule::command('tiers:recalculate')->daily()->at('00:00');
-Schedule::command('tiers:apply-pending')->daily()->at('01:00');
+// Apply pending tier changes daily at midnight
+Schedule::job(new \App\Jobs\ApplyPendingTierChanges)->daily()->at('00:00');

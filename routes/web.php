@@ -128,6 +128,14 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
         Route::post('products/{product}/toggle-status', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'toggleStatus'])->name('products.toggle-status');
         Route::patch('products/{product}/images/{image}/set-primary', [\App\Http\Controllers\SuperAdmin\ShopProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 
+        // Product Variations
+        Route::prefix('products/{product}/variations')->name('products.variations.')->group(function () {
+            Route::post('/', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'store'])->name('store');
+            Route::put('/{variation}', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'update'])->name('update');
+            Route::delete('/{variation}', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'destroy'])->name('destroy');
+            Route::post('/{variation}/toggle-status', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
         // Orders
         Route::resource('orders', \App\Http\Controllers\SuperAdmin\ShopOrderController::class)->except(['create', 'store', 'edit']);
         Route::post('orders/{order}/update-status', [\App\Http\Controllers\SuperAdmin\ShopOrderController::class, 'updateStatus'])->name('orders.update-status');

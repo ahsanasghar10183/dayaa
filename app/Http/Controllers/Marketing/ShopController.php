@@ -57,7 +57,7 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->active()
-            ->with('images')
+            ->with('images', 'inStockVariations')
             ->firstOrFail();
 
         // Related products - just get other available products

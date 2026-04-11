@@ -28,9 +28,7 @@ class CheckoutController extends Controller
             return redirect()->route('marketing.cart.index')->with('error', 'Your cart is empty');
         }
 
-        $subtotal = $cartItems->sum(function($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $subtotal = $cartItems->sum('subtotal');
 
         $tax = $subtotal * 0.19;
         $shipping = $subtotal > 100 ? 0 : 9.99;
@@ -78,13 +76,23 @@ class CheckoutController extends Controller
             return redirect()->route('marketing.cart.index')->with('error', 'Your cart is empty');
         }
 
-        // Calculate totals
+        // Calculate totals and validate stock
         $subtotal = 0;
         foreach ($cartItems as $item) {
-            if (!$item->product->isInStock() || $item->product->quantity < $item->quantity) {
-                return back()->with('error', "Product '{$item->product->name}' is no longer available in requested quantity");
+            // Check if variation or simple product
+            if ($item->variation) {
+                // Validate variation stock
+                if (!$item->variation->isInStock() || $item->variation->quantity < $item->quantity) {
+                    return back()->with('error', "Product variation '{$item->product->name} - {$item->variation_name}' is no longer available in requested quantity");
+                }
+                $subtotal += $item->variation->effective_price * $item->quantity;
+            } else {
+                // Validate simple product stock
+                if (!$item->product->isInStock() || $item->product->quantity < $item->quantity) {
+                    return back()->with('error', "Product '{$item->product->name}' is no longer available in requested quantity");
+                }
+                $subtotal += $item->product->price * $item->quantity;
             }
-            $subtotal += $item->product->price * $item->quantity;
         }
 
         $tax = $subtotal * 0.19;
@@ -142,20 +150,40 @@ class CheckoutController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
-            // Create order items and decrease product quantities
+            // Create order items and decrease product/variation quantities
             foreach ($cartItems as $cartItem) {
+                // Determine product name, SKU, and price
+                $productName = $cartItem->product->name;
+                if ($cartItem->variation_name) {
+                    $productName .= ' - ' . $cartItem->variation_name;
+                }
+
+                $productSku = $cartItem->variation
+                    ? ($cartItem->variation->sku ?? $cartItem->product->sku)
+                    : $cartItem->product->sku;
+
+                $unitPrice = $cartItem->variation
+                    ? $cartItem->variation->effective_price
+                    : $cartItem->product->price;
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
-                    'product_name' => $cartItem->product->name,
-                    'product_sku' => $cartItem->product->sku,
+                    'product_variation_id' => $cartItem->product_variation_id,
+                    'variation_name' => $cartItem->variation_name,
+                    'product_name' => $productName,
+                    'product_sku' => $productSku,
                     'quantity' => $cartItem->quantity,
-                    'unit_price' => $cartItem->product->price,
-                    'total_price' => $cartItem->product->price * $cartItem->quantity,
+                    'unit_price' => $unitPrice,
+                    'total_price' => $unitPrice * $cartItem->quantity,
                 ]);
 
-                // Decrease product quantity
-                $cartItem->product->decreaseQuantity($cartItem->quantity);
+                // Decrease quantity (variation or product)
+                if ($cartItem->variation) {
+                    $cartItem->variation->decreaseQuantity($cartItem->quantity);
+                } else {
+                    $cartItem->product->decreaseQuantity($cartItem->quantity);
+                }
             }
 
             // Clear cart
@@ -234,7 +262,7 @@ class CheckoutController extends Controller
     protected function getCartItems()
     {
         return CartItem::where('session_id', $this->getSessionId())
-            ->with('product')
+            ->with('product', 'variation')
             ->get();
     }
 

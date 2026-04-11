@@ -185,7 +185,11 @@
                             @foreach($cartItems as $item)
                             <div class="order-item">
                                 <div>
-                                    <small>{{ $item->product->name }}</small><br>
+                                    <small>{{ $item->product->name }}</small>
+                                    @if($item->variation_name)
+                                    <br><small class="text-primary"><strong>{{ $item->variation_name }}</strong></small>
+                                    @endif
+                                    <br>
                                     <small class="text-muted">Qty: {{ $item->quantity }}</small>
                                 </div>
                                 <small><strong>{{ $item->formatted_subtotal }}</strong></small>

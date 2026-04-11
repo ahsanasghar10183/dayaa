@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Marketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductVariation;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Session;
 
@@ -17,9 +18,7 @@ class CartController extends Controller
     {
         $cartItems = $this->getCartItems();
 
-        $subtotal = $cartItems->sum(function($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $subtotal = $cartItems->sum('subtotal');
 
         $tax = $subtotal * 0.19; // 19% VAT in Germany
         $shipping = $subtotal > 100 ? 0 : 9.99; // Free shipping over €100
@@ -34,35 +33,79 @@ class CartController extends Controller
     public function add(Request $request, $productId)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:99'
+            'quantity' => 'required|integer|min:1|max:99',
+            'variation_id' => 'nullable|integer|exists:product_variations,id'
         ]);
 
         $product = Product::findOrFail($productId);
+        $variation = null;
+        $variationName = null;
 
-        if (!$product->isInStock()) {
-            if ($request->expectsJson()) {
-                return response()->json(['success' => false, 'message' => 'Product is out of stock'], 400);
+        // Handle variable products
+        if ($product->isVariable()) {
+            if (!$request->has('variation_id')) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Please select a product variation'], 400);
+                }
+                return back()->with('error', 'Please select a product variation');
             }
-            return back()->with('error', 'Product is out of stock');
-        }
 
-        if ($product->quantity < $request->quantity) {
-            if ($request->expectsJson()) {
-                return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
+            $variation = ProductVariation::where('id', $request->variation_id)
+                ->where('product_id', $productId)
+                ->firstOrFail();
+
+            if (!$variation->isInStock()) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Selected variation is out of stock'], 400);
+                }
+                return back()->with('error', 'Selected variation is out of stock');
             }
-            return back()->with('error', 'Not enough stock available');
+
+            if ($variation->quantity < $request->quantity) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Not enough stock available for selected variation'], 400);
+                }
+                return back()->with('error', 'Not enough stock available for selected variation');
+            }
+
+            $variationName = $variation->name;
+        } else {
+            // Handle simple products
+            if (!$product->isInStock()) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Product is out of stock'], 400);
+                }
+                return back()->with('error', 'Product is out of stock');
+            }
+
+            if ($product->quantity < $request->quantity) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
+                }
+                return back()->with('error', 'Not enough stock available');
+            }
         }
 
         $sessionId = $this->getSessionId();
 
-        $cartItem = CartItem::where('session_id', $sessionId)
-            ->where('product_id', $productId)
-            ->first();
+        // Find existing cart item (matching both product and variation)
+        $cartItemQuery = CartItem::where('session_id', $sessionId)
+            ->where('product_id', $productId);
+
+        if ($variation) {
+            $cartItemQuery->where('product_variation_id', $variation->id);
+        } else {
+            $cartItemQuery->whereNull('product_variation_id');
+        }
+
+        $cartItem = $cartItemQuery->first();
 
         if ($cartItem) {
             $newQuantity = $cartItem->quantity + $request->quantity;
 
-            if ($newQuantity > $product->quantity) {
+            // Check stock for new quantity
+            $availableStock = $variation ? $variation->quantity : $product->quantity;
+            if ($newQuantity > $availableStock) {
                 if ($request->expectsJson()) {
                     return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
                 }
@@ -74,6 +117,8 @@ class CartController extends Controller
             CartItem::create([
                 'session_id' => $sessionId,
                 'product_id' => $productId,
+                'product_variation_id' => $variation ? $variation->id : null,
+                'variation_name' => $variationName,
                 'quantity' => $request->quantity,
             ]);
         }
@@ -90,17 +135,42 @@ class CartController extends Controller
     public function buyNow(Request $request, $productId)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:99'
+            'quantity' => 'required|integer|min:1|max:99',
+            'variation_id' => 'nullable|integer|exists:product_variations,id'
         ]);
 
         $product = Product::findOrFail($productId);
+        $variation = null;
+        $variationName = null;
 
-        if (!$product->isInStock()) {
-            return back()->with('error', 'Product is out of stock');
-        }
+        // Handle variable products
+        if ($product->isVariable()) {
+            if (!$request->has('variation_id')) {
+                return back()->with('error', 'Please select a product variation');
+            }
 
-        if ($product->quantity < $request->quantity) {
-            return back()->with('error', 'Not enough stock available');
+            $variation = ProductVariation::where('id', $request->variation_id)
+                ->where('product_id', $productId)
+                ->firstOrFail();
+
+            if (!$variation->isInStock()) {
+                return back()->with('error', 'Selected variation is out of stock');
+            }
+
+            if ($variation->quantity < $request->quantity) {
+                return back()->with('error', 'Not enough stock available for selected variation');
+            }
+
+            $variationName = $variation->name;
+        } else {
+            // Handle simple products
+            if (!$product->isInStock()) {
+                return back()->with('error', 'Product is out of stock');
+            }
+
+            if ($product->quantity < $request->quantity) {
+                return back()->with('error', 'Not enough stock available');
+            }
         }
 
         $sessionId = $this->getSessionId();
@@ -112,6 +182,8 @@ class CartController extends Controller
         CartItem::create([
             'session_id' => $sessionId,
             'product_id' => $productId,
+            'product_variation_id' => $variation ? $variation->id : null,
+            'variation_name' => $variationName,
             'quantity' => $request->quantity,
         ]);
 
@@ -132,9 +204,15 @@ class CartController extends Controller
 
         $cartItem = CartItem::where('id', $cartItemId)
             ->where('session_id', $sessionId)
+            ->with('variation')
             ->firstOrFail();
 
-        if ($cartItem->product->quantity < $request->quantity) {
+        // Check stock availability based on whether it's a variation or simple product
+        $availableStock = $cartItem->variation
+            ? $cartItem->variation->quantity
+            : $cartItem->product->quantity;
+
+        if ($availableStock < $request->quantity) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Not enough stock available'], 400);
             }
@@ -197,9 +275,7 @@ class CartController extends Controller
     {
         $cartItems = $this->getCartItems();
 
-        $subtotal = $cartItems->sum(function($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $subtotal = $cartItems->sum('subtotal');
 
         $tax = $subtotal * 0.19; // 19% VAT in Germany
         $shipping = $subtotal > 100 ? 0 : 9.99; // Free shipping over €100
@@ -207,13 +283,19 @@ class CartController extends Controller
 
         // Format cart items for JSON response
         $items = $cartItems->map(function($item) {
+            $price = $item->variation ? $item->variation->effective_price : $item->product->price;
+            $itemName = $item->product->name;
+            if ($item->variation_name) {
+                $itemName .= ' - ' . $item->variation_name;
+            }
+
             return [
                 'id' => $item->id,
-                'name' => $item->product->name,
-                'price' => '€' . number_format($item->product->price, 2),
+                'name' => $itemName,
+                'price' => '€' . number_format($price, 2),
                 'quantity' => $item->quantity,
                 'image' => $item->product->image_url,
-                'subtotal' => '€' . number_format($item->product->price * $item->quantity, 2),
+                'subtotal' => '€' . number_format($item->subtotal, 2),
             ];
         });
 
@@ -264,7 +346,7 @@ class CartController extends Controller
     protected function getCartItems()
     {
         return CartItem::where('session_id', $this->getSessionId())
-            ->with('product.primaryImage')
+            ->with('product.primaryImage', 'variation')
             ->get();
     }
 }

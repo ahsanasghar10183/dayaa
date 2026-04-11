@@ -288,5 +288,201 @@
                 </button>
             </div>
         </form>
+
+        <!-- Product Variations Section -->
+        <div class="mt-8 bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Product Variations</h3>
+                    <p class="text-sm text-gray-600 mt-1">Add variations like Style-1, Style-2, Style-3, etc.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm font-medium text-gray-700">Product Type:</span>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium {{ $product->isVariable() ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700' }}">
+                        {{ $product->isVariable() ? 'Variable' : 'Simple' }}
+                    </span>
+                </div>
+            </div>
+
+            @if($product->isVariable() && $product->quantity > 0)
+            <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p class="text-sm text-yellow-800">⚠️ <strong>Note:</strong> This product is set to Variable type. Stock is managed per variation. The parent product quantity ({{ $product->quantity }}) is not used.</p>
+            </div>
+            @endif
+
+            <!-- Add Variation Form -->
+            <form action="{{ route('super-admin.shop.products.variations.store', $product) }}" method="POST" class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                @csrf
+                <h4 class="font-medium text-gray-700 mb-4">Add New Variation</h4>
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="variation_name" class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
+                        <input type="text" name="name" id="variation_name" required placeholder="e.g., Style-1, Blue, Large"
+                               class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="variation_sku" class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                        <input type="text" name="sku" id="variation_sku" placeholder="Optional"
+                               class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="variation_price" class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+                        <input type="number" name="price" id="variation_price" step="0.01" min="0" placeholder="Uses product price if empty"
+                               class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="variation_quantity" class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                        <input type="number" name="quantity" id="variation_quantity" required min="0" value="0"
+                               class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                            Add Variation
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Active</span>
+                    </label>
+                </div>
+            </form>
+
+            <!-- Variations List -->
+            @if($product->variations->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($product->variations as $variation)
+                        <tr id="variation-{{ $variation->id }}" class="hover:bg-gray-50">
+                            <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $variation->name }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ $variation->sku ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">
+                                @if($variation->price)
+                                    {{ $variation->formatted_price }}
+                                @else
+                                    <span class="text-gray-500 text-xs">({{ $product->formatted_price }})</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-2 py-1 rounded-full text-xs font-medium {{ $variation->quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $variation->quantity }} units
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <form action="{{ route('super-admin.shop.products.variations.toggle-status', [$product, $variation]) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="px-3 py-1 rounded-full text-xs font-medium transition {{ $variation->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }}">
+                                        {{ $variation->is_active ? 'Active' : 'Inactive' }}
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-right space-x-2">
+                                <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }})"
+                                        class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                                <form action="{{ route('super-admin.shop.products.variations.destroy', [$product, $variation]) }}" method="POST" class="inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this variation?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+            <div class="text-center py-8 text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                <p class="mt-2 text-sm">No variations yet. Add your first variation above.</p>
+            </div>
+            @endif
+        </div>
+
+        <!-- Edit Variation Modal (Hidden by default) -->
+        <div id="edit-variation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                <h3 class="text-lg font-semibold mb-4">Edit Variation</h3>
+                <form id="edit-variation-form" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
+                            <input type="text" name="name" id="edit_variation_name" required
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                            <input type="text" name="sku" id="edit_variation_sku"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+                            <input type="number" name="price" id="edit_variation_price" step="0.01" min="0"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                            <input type="number" name="quantity" id="edit_variation_quantity" required min="0"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="is_active" id="edit_variation_active" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Active</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            Update Variation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function editVariation(id, name, sku, price, quantity) {
+                const form = document.getElementById('edit-variation-form');
+                form.action = `/super-admin/shop/products/{{ $product->id }}/variations/${id}`;
+
+                document.getElementById('edit_variation_name').value = name;
+                document.getElementById('edit_variation_sku').value = sku || '';
+                document.getElementById('edit_variation_price').value = price || '';
+                document.getElementById('edit_variation_quantity').value = quantity;
+
+                document.getElementById('edit-variation-modal').classList.remove('hidden');
+            }
+
+            function closeEditModal() {
+                document.getElementById('edit-variation-modal').classList.add('hidden');
+            }
+
+            // Close modal on outside click
+            document.getElementById('edit-variation-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditModal();
+                }
+            });
+        </script>
     </div>
 </x-super-admin-sidebar-layout>

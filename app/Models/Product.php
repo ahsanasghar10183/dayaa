@@ -16,6 +16,7 @@ class Product extends Model
         'description_en',
         'description_de',
         'specifications',
+        'product_type', // 'simple' or 'variable'
         'price',
         'compare_price',
         'cost_price',
@@ -74,6 +75,33 @@ class Product extends Model
     }
 
     /**
+     * Get product variations
+     */
+    public function variations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class);
+    }
+
+    /**
+     * Get active variations only
+     */
+    public function activeVariations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class)->where('is_active', true)->orderBy('sort_order');
+    }
+
+    /**
+     * Get in-stock variations only
+     */
+    public function inStockVariations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class)
+            ->where('is_active', true)
+            ->where('quantity', '>', 0)
+            ->orderBy('sort_order');
+    }
+
+    /**
      * Scope: Active products only
      */
     public function scopeActive($query)
@@ -98,10 +126,39 @@ class Product extends Model
     }
 
     /**
+     * Check if product is variable (has variations)
+     */
+    public function isVariable(): bool
+    {
+        return $this->product_type === 'variable';
+    }
+
+    /**
+     * Check if product is simple (no variations)
+     */
+    public function isSimple(): bool
+    {
+        return $this->product_type === 'simple';
+    }
+
+    /**
+     * Check if product has any variations
+     */
+    public function hasVariations(): bool
+    {
+        return $this->isVariable() && $this->variations()->count() > 0;
+    }
+
+    /**
      * Check if product is in stock
+     * For variable products, check if any variation is in stock
      */
     public function isInStock(): bool
     {
+        if ($this->isVariable()) {
+            return $this->inStockVariations()->count() > 0;
+        }
+
         return $this->quantity > 0;
     }
 

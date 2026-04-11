@@ -76,9 +76,37 @@
                         @endif
                     </div>
 
+                    <!-- Variation Selector (if product has variations) -->
+                    @if($product->isVariable() && $product->inStockVariations->count() > 0)
+                    <div class="variation-selector mb-4">
+                        <label for="variation-select" class="form-label fw-bold">{{ __('marketing.shop.select_variation', [], 'Select Variation') }}</label>
+                        <select class="form-select" id="variation-select" required onchange="updateVariationInfo()">
+                            <option value="">-- {{ __('marketing.shop.choose_option', [], 'Choose an option') }} --</option>
+                            @foreach($product->inStockVariations as $variation)
+                            <option value="{{ $variation->id }}"
+                                    data-price="{{ $variation->effective_price }}"
+                                    data-compare-price="{{ $variation->effective_compare_price ?? '' }}"
+                                    data-stock="{{ $variation->quantity }}"
+                                    data-name="{{ $variation->name }}">
+                                {{ $variation->name }}
+                                @if($variation->price)
+                                    - {{ $variation->formatted_price }}
+                                @endif
+                                ({{ $variation->quantity }} {{ __('marketing.shop.available', [], 'available') }})
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
                     <div class="availability mb-4">
                         @if($product->is_in_stock)
-                        <span class="badge bg-success">{{ __('marketing.shop.in_stock') }} ({{ $product->quantity }} {{ __('marketing.shop.available') }})</span>
+                        <span class="badge bg-success" id="stock-badge">
+                            {{ __('marketing.shop.in_stock') }}
+                            @if(!$product->isVariable())
+                                ({{ $product->quantity }} {{ __('marketing.shop.available') }})
+                            @endif
+                        </span>
                         @else
                         <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
                         @endif
@@ -88,13 +116,13 @@
                     <div class="row g-3 mb-4">
                         <div class="col-auto">
                             <label for="quantity" class="form-label">{{ __('marketing.shop.quantity') }}</label>
-                            <input type="number" class="form-control" id="product-quantity" value="1" min="1" max="{{ $product->quantity }}" style="width: 100px;">
+                            <input type="number" class="form-control" id="product-quantity" value="1" min="1" max="{{ $product->isVariable() ? 999 : $product->quantity }}" style="width: 100px;">
                         </div>
                         <div class="col-auto d-flex align-items-end gap-2">
-                            <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn">
+                            <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn" id="add-to-cart-btn">
                                 <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
                             </button>
-                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" style="background: white; border: 2px solid #0F69F3; color: #0F69F3; border-radius: 100px; padding: 17px 24px; font-weight: 600; font-size: 16px; line-height: 1; transition: all 0.3s ease;">
+                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" id="buy-now-btn" style="background: white; border: 2px solid #0F69F3; color: #0F69F3; border-radius: 100px; padding: 17px 24px; font-weight: 600; font-size: 16px; line-height: 1; transition: all 0.3s ease;">
                                 <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
                             </button>
                         </div>
@@ -211,6 +239,8 @@
 
 @push('scripts')
 <script>
+const productIsVariable = {{ $product->isVariable() ? 'true' : 'false' }};
+
 function changeMainImage(url) {
     document.getElementById('mainImage').src = url;
 
@@ -223,8 +253,63 @@ function changeMainImage(url) {
     });
 }
 
+function updateVariationInfo() {
+    const select = document.getElementById('variation-select');
+    if (!select) return;
+
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption.value) {
+        const price = parseFloat(selectedOption.dataset.price);
+        const stock = parseInt(selectedOption.dataset.stock);
+
+        // Update quantity max
+        document.getElementById('product-quantity').max = stock;
+
+        // Update stock badge
+        const stockBadge = document.getElementById('stock-badge');
+        if (stockBadge) {
+            stockBadge.textContent = `{{ __('marketing.shop.in_stock') }} (${stock} {{ __('marketing.shop.available') }})`;
+        }
+
+        // Enable buttons
+        document.getElementById('add-to-cart-btn').disabled = false;
+        document.getElementById('buy-now-btn').disabled = false;
+    } else {
+        // Disable buttons if no variation selected
+        document.getElementById('add-to-cart-btn').disabled = true;
+        document.getElementById('buy-now-btn').disabled = true;
+    }
+}
+
+function getSelectedVariationId() {
+    if (!productIsVariable) return null;
+
+    const select = document.getElementById('variation-select');
+    if (!select) return null;
+
+    return select.value || null;
+}
+
 function addToCart(productId) {
+    // Check if variation is required but not selected
+    if (productIsVariable) {
+        const variationId = getSelectedVariationId();
+        if (!variationId) {
+            alert('{{ __("marketing.shop.please_select_variation", [], "Please select a variation first") }}');
+            return;
+        }
+    }
+
     const quantity = document.getElementById('product-quantity').value;
+    const variationId = getSelectedVariationId();
+
+    const requestData = {
+        quantity: parseInt(quantity)
+    };
+
+    if (variationId) {
+        requestData.variation_id = parseInt(variationId);
+    }
 
     // Use fetch to add to cart without page reload
     fetch('{{ route("marketing.cart.add", ":productId") }}'.replace(':productId', productId), {
@@ -234,7 +319,7 @@ function addToCart(productId) {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ quantity: parseInt(quantity) })
+        body: JSON.stringify(requestData)
     })
     .then(response => response.json())
     .then(data => {
@@ -270,13 +355,33 @@ function addToCart(productId) {
 
         form.appendChild(csrfToken);
         form.appendChild(quantityInput);
+
+        if (variationId) {
+            const variationInput = document.createElement('input');
+            variationInput.type = 'hidden';
+            variationInput.name = 'variation_id';
+            variationInput.value = variationId;
+            form.appendChild(variationInput);
+        }
+
         document.body.appendChild(form);
         form.submit();
     });
 }
 
 function buyNow(productId) {
+    // Check if variation is required but not selected
+    if (productIsVariable) {
+        const variationId = getSelectedVariationId();
+        if (!variationId) {
+            alert('{{ __("marketing.shop.please_select_variation", [], "Please select a variation first") }}');
+            return;
+        }
+    }
+
     const quantity = document.getElementById('product-quantity').value;
+    const variationId = getSelectedVariationId();
+
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = '{{ route("marketing.cart.buy-now", ":productId") }}'.replace(':productId', productId);
@@ -293,8 +398,29 @@ function buyNow(productId) {
 
     form.appendChild(csrfToken);
     form.appendChild(quantityInput);
+
+    if (variationId) {
+        const variationInput = document.createElement('input');
+        variationInput.type = 'hidden';
+        variationInput.name = 'variation_id';
+        variationInput.value = variationId;
+        form.appendChild(variationInput);
+    }
+
     document.body.appendChild(form);
     form.submit();
 }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (productIsVariable) {
+        // Disable buttons initially
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        const buyNowBtn = document.getElementById('buy-now-btn');
+
+        if (addToCartBtn) addToCartBtn.disabled = true;
+        if (buyNowBtn) buyNowBtn.disabled = true;
+    }
+});
 </script>
 @endpush
