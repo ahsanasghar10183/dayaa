@@ -117,7 +117,7 @@
                     </p>
                     <div class="pp-cta-button mt-4">
                         <a href="{{ route('marketing.contact') }}" class="pp-theme-btn wow fadeInUp" data-wow-delay=".3s">{{ __('marketing.shop.contact_team') }} <i class="fa-solid fa-arrow-right-long"></i></a>
-                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">{{ __('marketing.shop.start_trial') }} <i class="fa-solid fa-arrow-right-long"></i></a>
+                        <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn pp-style-2 wow fadeInUp ms-3" data-wow-delay=".3s">{{ __('marketing.shop.get_started_now') }} <i class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>
             </div>

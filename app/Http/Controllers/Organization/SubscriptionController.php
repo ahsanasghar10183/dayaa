@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
+use App\Models\SubscriptionTier;
+use App\Services\StripeService;
+use App\Services\SubscriptionTierService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -121,6 +126,153 @@ class SubscriptionController extends Controller
             'tiers',
             'total12m'
         ));
+    }
+
+    /**
+     * Show subscription creation page (initial subscription setup)
+     */
+    public function create(SubscriptionTierService $tierService)
+    {
+        $organization = auth()->user()->organization;
+
+        // Check if already subscribed
+        if ($organization->subscription()->where('status', 'active')->exists()) {
+            return redirect()->route('organization.billing.index')
+                ->with('info', 'You already have an active subscription.');
+        }
+
+        // Calculate 12-month donation total to recommend a tier
+        $total12m = $tierService->calculate12MonthDonations($organization);
+
+        // Determine recommended tier (default to Tier 1 if no donations yet)
+        $recommendedTier = $tierService->determineTierByAmount($total12m);
+        if (!$recommendedTier) {
+            $recommendedTier = SubscriptionTier::active()->ordered()->first();
+        }
+
+        return view('organization.billing.create', compact('recommendedTier'));
+    }
+
+    /**
+     * Store new subscription (process Stripe payment)
+     */
+    public function store(Request $request, StripeService $stripeService)
+    {
+        $request->validate([
+            'tier_id' => 'required|exists:subscription_tiers,id',
+            'payment_method' => 'required|string',
+            'billing_name' => 'required|string|max:255',
+            'billing_email' => 'required|email|max:255',
+            'billing_address' => 'required|string|max:500',
+            'billing_city' => 'required|string|max:100',
+            'billing_postal_code' => 'required|string|max:20',
+            'billing_country' => 'required|string|max:2',
+            'vat_number' => 'nullable|string|max:50',
+            'terms_accepted' => 'required|accepted',
+        ]);
+
+        $organization = auth()->user()->organization;
+        $tier = SubscriptionTier::findOrFail($request->tier_id);
+
+        DB::beginTransaction();
+
+        try {
+            // 1. Create or get Stripe customer
+            if (!$organization->stripe_customer_id) {
+                $customer = $stripeService->createCustomer(
+                    $organization->email ?? $request->billing_email,
+                    $request->billing_name,
+                    [
+                        'organization_id' => $organization->id,
+                        'organization_name' => $organization->name,
+                    ]
+                );
+                $organization->update(['stripe_customer_id' => $customer->id]);
+            } else {
+                $customer = \Stripe\Customer::retrieve($organization->stripe_customer_id);
+            }
+
+            // 2. Attach payment method to customer
+            $stripeService->attachPaymentMethod($request->payment_method, $customer->id);
+
+            // 3. Set as default payment method
+            \Stripe\Customer::update($customer->id, [
+                'invoice_settings' => [
+                    'default_payment_method' => $request->payment_method,
+                ],
+            ]);
+
+            // 4. Create Stripe subscription
+            $stripeSubscription = $stripeService->createSubscription(
+                $customer->id,
+                $tier->stripe_price_id
+            );
+
+            // 5. Get payment method details for display
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($request->payment_method);
+
+            // 6. Create local subscription record
+            $subscription = Subscription::create([
+                'organization_id' => $organization->id,
+                'tier_id' => $tier->id,
+                'plan' => $tier->name, // For backward compatibility
+                'price' => $tier->monthly_fee,
+                'status' => $stripeSubscription->status,
+                'stripe_customer_id' => $customer->id,
+                'stripe_subscription_id' => $stripeSubscription->id,
+                'stripe_price_id' => $tier->stripe_price_id,
+                'stripe_status' => $stripeSubscription->status,
+                'current_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start),
+                'current_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
+                'next_billing_date' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
+                'payment_method_last4' => $paymentMethod->card->last4 ?? null,
+                'payment_method_brand' => $paymentMethod->card->brand ?? null,
+            ]);
+
+            DB::commit();
+
+            Log::info('Subscription created successfully', [
+                'organization_id' => $organization->id,
+                'subscription_id' => $subscription->id,
+                'tier' => $tier->name,
+            ]);
+
+            return redirect()->route('organization.dashboard')
+                ->with('success', 'Subscription activated successfully! Welcome to ' . $tier->name . '.');
+
+        } catch (\Stripe\Exception\CardException $e) {
+            DB::rollBack();
+            Log::error('Stripe card error during subscription creation', [
+                'error' => $e->getMessage(),
+                'organization_id' => $organization->id,
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Card Error: ' . $e->getMessage());
+
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            DB::rollBack();
+            Log::error('Stripe API error during subscription creation', [
+                'error' => $e->getMessage(),
+                'organization_id' => $organization->id,
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Payment processing failed. Please try again.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error creating subscription', [
+                'error' => $e->getMessage(),
+                'organization_id' => $organization->id,
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred. Please try again or contact support.');
+        }
     }
 
     /**

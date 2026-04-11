@@ -89,7 +89,7 @@ return [
 
         // CTA Section
         'cta_title' => 'Bereit, Ihr Fundraising zu transformieren?',
-        'cta_text' => 'Schließen Sie sich Hunderten von Organisationen an, die bereits Dayaa verwenden, um ihre Spendenwirkung zu maximieren. Starten Sie noch heute mit einer kostenlosen Testversion und entdecken Sie, wie einfach digitales Fundraising sein kann.',
+        'cta_text' => 'Schließen Sie sich Hunderten von Organisationen an, die bereits Dayaa verwenden, um ihre Spendenwirkung zu maximieren. Starten Sie noch heute und entdecken Sie, wie einfach digitales Fundraising sein kann.',
         'cta_button' => 'Jetzt loslegen',
     ],
 
@@ -189,8 +189,8 @@ return [
 
         // CTA Section
         'cta_title' => 'Bereit loszulegen?',
-        'cta_text' => 'Starten Sie noch heute Ihre kostenlose Testversion. Keine Kreditkarte erforderlich.',
-        'cta_button' => 'Kostenlose Testversion starten',
+        'cta_text' => 'Beginnen Sie noch heute mit der Annahme von Spenden mit Dayaas leistungsstarker Plattform.',
+        'cta_button' => 'Jetzt starten',
     ],
 
     // Shop
@@ -232,9 +232,8 @@ return [
         'need_help_title' => 'Brauchen Sie Hilfe?',
         'need_help_text' => 'Unser Team steht Ihnen bei Fragen zu unseren Produkten zur Verfügung',
         'contact_team' => 'Team kontaktieren',
-        'start_trial' => 'Testversion starten',
         'transform_title' => 'Bereit, Ihr Fundraising zu transformieren?',
-        'transform_text' => 'Kombinieren Sie dieses Gerät mit unserer leistungsstarken Plattform, um Ihre Spendenwirkung zu maximieren. Starten Sie Ihre kostenlose Testversion und sehen Sie, wie einfach digitales Fundraising sein kann.',
+        'transform_text' => 'Kombinieren Sie dieses Gerät mit unserer leistungsstarken Plattform, um Ihre Spendenwirkung zu maximieren und sehen Sie, wie einfach digitales Fundraising sein kann.',
         'get_started_now' => 'Jetzt loslegen',
     ],
 

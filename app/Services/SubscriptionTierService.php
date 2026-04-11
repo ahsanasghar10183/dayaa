@@ -3,222 +3,325 @@
 namespace App\Services;
 
 use App\Models\Organization;
-use App\Models\Subscription;
 use App\Models\SubscriptionTier;
 use App\Models\TierChangeLog;
 use App\Models\Donation;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class SubscriptionTierService
 {
     /**
-     * Calculate 12-month donation total for an organization
+     * Check if organization's tier should change based on 12-month donations
+     * Called after every completed donation
      */
-    public function calculate12MonthTotal(Organization $organization): float
+    public function checkAndScheduleTierChange(Organization $organization): ?TierChangeLog
     {
-        $twelveMonthsAgo = Carbon::now()->subYear();
+        try {
+            // Calculate total donations in last 12 months
+            $totalLast12Months = $this->calculate12MonthDonations($organization);
 
-        return (float) $organization->donations()
+            // Determine appropriate tier based on total
+            $appropriateTier = $this->determineTierByAmount($totalLast12Months);
+
+            // Get current tier
+            $currentTierId = $organization->subscription?->tier_id;
+
+            // If tier should change
+            if ($appropriateTier && $appropriateTier->id !== $currentTierId) {
+                return $this->scheduleTierChange(
+                    $organization,
+                    $currentTierId,
+                    $appropriateTier->id,
+                    $totalLast12Months
+                );
+            }
+
+            Log::info('No tier change needed for organization', [
+                'organization_id' => $organization->id,
+                'current_tier_id' => $currentTierId,
+                'total_12m' => $totalLast12Months,
+            ]);
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Error checking tier change', [
+                'organization_id' => $organization->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Calculate total donations in last 12 months
+     */
+    public function calculate12MonthDonations(Organization $organization): float
+    {
+        $twelveMonthsAgo = Carbon::now()->subMonths(12);
+
+        $total = Donation::where('organization_id', $organization->id)
             ->where('payment_status', 'completed')
             ->where('created_at', '>=', $twelveMonthsAgo)
             ->sum('amount');
+
+        return round($total, 2);
     }
 
     /**
-     * Get the appropriate tier for a given fundraising amount
+     * Determine appropriate tier based on donation amount
      */
-    public function getTierForAmount(float $amount): ?SubscriptionTier
+    public function determineTierByAmount(float $amount): ?SubscriptionTier
     {
-        return SubscriptionTier::active()
-            ->ordered()
-            ->get()
-            ->first(function ($tier) use ($amount) {
-                return $tier->isInRange($amount);
-            });
+        return SubscriptionTier::where('is_active', true)
+            ->where('min_amount', '<=', $amount)
+            ->where(function ($query) use ($amount) {
+                $query->whereNull('max_amount')
+                    ->orWhere('max_amount', '>', $amount);
+            })
+            ->orderBy('min_amount', 'asc')
+            ->first();
     }
 
     /**
-     * Check if tier should change after a donation
-     * Returns TierChangeLog if change is needed, null otherwise
-     */
-    public function checkTierAfterDonation(Donation $donation): ?TierChangeLog
-    {
-        $organization = $donation->organization;
-        $subscription = $organization->subscription;
-
-        if (!$subscription) {
-            // Create default subscription if doesn't exist
-            $freeTier = SubscriptionTier::where('name', 'Free')->first();
-            $subscription = Subscription::create([
-                'organization_id' => $organization->id,
-                'tier_id' => $freeTier->id,
-                'price' => 0,
-                'status' => 'active',
-                'current_period_start' => now(),
-                'current_period_end' => now()->addMonth(),
-                'next_billing_date' => now()->addMonth(),
-            ]);
-        }
-
-        // Calculate 12-month total
-        $total12m = $this->calculate12MonthTotal($organization);
-
-        // Get appropriate tier for current total
-        $newTier = $this->getTierForAmount($total12m);
-
-        if (!$newTier) {
-            return null;
-        }
-
-        // Check if tier changed
-        if ($newTier->id === $subscription->tier_id) {
-            return null; // No change needed
-        }
-
-        // Schedule tier change for next billing date
-        return $this->scheduleTierChange(
-            $organization,
-            $subscription->tier_id,
-            $newTier->id,
-            $total12m,
-            'donation'
-        );
-    }
-
-    /**
-     * Schedule a tier change
+     * Schedule a tier change for next billing date
      */
     public function scheduleTierChange(
         Organization $organization,
         ?int $fromTierId,
         int $toTierId,
-        float $donationTotal,
-        string $triggeredBy = 'donation'
+        float $donationTotal
     ): TierChangeLog {
-        $subscription = $organization->subscription;
+        DB::beginTransaction();
 
-        // Cancel any existing pending tier changes
-        TierChangeLog::where('organization_id', $organization->id)
-            ->where('status', 'pending')
-            ->update(['status' => 'cancelled', 'notes' => 'Superseded by new tier change']);
+        try {
+            // Get next billing date
+            $nextBillingDate = $this->getNextBillingDate($organization);
 
-        // Create new tier change log
-        return TierChangeLog::create([
-            'organization_id' => $organization->id,
-            'from_tier_id' => $fromTierId,
-            'to_tier_id' => $toTierId,
-            'triggered_by' => $triggeredBy,
-            'status' => 'pending',
-            'donation_total_12m' => $donationTotal,
-            'scheduled_date' => $subscription->next_billing_date ?? now()->addMonth(),
-        ]);
+            // Create tier change log
+            $tierChangeLog = TierChangeLog::create([
+                'organization_id' => $organization->id,
+                'from_tier_id' => $fromTierId,
+                'to_tier_id' => $toTierId,
+                'triggered_by' => 'donation',
+                'triggered_at' => now(),
+                'scheduled_for' => $nextBillingDate,
+                'status' => 'pending',
+                'donation_total_12m' => $donationTotal,
+                'notification_sent' => false,
+            ]);
+
+            // Update subscription with pending tier
+            if ($organization->subscription) {
+                $organization->subscription->update([
+                    'pending_tier_id' => $toTierId,
+                ]);
+            }
+
+            DB::commit();
+
+            // Send notification email (non-blocking)
+            $this->sendTierChangeNotification($organization, $tierChangeLog);
+
+            Log::info('Tier change scheduled', [
+                'organization_id' => $organization->id,
+                'from_tier' => $fromTierId,
+                'to_tier' => $toTierId,
+                'scheduled_for' => $nextBillingDate,
+            ]);
+
+            return $tierChangeLog;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error scheduling tier change', [
+                'organization_id' => $organization->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Get organization's next billing date
+     */
+    public function getNextBillingDate(Organization $organization): Carbon
+    {
+        if ($organization->subscription && $organization->subscription->stripe_subscription_id) {
+            // Get from Stripe subscription
+            try {
+                $stripe = app(StripeService::class);
+                $stripeSubscription = $stripe->getSubscription($organization->subscription->stripe_subscription_id);
+                return Carbon::createFromTimestamp($stripeSubscription->current_period_end);
+            } catch (\Exception $e) {
+                Log::warning('Could not fetch Stripe billing date, using default', [
+                    'organization_id' => $organization->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Default: First day of next month
+        return Carbon::now()->startOfMonth()->addMonth();
     }
 
     /**
      * Apply a pending tier change
+     * Called by scheduled job on the scheduled date
      */
     public function applyTierChange(TierChangeLog $tierChangeLog): bool
     {
-        if (!$tierChangeLog->isPending()) {
-            return false;
-        }
+        DB::beginTransaction();
 
-        $organization = $tierChangeLog->organization;
-        $subscription = $organization->subscription;
-        $newTier = $tierChangeLog->toTier;
+        try {
+            $organization = $tierChangeLog->organization;
+            $newTier = $tierChangeLog->toTier;
 
-        if (!$subscription || !$newTier) {
-            return false;
-        }
-
-        // Update subscription
-        $subscription->update([
-            'tier_id' => $newTier->id,
-            'price' => $newTier->monthly_fee,
-            'plan' => null, // Nullify old plan field
-        ]);
-
-        // Mark tier change as applied
-        $tierChangeLog->markAsApplied();
-
-        // TODO: Update Stripe subscription when Stripe is integrated
-
-        return true;
-    }
-
-    /**
-     * Process all pending tier changes that are due
-     */
-    public function processPendingTierChanges(): int
-    {
-        $pendingChanges = TierChangeLog::pending()
-            ->scheduledFor(now())
-            ->with(['organization', 'toTier'])
-            ->get();
-
-        $processed = 0;
-
-        foreach ($pendingChanges as $change) {
-            if ($this->applyTierChange($change)) {
-                $processed++;
+            // Update Stripe subscription
+            if ($organization->subscription && $organization->subscription->stripe_subscription_id) {
+                $stripe = app(StripeService::class);
+                $stripe->updateSubscriptionPrice(
+                    $organization->subscription->stripe_subscription_id,
+                    $newTier->stripe_price_id
+                );
             }
-        }
 
-        return $processed;
+            // Update local subscription record
+            if ($organization->subscription) {
+                $organization->subscription->update([
+                    'tier_id' => $newTier->id,
+                    'pending_tier_id' => null,
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Mark tier change as applied
+            $tierChangeLog->update([
+                'status' => 'applied',
+                'applied_at' => now(),
+            ]);
+
+            DB::commit();
+
+            // Send confirmation email
+            $this->sendTierAppliedNotification($organization, $tierChangeLog);
+
+            Log::info('Tier change applied successfully', [
+                'organization_id' => $organization->id,
+                'tier_change_log_id' => $tierChangeLog->id,
+                'new_tier_id' => $newTier->id,
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error applying tier change', [
+                'tier_change_log_id' => $tierChangeLog->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Mark as failed
+            $tierChangeLog->update([
+                'status' => 'failed',
+                'notes' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
     }
 
     /**
-     * Recalculate tier for an organization (used by scheduled jobs)
+     * Send tier change notification email
      */
-    public function recalculateOrganizationTier(Organization $organization): ?TierChangeLog
+    protected function sendTierChangeNotification(Organization $organization, TierChangeLog $tierChangeLog): void
     {
-        $subscription = $organization->subscription;
+        try {
+            // Load relationships
+            $tierChangeLog->load(['fromTier', 'toTier', 'organization']);
 
-        if (!$subscription) {
-            return null;
+            // Send using Mailable class
+            Mail::to($organization->email)
+                ->send(new \App\Mail\TierChangeScheduled($tierChangeLog));
+
+            $tierChangeLog->update(['notification_sent' => true]);
+
+            Log::info('Tier change notification sent', [
+                'organization_id' => $organization->id,
+                'email' => $organization->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error sending tier change notification', [
+                'organization_id' => $organization->id,
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        $total12m = $this->calculate12MonthTotal($organization);
-        $appropriateTier = $this->getTierForAmount($total12m);
-
-        if (!$appropriateTier || $appropriateTier->id === $subscription->tier_id) {
-            return null; // No change needed
-        }
-
-        return $this->scheduleTierChange(
-            $organization,
-            $subscription->tier_id,
-            $appropriateTier->id,
-            $total12m,
-            'scheduled'
-        );
     }
 
     /**
-     * Recalculate tiers for all organizations (daily job)
+     * Send tier applied confirmation email
      */
-    public function recalculateAllOrganizationTiers(): array
+    protected function sendTierAppliedNotification(Organization $organization, TierChangeLog $tierChangeLog): void
     {
-        $organizations = Organization::where('status', 'active')
-            ->with('subscription')
-            ->get();
+        try {
+            // Load relationships
+            $tierChangeLog->load(['fromTier', 'toTier', 'organization']);
 
-        $results = [
-            'total' => $organizations->count(),
-            'changes_scheduled' => 0,
-            'no_change' => 0,
+            // Send using Mailable class
+            Mail::to($organization->email)
+                ->send(new \App\Mail\TierChangeApplied($tierChangeLog));
+
+            Log::info('Tier applied notification sent', [
+                'organization_id' => $organization->id,
+                'email' => $organization->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error sending tier applied notification', [
+                'organization_id' => $organization->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get tier progress for dashboard display
+     */
+    public function getTierProgress(Organization $organization): array
+    {
+        $total12Months = $this->calculate12MonthDonations($organization);
+        $currentTier = $organization->subscription?->tier;
+        $nextTier = $this->getNextTier($currentTier);
+
+        $progress = 0;
+        if ($currentTier && $nextTier) {
+            $range = $nextTier->min_amount - $currentTier->min_amount;
+            $current = $total12Months - $currentTier->min_amount;
+            $progress = $range > 0 ? min(100, ($current / $range) * 100) : 0;
+        }
+
+        return [
+            'total_12_months' => $total12Months,
+            'current_tier' => $currentTier,
+            'next_tier' => $nextTier,
+            'progress_percentage' => round($progress, 1),
+            'amount_to_next_tier' => $nextTier ? max(0, $nextTier->min_amount - $total12Months) : 0,
         ];
+    }
 
-        foreach ($organizations as $organization) {
-            $tierChange = $this->recalculateOrganizationTier($organization);
-
-            if ($tierChange) {
-                $results['changes_scheduled']++;
-            } else {
-                $results['no_change']++;
-            }
+    /**
+     * Get next tier after current tier
+     */
+    protected function getNextTier(?SubscriptionTier $currentTier): ?SubscriptionTier
+    {
+        if (!$currentTier) {
+            return SubscriptionTier::where('is_active', true)
+                ->orderBy('min_amount', 'asc')
+                ->first();
         }
 
-        return $results;
+        return SubscriptionTier::where('is_active', true)
+            ->where('min_amount', '>', $currentTier->min_amount)
+            ->orderBy('min_amount', 'asc')
+            ->first();
     }
 }

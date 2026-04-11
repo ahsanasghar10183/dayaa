@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\TierChangeLog;
+use App\Services\SubscriptionTierService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TierChangeScheduled extends Mailable implements ShouldQueue
+class TierChangeApplied extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -32,7 +33,7 @@ class TierChangeScheduled extends Mailable implements ShouldQueue
         $isUpgrade = $this->tierChangeLog->toTier->monthly_fee > ($this->tierChangeLog->fromTier->monthly_fee ?? 0);
 
         return new Envelope(
-            subject: $isUpgrade ? 'Your Subscription is Being Upgraded!' : 'Subscription Tier Change Scheduled',
+            subject: $isUpgrade ? 'Subscription Upgraded Successfully!' : 'Subscription Tier Updated',
         );
     }
 
@@ -42,18 +43,24 @@ class TierChangeScheduled extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $subscription = $this->tierChangeLog->organization->subscription;
+        $tierService = app(SubscriptionTierService::class);
+
+        // Get next tier for progress display
+        $nextTier = \App\Models\SubscriptionTier::where('min_amount', '>', $this->tierChangeLog->donation_total_12m)
+            ->orderBy('min_amount', 'asc')
+            ->first();
 
         return new Content(
-            markdown: 'emails.subscription.tier-change-scheduled',
+            markdown: 'emails.subscription.tier-change-applied',
             with: [
                 'organization' => $this->tierChangeLog->organization,
                 'fromTier' => $this->tierChangeLog->fromTier,
                 'toTier' => $this->tierChangeLog->toTier,
-                'scheduledDate' => $this->tierChangeLog->scheduled_for->format('F j, Y'),
+                'appliedDate' => $this->tierChangeLog->updated_at->format('F j, Y'),
                 'nextBillingDate' => $subscription?->current_period_end?->format('F j, Y') ?? 'your next billing date',
                 'donationTotal' => $this->tierChangeLog->donation_total_12m,
+                'nextTier' => $nextTier,
                 'billingUrl' => route('organization.billing.index'),
-                'isUpgrade' => $this->tierChangeLog->toTier->monthly_fee > ($this->tierChangeLog->fromTier->monthly_fee ?? 0),
             ],
         );
     }

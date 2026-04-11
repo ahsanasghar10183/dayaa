@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DonationController;
+use App\Http\Controllers\StripeWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +39,6 @@ Route::middleware('auth:sanctum')->prefix('donations')->group(function () {
     Route::patch('/{id}/fail', [DonationController::class, 'fail']);
     Route::post('/{id}/send-receipt', [DonationController::class, 'sendReceipt']);
 });
+
+// Stripe Webhooks (must be outside auth middleware)
+Route::post('/webhook/stripe', [StripeWebhookController::class, 'handleWebhook']);

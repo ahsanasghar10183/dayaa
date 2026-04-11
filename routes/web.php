@@ -178,6 +178,8 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
 
     // Billing & Subscription
     Route::get('/billing', [\App\Http\Controllers\Organization\SubscriptionController::class, 'index'])->name('billing.index');
+    Route::get('/billing/create', [\App\Http\Controllers\Organization\SubscriptionController::class, 'create'])->name('billing.create');
+    Route::post('/billing', [\App\Http\Controllers\Organization\SubscriptionController::class, 'store'])->name('billing.store');
     Route::get('/billing/plans', [\App\Http\Controllers\Organization\SubscriptionController::class, 'plans'])->name('billing.plans');
     Route::post('/billing/plan', [\App\Http\Controllers\Organization\SubscriptionController::class, 'changePlan'])->name('billing.change-plan');
 

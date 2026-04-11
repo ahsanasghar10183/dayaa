@@ -89,7 +89,7 @@ return [
 
         // CTA Section
         'cta_title' => 'Ready to Transform Your Fundraising?',
-        'cta_text' => 'Join hundreds of organizations already using Dayaa to maximize their donation impact. Get started today with a free trial and discover how easy digital fundraising can be.',
+        'cta_text' => 'Join hundreds of organizations already using Dayaa to maximize their donation impact. Get started today and discover how easy digital fundraising can be.',
         'cta_button' => 'Get Started',
     ],
 
@@ -200,8 +200,8 @@ return [
 
         // CTA Section
         'cta_title' => 'Ready to Get Started?',
-        'cta_text' => 'Start your free trial today. No credit card required.',
-        'cta_button' => 'Start Free Trial',
+        'cta_text' => 'Start accepting donations today with Dayaa\'s powerful platform.',
+        'cta_button' => 'Get Started Now',
     ],
 
     // Shop
@@ -247,9 +247,8 @@ return [
         'need_help_title' => 'Need Help Choosing the Right Device?',
         'need_help_text' => 'Our team can help you select the perfect donation devices for your organization\'s needs. Get expert advice and personalized recommendations.',
         'contact_team' => 'Contact Our Team',
-        'start_trial' => 'Start Free Trial',
         'transform_title' => 'Ready to Transform Your Fundraising?',
-        'transform_text' => 'Combine this device with our powerful platform to maximize your donation impact. Start your free trial and see how easy digital fundraising can be.',
+        'transform_text' => 'Combine this device with our powerful platform to maximize your donation impact and see how easy digital fundraising can be.',
         'get_started_now' => 'Get Started Now',
         'home' => 'Home',
     ],

@@ -42,15 +42,22 @@ class DonationObserver
     protected function checkTier(Donation $donation): void
     {
         try {
-            $tierChange = $this->tierService->checkTierAfterDonation($donation);
+            $organization = $donation->organization;
+
+            if (!$organization) {
+                return;
+            }
+
+            $tierChange = $this->tierService->checkAndScheduleTierChange($organization);
 
             if ($tierChange) {
-                \Log::info('Tier change scheduled', [
+                \Log::info('Tier change scheduled after donation', [
+                    'donation_id' => $donation->id,
                     'organization_id' => $donation->organization_id,
                     'from_tier' => $tierChange->from_tier_id,
                     'to_tier' => $tierChange->to_tier_id,
                     'donation_total_12m' => $tierChange->donation_total_12m,
-                    'scheduled_date' => $tierChange->scheduled_date,
+                    'scheduled_for' => $tierChange->scheduled_for,
                 ]);
             }
         } catch (\Exception $e) {

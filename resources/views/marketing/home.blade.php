@@ -151,7 +151,7 @@
                 <div class="col-lg-6" >
                     <div class="about-content">
                         <div class="pp-section-title mb-0" >
-                            <span class="pp-sub-title wow fadeInUp" >{{ __('marketing.home.about_subtitle') }}</span>
+                            <span class="pp-sub-title wow fadeInUp" style="overflow: visible; padding-top: 4px; padding-bottom: 4px;">{{ __('marketing.home.about_subtitle') }}</span>
                             <h2 class="wow fadeInUp" data-wow-delay=".3s" >
                                 {{ __('marketing.home.about_title') }}
                             </h2>
@@ -457,7 +457,7 @@
                     <div class="pp-cta-image">
                         <img src="{{ asset('marketing/assets/img/home-1/cta/cta-1.jpg') }}" alt="Get Started" class="wow img-custom-anim-top" data-wow-duration="1.3s" data-wow-delay="0.3s">
                         <div class="pp-cta-image-2">
-                            <img src="{{ asset('marketing/assets/img/home-1/cta/mobile-app.jpeg') }}" alt="Dayaa Platform" class="wow img-custom-anim-right" data-wow-duration="1.3s" data-wow-delay="0.3s">
+                            <!-- <img src="{{ asset('marketing/assets/img/home-1/cta/mobile-app.jpeg') }}" alt="Dayaa Platform" class="wow img-custom-anim-right" data-wow-duration="1.3s" data-wow-delay="0.3s"> -->
                         </div>
                         <div class="pp-shape float-bob-y">
                             <img src="{{ asset('marketing/assets/img/home-1/cta/shape-1.jpg') }}" alt="img">

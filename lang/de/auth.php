@@ -44,9 +44,9 @@ return [
         'step_2' => 'Admin-Überprüfung - Wir verifizieren Ihre Organisation',
         'step_3' => 'Kontoaktivierung - Beginnen Sie mit DAYAA',
         'password_requirements' => 'Passwort muss mindestens 8 Zeichen lang sein',
-        'free_trial' => 'Kostenlose Testversion',
         'secure_setup' => 'Sichere Einrichtung',
         'quick_approval' => 'Schnelle Genehmigung',
+        'easy_setup' => 'Einfache Einrichtung',
     ],
 
     // Forgot Password

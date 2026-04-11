@@ -62,15 +62,9 @@
                 <div class="relative z-10 flex flex-col justify-between p-12 text-white w-full">
                     <!-- Logo & Branding -->
                     <div>
-                        <div class="flex items-center space-x-3 mb-8">
-                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-md border border-white border-opacity-30 shadow-lg">
-                                <span class="text-2xl font-black text-white">D</span>
-                            </div>
-                            <div>
-                                <h1 class="text-3xl font-bold tracking-tight">DAYAA</h1>
-                                <p class="text-sm text-white text-opacity-90">Empowering Generosity</p>
-                            </div>
-                        </div>
+                        <a href="{{ route('marketing.home') }}" class="inline-block mb-8">
+                            <img src="{{ asset('marketing/assets/img/logo/dayaa-logo.png') }}" alt="Dayaa Logo" style="max-height: 50px; filter: brightness(0) invert(1);">
+                        </a>
                     </div>
 
                     <!-- Main content -->
@@ -128,15 +122,9 @@
 
                     <!-- Mobile Logo (visible only on mobile) -->
                     <div class="lg:hidden flex items-center justify-center mb-8">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-gradient-dayaa rounded-xl flex items-center justify-center shadow-lg">
-                                <span class="text-2xl font-black text-white">D</span>
-                            </div>
-                            <div>
-                                <h1 class="text-2xl font-bold text-gray-900">DAYAA</h1>
-                                <p class="text-sm text-gray-600">Empowering Generosity</p>
-                            </div>
-                        </div>
+                        <a href="{{ route('marketing.home') }}" class="inline-block">
+                            <img src="{{ asset('marketing/assets/img/logo/dayaa-logo.png') }}" alt="Dayaa Logo" style="max-height: 50px;">
+                        </a>
                     </div>
 
                     <!-- Card Container -->

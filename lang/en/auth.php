@@ -43,9 +43,9 @@ return [
         'step_2' => 'Admin review - We verify your organization',
         'step_3' => 'Account activation - Start using DAYAA',
         'password_requirements' => 'Password must be at least 8 characters',
-        'free_trial' => 'Free Trial',
         'secure_setup' => 'Secure Setup',
         'quick_approval' => 'Quick Approval',
+        'easy_setup' => 'Easy Setup',
     ],
 
     // Forgot Password
