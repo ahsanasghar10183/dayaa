@@ -342,11 +342,59 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <label for="variation_image" class="block text-sm font-medium text-gray-700 mb-1">Variation Image (Optional)</label>
-                    <input type="file" name="image" id="variation_image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
-                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-xs text-gray-500">Upload a specific image for this variation. If no image is uploaded, the product's primary image will be used.</p>
+                    <label for="variation_images" class="block text-sm font-medium text-gray-700 mb-1">Variation Images (Optional)</label>
+
+                    <!-- New Images Preview Grid for Add Variation -->
+                    <div id="new-variation-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" style="display: none;"></div>
+
+                    <div class="relative">
+                        <input type="file" id="variation_images" name="images[]" multiple accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                               onchange="previewVariationImages(event)" class="hidden">
+                        <label for="variation_images"
+                               class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-green-500 transition-all group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 mb-2 text-gray-400 group-hover:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="mb-1 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> variation images</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 2MB (Max 10 images)</p>
+                            </div>
+                        </label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Upload multiple images for this variation. First image will be the primary image. If no images uploaded, product's primary image will be used.</p>
                 </div>
+
+                <script>
+                    function previewVariationImages(event) {
+                        const container = document.getElementById('new-variation-preview-container');
+                        const files = event.target.files;
+
+                        if (files.length > 0) {
+                            container.style.display = 'grid';
+                            container.innerHTML = '';
+
+                            Array.from(files).forEach((file, index) => {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const div = document.createElement('div');
+                                    div.className = 'relative group rounded-xl overflow-hidden border-2 border-green-300 bg-white shadow-sm';
+                                    div.innerHTML = `
+                                        <div class="aspect-square relative">
+                                            <img src="${e.target.result}" alt="New image ${index + 1}" class="w-full h-full object-cover">
+                                            <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
+                                                ${index === 0 ? 'Primary' : 'New'}
+                                            </div>
+                                        </div>
+                                    `;
+                                    container.appendChild(div);
+                                };
+                                reader.readAsDataURL(file);
+                            });
+                        } else {
+                            container.style.display = 'none';
+                        }
+                    }
+                </script>
                 <div class="mt-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -376,7 +424,11 @@
                             <td class="px-4 py-3">
                                 <div class="relative w-16 h-16 rounded-lg overflow-hidden border-2 {{ $variation->hasOwnImage() ? 'border-blue-300' : 'border-gray-200' }}">
                                     <img src="{{ $variation->image_url }}" alt="{{ $variation->name }}" class="w-full h-full object-cover">
-                                    @if($variation->hasOwnImage())
+                                    @if($variation->images_count > 0)
+                                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-bl font-semibold" title="{{ $variation->images_count }} images">
+                                        {{ $variation->images_count }}
+                                    </div>
+                                    @elseif($variation->hasOwnImage())
                                     <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs px-1 rounded-bl" title="Has own image">
                                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
@@ -434,46 +486,64 @@
 
         <!-- Edit Variation Modal (Hidden by default) -->
         <div id="edit-variation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-semibold mb-4">Edit Variation</h3>
                 <form id="edit-variation-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="space-y-4">
-                        <!-- Current Image Preview -->
-                        <div id="edit_variation_current_image_container" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Image</label>
-                            <div class="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-300">
-                                <img id="edit_variation_current_image" src="" alt="Current variation image" class="w-full h-full object-cover">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
+                                <input type="text" name="name" id="edit_variation_name" required
+                                       class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                                <input type="text" name="sku" id="edit_variation_sku"
+                                       class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+                                <input type="number" name="price" id="edit_variation_price" step="0.01" min="0"
+                                       class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                                <input type="number" name="quantity" id="edit_variation_quantity" required min="0"
+                                       class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
-                            <input type="text" name="name" id="edit_variation_name" required
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        <!-- Existing Images Gallery -->
+                        <div id="edit_variation_images_container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                            <div id="edit_variation_images_grid" class="grid grid-cols-3 md:grid-cols-4 gap-3 mb-3"></div>
                         </div>
+
+                        <!-- Upload New Images -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-                            <input type="text" name="sku" id="edit_variation_sku"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Add More Images (Optional)</label>
+
+                            <!-- New Images Preview -->
+                            <div id="edit-variation-preview-container" class="grid grid-cols-3 md:grid-cols-4 gap-3 mb-3" style="display: none;"></div>
+
+                            <div class="relative">
+                                <input type="file" id="edit_variation_new_images" name="images[]" multiple accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                                       onchange="previewEditVariationImages(event)" class="hidden">
+                                <label for="edit_variation_new_images"
+                                       class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-500 transition-all group">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <svg class="w-8 h-8 mb-1 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                        <p class="text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Upload more images</span></p>
+                                        <p class="text-xs text-gray-500">Max 10 images total</p>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
-                            <input type="number" name="price" id="edit_variation_price" step="0.01" min="0"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
-                            <input type="number" name="quantity" id="edit_variation_quantity" required min="0"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Update Image (Optional)</label>
-                            <input type="file" name="image" id="edit_variation_image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
-                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                            <p class="mt-1 text-xs text-gray-500">Upload a new image to replace the current one</p>
-                        </div>
+
                         <div>
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" id="edit_variation_active" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -494,7 +564,10 @@
         </div>
 
         <script>
-            function editVariation(id, name, sku, price, quantity, imageUrl) {
+            let currentVariationId = null;
+
+            async function editVariation(id, name, sku, price, quantity, imageUrl) {
+                currentVariationId = id;
                 const form = document.getElementById('edit-variation-form');
                 form.action = `/super-admin/shop/products/{{ $product->id }}/variations/${id}`;
 
@@ -503,19 +576,119 @@
                 document.getElementById('edit_variation_price').value = price || '';
                 document.getElementById('edit_variation_quantity').value = quantity;
 
-                // Show current image if exists
-                if (imageUrl) {
-                    document.getElementById('edit_variation_current_image').src = imageUrl;
-                    document.getElementById('edit_variation_current_image_container').classList.remove('hidden');
-                } else {
-                    document.getElementById('edit_variation_current_image_container').classList.add('hidden');
+                // Clear previous images and previews
+                document.getElementById('edit_variation_images_grid').innerHTML = '';
+                document.getElementById('edit-variation-preview-container').innerHTML = '';
+                document.getElementById('edit-variation-preview-container').style.display = 'none';
+                document.getElementById('edit_variation_new_images').value = '';
+
+                // Fetch variation images from server
+                try {
+                    const response = await fetch(`/super-admin/shop/products/{{ $product->id }}/variations/${id}/images`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        displayVariationImages(data.images);
+                    }
+                } catch (error) {
+                    console.error('Error fetching variation images:', error);
                 }
 
                 document.getElementById('edit-variation-modal').classList.remove('hidden');
             }
 
+            function displayVariationImages(images) {
+                const grid = document.getElementById('edit_variation_images_grid');
+                grid.innerHTML = '';
+
+                if (images && images.length > 0) {
+                    images.forEach((image, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'relative group rounded-lg overflow-hidden border-2 border-gray-300 bg-white shadow-sm hover:shadow-md transition-all';
+                        div.innerHTML = `
+                            <div class="aspect-square relative">
+                                <img src="${image.url}" alt="Variation image ${index + 1}" class="w-full h-full object-cover">
+                                ${image.is_primary ? `
+                                    <div class="absolute top-1 left-1 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded shadow">
+                                        Primary
+                                    </div>
+                                ` : ''}
+                                <button type="button"
+                                        onclick="deleteVariationImage(${image.id})"
+                                        class="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+                        grid.appendChild(div);
+                    });
+                } else {
+                    grid.innerHTML = '<p class="text-sm text-gray-500 col-span-full">No images for this variation. Upload some below!</p>';
+                }
+            }
+
+            async function deleteVariationImage(imageId) {
+                if (!confirm('Are you sure you want to delete this image?')) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/super-admin/shop/products/{{ $product->id }}/variations/${currentVariationId}/images/${imageId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    if (response.ok) {
+                        // Refresh the images
+                        const imagesResponse = await fetch(`/super-admin/shop/products/{{ $product->id }}/variations/${currentVariationId}/images`);
+                        const data = await imagesResponse.json();
+                        displayVariationImages(data.images);
+                    } else {
+                        alert('Error deleting image. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting image:', error);
+                    alert('Error deleting image. Please try again.');
+                }
+            }
+
+            function previewEditVariationImages(event) {
+                const container = document.getElementById('edit-variation-preview-container');
+                const files = event.target.files;
+
+                if (files.length > 0) {
+                    container.style.display = 'grid';
+                    container.innerHTML = '';
+
+                    Array.from(files).forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.className = 'relative rounded-lg overflow-hidden border-2 border-green-300 bg-white shadow-sm';
+                            div.innerHTML = `
+                                <div class="aspect-square relative">
+                                    <img src="${e.target.result}" alt="New image ${index + 1}" class="w-full h-full object-cover">
+                                    <div class="absolute top-1 left-1 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded shadow">
+                                        New
+                                    </div>
+                                </div>
+                            `;
+                            container.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    container.style.display = 'none';
+                }
+            }
+
             function closeEditModal() {
                 document.getElementById('edit-variation-modal').classList.add('hidden');
+                currentVariationId = null;
             }
 
             // Close modal on outside click

@@ -91,6 +91,19 @@ return [
         'cta_title' => 'Ready to Transform Your Fundraising?',
         'cta_text' => 'Join hundreds of organizations already using Dayaa to maximize their donation impact. Get started today and discover how easy digital fundraising can be.',
         'cta_button' => 'Get Started',
+
+        // Trust Section (before footer)
+        'trust_section_subtitle' => 'WHY CHOOSE DAYAA',
+        'trust_section_title' => 'Empowering Organizations with Innovative Solutions',
+        'trust_feature_1_title' => 'INNOVATION DRIVEN',
+        'trust_feature_1_desc' => 'Cutting-edge technology designed specifically for modern fundraising',
+        'trust_feature_2_title' => 'SEAMLESS PAYMENTS',
+        'trust_feature_2_desc' => 'Accept all major payment methods with contactless and digital wallet support',
+        'trust_feature_3_title' => 'BANK-LEVEL SECURITY',
+        'trust_feature_3_desc' => 'PCI-DSS compliant with end-to-end encryption for complete peace of mind',
+        'trust_feature_4_title' => 'QUALITY ASSURED',
+        'trust_feature_4_desc' => 'Premium hardware with comprehensive warranty and dedicated support',
+        'trust_payment_methods' => 'Accepted payment methods worldwide',
     ],
 
     // About Page

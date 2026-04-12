@@ -53,6 +53,14 @@ class ProductVariation extends Model
     }
 
     /**
+     * Get all images for this variation
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductVariationImage::class, 'product_variation_id')->ordered();
+    }
+
+    /**
      * Get the price to use (variation price or parent product price)
      */
     public function getEffectivePriceAttribute(): float
@@ -155,16 +163,26 @@ class ProductVariation extends Model
     }
 
     /**
-     * Get variation image URL or fallback to product primary image
+     * Get variation primary image URL or fallback to product primary image
      */
     public function getImageUrlAttribute(): string
     {
+        // First try to get from images gallery (primary or first image)
+        $primaryImage = $this->images()->where('is_primary', true)->first();
+        if ($primaryImage) {
+            return $primaryImage->image_url;
+        }
+
+        $firstImage = $this->images()->first();
+        if ($firstImage) {
+            return $firstImage->image_url;
+        }
+
+        // Fallback to old single image_path for backward compatibility
         if ($this->image_path) {
-            // Check if the image_path is an external URL (http/https)
             if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
                 return $this->image_path;
             }
-            // Otherwise, treat as local storage path - use relative path with leading slash
             return '/' . 'storage/' . $this->image_path;
         }
 
@@ -173,20 +191,43 @@ class ProductVariation extends Model
     }
 
     /**
+     * Get all image URLs for this variation
+     */
+    public function getImageGalleryAttribute(): array
+    {
+        $imageUrls = $this->images->map(function ($image) {
+            return $image->image_url;
+        })->toArray();
+
+        // If no images in gallery, use single image or product image as fallback
+        if (empty($imageUrls)) {
+            $imageUrls[] = $this->image_url;
+        }
+
+        return $imageUrls;
+    }
+
+    /**
      * Get thumbnail URL for variation image
      */
     public function getThumbnailUrlAttribute(): string
     {
-        // For now, return same as image_url
-        // In the future, you could generate actual thumbnails
         return $this->image_url;
     }
 
     /**
-     * Check if variation has its own image
+     * Check if variation has its own images
      */
     public function hasOwnImage(): bool
     {
-        return !empty($this->image_path);
+        return $this->images()->exists() || !empty($this->image_path);
+    }
+
+    /**
+     * Get count of variation images
+     */
+    public function getImagesCountAttribute(): int
+    {
+        return $this->images()->count();
     }
 }

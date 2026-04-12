@@ -28,15 +28,15 @@
                     <div class="main-image mb-3">
                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="img-fluid rounded" id="mainImage">
                     </div>
-                    @if($product->images->count() > 1)
-                    <div class="row g-2">
-                        @foreach($product->images as $image)
-                        <div class="col-3">
-                            <img src="{{ $image->url }}" alt="{{ $image->alt_text }}" class="img-fluid rounded thumbnail-image" style="cursor: pointer;" onclick="changeMainImage('{{ $image->url }}')">
-                        </div>
-                        @endforeach
+                    <div class="row g-2" id="image-thumbnails">
+                        @if($product->images->count() > 1)
+                            @foreach($product->images as $image)
+                            <div class="col-3">
+                                <img src="{{ $image->url }}" alt="{{ $image->alt_text }}" class="img-fluid rounded thumbnail-image" style="cursor: pointer;" onclick="changeMainImage('{{ $image->url }}')">
+                            </div>
+                            @endforeach
+                        @endif
                     </div>
-                    @endif
                 </div>
             </div>
 
@@ -90,6 +90,7 @@
                                      data-stock="{{ $variation->quantity }}"
                                      data-name="{{ $variation->name }}"
                                      data-image="{{ $variation->image_url }}"
+                                     data-images="{{ json_encode($variation->image_gallery) }}"
                                      onclick="selectVariation(this)"
                                      style="cursor: pointer; position: relative;">
                                     <div style="width: 100px; height: 100px; border: 3px solid {{ $index === 0 ? '#0F69F3' : '#dee2e6' }}; border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
@@ -299,14 +300,53 @@ function selectVariation(element) {
     const variationId = element.dataset.variationId;
     document.getElementById('selected-variation-id').value = variationId;
 
-    // Update main product image if variation has its own image
-    const variationImage = element.dataset.image;
-    if (variationImage) {
-        document.getElementById('mainImage').src = variationImage;
-    }
+    // Update image gallery for variation
+    updateImageGallery(element);
 
     // Update variation info
     updateVariationInfo(element);
+}
+
+function updateImageGallery(element) {
+    const imagesData = element.dataset.images;
+
+    if (!imagesData) return;
+
+    try {
+        const images = JSON.parse(imagesData);
+
+        if (images && images.length > 0) {
+            // Update main image
+            document.getElementById('mainImage').src = images[0];
+
+            // Update thumbnails
+            const thumbnailsContainer = document.getElementById('image-thumbnails');
+            thumbnailsContainer.innerHTML = '';
+
+            if (images.length > 1) {
+                images.forEach((imageUrl, index) => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-3';
+
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = `${element.dataset.name} - Image ${index + 1}`;
+                    img.className = 'img-fluid rounded thumbnail-image';
+                    img.style.cursor = 'pointer';
+                    img.onclick = function() { changeMainImage(imageUrl); };
+
+                    if (index === 0) {
+                        img.classList.add('active');
+                    }
+
+                    colDiv.appendChild(img);
+                    thumbnailsContainer.appendChild(colDiv);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error parsing variation images:', error);
+    }
 }
 
 function updateVariationInfo(element) {
@@ -469,6 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize with first variation selected
         const firstVariation = document.querySelector('.variation-thumbnail.selected');
         if (firstVariation) {
+            updateImageGallery(firstVariation);
             updateVariationInfo(firstVariation);
         } else {
             // Disable buttons initially if no variation selected

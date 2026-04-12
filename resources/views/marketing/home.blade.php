@@ -36,6 +36,7 @@
 </section>
 
 <!-- Pp-Brand Section Start -->
+{{-- Brands section commented out - can be added later when needed
 <div class="pp-brand-section section-padding pb-0 fix">
     <div class="container custom-container-3">
         <div class="brand-wrapper style-2">
@@ -74,6 +75,7 @@
         </div>
     </div>
 </div>
+--}}
 
 <!-- Featured Donation Devices Section -->
 @if($featuredProducts->isNotEmpty())
@@ -445,6 +447,83 @@
     </div>
 </section>
 
+<!-- Pp-Trust Section Start -->
+<section class="pp-trust-section section-padding fix section-bg">
+    <div class="container">
+        <div class="pp-section-title text-center mb-5">
+            <span class="pp-sub-title wow fadeInUp">
+                {{ __('marketing.home.trust_section_subtitle') }}
+                <span class="pp-style-2"></span>
+            </span>
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                {{ __('marketing.home.trust_section_title') }}
+            </h2>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="row g-4 mb-5">
+            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
+                <div class="pp-trust-feature-card text-center">
+                    <div class="pp-trust-icon mb-3">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/innovation.svg') }}" alt="Innovation Icon" style="width: 64px; height: 64px;">
+                    </div>
+                    <h5 class="mb-2">{{ __('marketing.home.trust_feature_1_title') }}</h5>
+                    <p class="text-muted mb-0">{{ __('marketing.home.trust_feature_1_desc') }}</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".5s">
+                <div class="pp-trust-feature-card text-center">
+                    <div class="pp-trust-icon mb-3">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/payment.svg') }}" alt="Payment Icon" style="width: 64px; height: 64px;">
+                    </div>
+                    <h5 class="mb-2">{{ __('marketing.home.trust_feature_2_title') }}</h5>
+                    <p class="text-muted mb-0">{{ __('marketing.home.trust_feature_2_desc') }}</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".7s">
+                <div class="pp-trust-feature-card text-center">
+                    <div class="pp-trust-icon mb-3">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/security.svg') }}" alt="Security Icon" style="width: 64px; height: 64px;">
+                    </div>
+                    <h5 class="mb-2">{{ __('marketing.home.trust_feature_3_title') }}</h5>
+                    <p class="text-muted mb-0">{{ __('marketing.home.trust_feature_3_desc') }}</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".9s">
+                <div class="pp-trust-feature-card text-center">
+                    <div class="pp-trust-icon mb-3">
+                        <img src="{{ asset('marketing/assets/img/home-1/icon/guarantee.svg') }}" alt="Guarantee Icon" style="width: 64px; height: 64px;">
+                    </div>
+                    <h5 class="mb-2">{{ __('marketing.home.trust_feature_4_title') }}</h5>
+                    <p class="text-muted mb-0">{{ __('marketing.home.trust_feature_4_desc') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider Line -->
+        <hr class="my-5 wow fadeInUp" data-wow-delay=".3s" style="border-top: 2px solid #e5e7eb; opacity: 0.5;">
+
+        <!-- Payment Methods -->
+        <div class="pp-payment-methods text-center wow fadeInUp" data-wow-delay=".5s">
+            <p class="text-muted mb-4 fw-medium">{{ __('marketing.home.trust_payment_methods') }}</p>
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+                <img src="{{ asset('marketing/assets/img/payment-methods/visa.svg') }}" alt="Visa" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/vpay.svg') }}" alt="V Pay" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/mastercard.svg') }}" alt="Mastercard" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/maestro.svg') }}" alt="Maestro" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/amex.svg') }}" alt="American Express" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/discover.svg') }}" alt="Discover" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/applepay.svg') }}" alt="Apple Pay" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/googlepay.svg') }}" alt="Google Pay" style="height: 32px;">
+                <img src="{{ asset('marketing/assets/img/payment-methods/unionpay.svg') }}" alt="UnionPay" style="height: 32px;">
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Pp-cta Section Start -->
 <section class="pp-cta-section section-padding fix theme-bg">
     <div class="top-shape">
@@ -496,6 +575,79 @@
 
 .product-image:hover img {
     transform: scale(1.05);
+}
+
+/* Trust Section Styles */
+.pp-trust-section {
+    background: #f9fafb;
+}
+
+.pp-trust-feature-card {
+    padding: 2rem 1.5rem;
+    background: white;
+    border-radius: 16px;
+    height: 100%;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.pp-trust-feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(15, 105, 243, 0.1);
+    border-color: rgba(15, 105, 243, 0.2);
+}
+
+.pp-trust-feature-card h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: 0.5px;
+}
+
+.pp-trust-feature-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+.pp-trust-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pp-trust-icon img {
+    filter: drop-shadow(0 4px 12px rgba(15, 105, 243, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.pp-trust-feature-card:hover .pp-trust-icon img {
+    transform: scale(1.1);
+}
+
+/* Payment Methods Section */
+.pp-payment-methods img {
+    transition: transform 0.3s ease;
+}
+
+.pp-payment-methods img:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pp-trust-feature-card {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .pp-payment-methods .d-flex {
+        gap: 1rem !important;
+    }
+
+    .pp-payment-methods img {
+        height: 28px !important;
+    }
 }
 </style>
 @endpush

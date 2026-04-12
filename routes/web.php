@@ -134,6 +134,8 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
             Route::put('/{variation}', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'update'])->name('update');
             Route::delete('/{variation}', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'destroy'])->name('destroy');
             Route::post('/{variation}/toggle-status', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'toggleStatus'])->name('toggle-status');
+            Route::get('/{variation}/images', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'getImages'])->name('get-images');
+            Route::delete('/{variation}/images/{image}', [\App\Http\Controllers\SuperAdmin\ProductVariationController::class, 'deleteImage'])->name('delete-image');
         });
 
         // Orders
