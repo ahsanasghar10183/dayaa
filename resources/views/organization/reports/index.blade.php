@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
-                <p class="text-sm text-gray-500 mt-1">Donation insights and performance metrics</p>
+                <h2 class="text-2xl font-bold text-gray-900">Donation Reports</h2>
+                <p class="text-sm text-gray-500 mt-1">Detailed donation records with advanced filtering and export</p>
             </div>
             <a href="{{ route('organization.reports.export', request()->query()) }}"
                class="btn-primary flex items-center gap-2">
@@ -16,146 +16,6 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {{-- KPI Cards --}}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {{-- Today --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Today</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($todayStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $todayStats['count'] }} donations</p>
-                @php
-                    $diff = $todayStats['total'] - $yesterdayStats['total'];
-                    $pct = $yesterdayStats['total'] > 0 ? round(($diff / $yesterdayStats['total']) * 100, 1) : 0;
-                @endphp
-                <p class="text-xs mt-2 {{ $diff >= 0 ? 'text-green-600' : 'text-red-500' }}">
-                    {{ $diff >= 0 ? '+' : '' }}€{{ number_format(abs($diff), 2) }} vs yesterday
-                    @if($pct != 0)({{ $diff >= 0 ? '+' : '' }}{{ $pct }}%)@endif
-                </p>
-            </div>
-
-            {{-- This Week --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">This Week</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($weekStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $weekStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($weekStats['avg'], 2) }}</p>
-            </div>
-
-            {{-- This Month --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">This Month</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($monthStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $monthStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($monthStats['avg'], 2) }}</p>
-            </div>
-
-            {{-- All Time --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">All Time</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($allTimeStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $allTimeStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($allTimeStats['avg'], 2) }}</p>
-            </div>
-        </div>
-
-        {{-- Top Stats Row --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {{-- Top Campaign --}}
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm font-medium text-blue-700">Top Campaign</p>
-                </div>
-                @if($topCampaign && $topCampaign->campaign)
-                    <p class="font-bold text-gray-900 truncate">{{ $topCampaign->campaign->name }}</p>
-                    <p class="text-2xl font-bold text-blue-700 mt-1">€{{ number_format($topCampaign->total, 2) }}</p>
-                @else
-                    <p class="text-gray-400 text-sm">No data yet</p>
-                @endif
-            </div>
-
-            {{-- Top Device --}}
-            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100 p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm font-medium text-purple-700">Top Device</p>
-                </div>
-                @if($topDevice && $topDevice->device)
-                    <p class="font-bold text-gray-900 truncate">{{ $topDevice->device->name }}</p>
-                    <p class="text-2xl font-bold text-purple-700 mt-1">€{{ number_format($topDevice->total, 2) }}</p>
-                @else
-                    <p class="text-gray-400 text-sm">No data yet</p>
-                @endif
-            </div>
-
-            {{-- Active Devices --}}
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100 p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm font-medium text-green-700">Active Devices</p>
-                </div>
-                <p class="text-3xl font-bold text-green-700">{{ $activeDevicesCount }}</p>
-                <p class="text-sm text-gray-500 mt-1">Currently online</p>
-            </div>
-        </div>
-
-        {{-- Charts Row --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {{-- 30-Day Trend --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Donation Trend (Last 30 Days)</h3>
-                <div class="relative h-64">
-                    <canvas id="trendChart"></canvas>
-                </div>
-            </div>
-
-            {{-- Campaign Comparison --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Campaign Performance</h3>
-                <div class="relative h-64">
-                    <canvas id="campaignChart"></canvas>
-                </div>
-            </div>
-
-            {{-- Hourly Activity --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Hourly Activity (Last 30 Days)</h3>
-                <div class="relative h-64">
-                    <canvas id="hourlyChart"></canvas>
-                </div>
-            </div>
-
-            {{-- Day of Week --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Day of Week Analysis (Last 90 Days)</h3>
-                <div class="relative h-64">
-                    <canvas id="dowChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        {{-- Device Performance --}}
-        @if(count($deviceChartData['labels']) > 0)
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-            <h3 class="text-base font-semibold text-gray-900 mb-4">Device Performance</h3>
-            <div class="relative h-64">
-                <canvas id="deviceChart"></canvas>
-            </div>
-        </div>
-        @endif
 
         {{-- Filters --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
@@ -220,8 +80,9 @@
                         <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
                         <select name="status" class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                             <option value="">All Statuses</option>
-                            <option value="success" {{ request('status') === 'success' ? 'selected' : '' }}>Success</option>
+                            <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
                             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>Processing</option>
                             <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Failed</option>
                         </select>
                     </div>
@@ -270,7 +131,7 @@
                 <p class="text-lg font-bold text-blue-800">€{{ number_format($summary->avg_amount ?? 0, 2) }}</p>
             </div>
             <div>
-                <p class="text-xs text-green-600 font-medium">Successful</p>
+                <p class="text-xs text-green-600 font-medium">Completed</p>
                 <p class="text-lg font-bold text-green-700">{{ number_format($summary->success_count) }}</p>
             </div>
             <div>
@@ -356,13 +217,17 @@
                                     <span class="text-sm text-gray-700">{{ $donation->device->name ?? 'N/A' }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($donation->payment_status === 'success')
+                                    @if($donation->payment_status === 'completed')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Success
+                                            Completed
                                         </span>
                                     @elseif($donation->payment_status === 'pending')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                             Pending
+                                        </span>
+                                    @elseif($donation->payment_status === 'processing')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Processing
                                         </span>
                                     @elseif($donation->payment_status === 'failed')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -396,197 +261,7 @@
     </div>
 
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        const PRIMARY = '#1163F0';
-        const PRIMARY_LIGHT = 'rgba(17,99,240,0.15)';
-        const COLORS = ['#1163F0','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#F97316','#EC4899'];
-
-        // ---- Trend Chart ----
-        const trendData = @json($trendData);
-        new Chart(document.getElementById('trendChart'), {
-            type: 'line',
-            data: {
-                labels: trendData.labels,
-                datasets: [{
-                    label: 'Total (€)',
-                    data: trendData.totals,
-                    borderColor: PRIMARY,
-                    backgroundColor: PRIMARY_LIGHT,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + trendData.counts[ctx.dataIndex] + ' donations)'
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: v => '€' + v.toLocaleString()
-                        },
-                        grid: { color: '#f3f4f6' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            maxRotation: 45,
-                            maxTicksLimit: 10
-                        }
-                    }
-                }
-            }
-        });
-
-        // ---- Campaign Chart ----
-        const campaignData = @json($campaignChartData);
-        if (campaignData.labels.length > 0) {
-            new Chart(document.getElementById('campaignChart'), {
-                type: 'bar',
-                data: {
-                    labels: campaignData.labels,
-                    datasets: [{
-                        label: 'Total (€)',
-                        data: campaignData.totals,
-                        backgroundColor: COLORS,
-                        borderRadius: 6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + campaignData.counts[ctx.dataIndex] + ' donations)'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: v => '€' + v.toLocaleString() },
-                            grid: { color: '#f3f4f6' }
-                        },
-                        x: { grid: { display: false }, ticks: { maxRotation: 45 } }
-                    }
-                }
-            });
-        } else {
-            document.getElementById('campaignChart').closest('.relative').innerHTML = '<div class="flex items-center justify-center h-full text-gray-400">No campaign data yet</div>';
-        }
-
-        // ---- Hourly Chart ----
-        const hourlyData = @json($hourlyData);
-        new Chart(document.getElementById('hourlyChart'), {
-            type: 'bar',
-            data: {
-                labels: hourlyData.labels,
-                datasets: [{
-                    label: 'Donations',
-                    data: hourlyData.counts,
-                    backgroundColor: 'rgba(16,185,129,0.7)',
-                    borderRadius: 4,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ctx.parsed.y + ' donations (€' + hourlyData.totals[ctx.dataIndex].toFixed(2) + ')'
-                        }
-                    }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f3f4f6' }, ticks: { stepSize: 1 } },
-                    x: { grid: { display: false }, ticks: { maxRotation: 45 } }
-                }
-            }
-        });
-
-        // ---- Day of Week Chart ----
-        const dowData = @json($dayOfWeekData);
-        new Chart(document.getElementById('dowChart'), {
-            type: 'bar',
-            data: {
-                labels: dowData.labels,
-                datasets: [{
-                    label: 'Donations',
-                    data: dowData.counts,
-                    backgroundColor: COLORS.slice(0, 7),
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ctx.parsed.y + ' donations (€' + dowData.totals[ctx.dataIndex].toFixed(2) + ')'
-                        }
-                    }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f3f4f6' }, ticks: { stepSize: 1 } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-
-        // ---- Device Chart ----
-        @if(count($deviceChartData['labels']) > 0)
-        const deviceData = @json($deviceChartData);
-        new Chart(document.getElementById('deviceChart'), {
-            type: 'bar',
-            data: {
-                labels: deviceData.labels,
-                datasets: [{
-                    label: 'Total (€)',
-                    data: deviceData.totals,
-                    backgroundColor: COLORS,
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + deviceData.counts[ctx.dataIndex] + ' donations)'
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { callback: v => '€' + v.toLocaleString() },
-                        grid: { color: '#f3f4f6' }
-                    },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-        @endif
-
         // ---- Date preset toggle ----
         function handleDatePresetChange() {
             const val = document.getElementById('datePreset').value;

@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class ReportingController extends Controller
 {
     /**
-     * Main reports index page
+     * Main reports index page - Tabular data and exports
      */
     public function index(Request $request)
     {
@@ -108,69 +108,9 @@ class ReportingController extends Controller
             AVG(CASE WHEN payment_status = "completed" THEN amount ELSE NULL END) as avg_amount,
             SUM(CASE WHEN payment_status = "completed" THEN 1 ELSE 0 END) as success_count,
             SUM(CASE WHEN payment_status = "failed" THEN 1 ELSE 0 END) as failed_count,
-            SUM(CASE WHEN payment_status = "pending" THEN 1 ELSE 0 END) as pending_count
+            SUM(CASE WHEN payment_status = "pending" THEN 1 ELSE 0 END) as pending_count,
+            SUM(CASE WHEN payment_status = "processing" THEN 1 ELSE 0 END) as processing_count
         ')->first();
-
-        // KPIs (today vs yesterday)
-        $todayStart = Carbon::today();
-        $todayEnd = Carbon::now();
-        $yesterdayStart = Carbon::yesterday();
-        $yesterdayEnd = Carbon::yesterday()->endOfDay();
-
-        $todayStats = $this->getPeriodStats($organization->id, $todayStart, $todayEnd);
-        $yesterdayStats = $this->getPeriodStats($organization->id, $yesterdayStart, $yesterdayEnd);
-
-        // This week
-        $weekStats = $this->getPeriodStats($organization->id, Carbon::now()->startOfWeek(), Carbon::now());
-        // This month
-        $monthStats = $this->getPeriodStats($organization->id, Carbon::now()->startOfMonth(), Carbon::now());
-        // All time
-        $allTimeStats = $this->getPeriodStats($organization->id, Carbon::createFromDate(2000, 1, 1), Carbon::now());
-
-        // Top campaign
-        $topCampaign = Donation::where('donations.organization_id', $organization->id)
-            ->where('payment_status', 'completed')
-            ->select('campaign_id', DB::raw('SUM(amount) as total'))
-            ->groupBy('campaign_id')
-            ->orderByDesc('total')
-            ->with('campaign')
-            ->first();
-
-        // Top device
-        $topDevice = Donation::where('donations.organization_id', $organization->id)
-            ->where('payment_status', 'completed')
-            ->select('device_id', DB::raw('SUM(amount) as total'))
-            ->groupBy('device_id')
-            ->orderByDesc('total')
-            ->with('device')
-            ->first();
-
-        // Active devices count
-        $activeDevicesCount = Device::where('organization_id', $organization->id)
-            ->where('status', 'active')
-            ->count();
-
-        // Recent 10 donations
-        $recentDonations = Donation::where('donations.organization_id', $organization->id)
-            ->with(['campaign', 'device'])
-            ->orderByDesc('created_at')
-            ->limit(10)
-            ->get();
-
-        // Chart data: 30-day donation trend
-        $trendData = $this->getTrendData($organization->id);
-
-        // Chart data: campaign comparison
-        $campaignChartData = $this->getCampaignChartData($organization->id);
-
-        // Chart data: device performance
-        $deviceChartData = $this->getDeviceChartData($organization->id);
-
-        // Chart data: hourly activity (last 30 days)
-        $hourlyData = $this->getHourlyData($organization->id);
-
-        // Chart data: day of week
-        $dayOfWeekData = $this->getDayOfWeekData($organization->id);
 
         // Filter dropdowns
         $campaigns = Campaign::where('organization_id', $organization->id)->orderBy('name')->get();
@@ -179,20 +119,6 @@ class ReportingController extends Controller
         return view('organization.reports.index', compact(
             'donations',
             'summary',
-            'todayStats',
-            'yesterdayStats',
-            'weekStats',
-            'monthStats',
-            'allTimeStats',
-            'topCampaign',
-            'topDevice',
-            'activeDevicesCount',
-            'recentDonations',
-            'trendData',
-            'campaignChartData',
-            'deviceChartData',
-            'hourlyData',
-            'dayOfWeekData',
             'campaigns',
             'devices',
             'startDate',
@@ -342,134 +268,5 @@ class ReportingController extends Controller
         }
 
         return [$start, $end, $preset];
-    }
-
-    private function getPeriodStats(int $orgId, Carbon $start, Carbon $end): array
-    {
-        $row = Donation::where('organization_id', $orgId)
-            ->whereBetween('created_at', [$start, $end])
-            ->selectRaw('
-                COUNT(*) as count,
-                SUM(CASE WHEN payment_status = "completed" THEN amount ELSE 0 END) as total,
-                AVG(CASE WHEN payment_status = "completed" THEN amount ELSE NULL END) as avg
-            ')
-            ->first();
-
-        return [
-            'count' => (int) ($row->count ?? 0),
-            'total' => (float) ($row->total ?? 0),
-            'avg'   => (float) ($row->avg ?? 0),
-        ];
-    }
-
-    private function getTrendData(int $orgId): array
-    {
-        $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'completed')
-            ->where('created_at', '>=', Carbon::now()->subDays(29)->startOfDay())
-            ->selectRaw('DATE(created_at) as date, SUM(amount) as total, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date');
-
-        $labels = [];
-        $totals = [];
-        $counts = [];
-
-        for ($i = 29; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i)->format('Y-m-d');
-            $labels[] = Carbon::now()->subDays($i)->format('M j');
-            $totals[] = isset($rows[$date]) ? (float) $rows[$date]->total : 0;
-            $counts[] = isset($rows[$date]) ? (int) $rows[$date]->count : 0;
-        }
-
-        return compact('labels', 'totals', 'counts');
-    }
-
-    private function getCampaignChartData(int $orgId): array
-    {
-        $rows = Donation::where('donations.organization_id', $orgId)
-            ->where('payment_status', 'completed')
-            ->join('campaigns', 'donations.campaign_id', '=', 'campaigns.id')
-            ->selectRaw('campaigns.name as campaign_name, SUM(donations.amount) as total, COUNT(*) as count')
-            ->groupBy('campaigns.id', 'campaigns.name')
-            ->orderByDesc('total')
-            ->limit(8)
-            ->get();
-
-        return [
-            'labels' => $rows->pluck('campaign_name')->toArray(),
-            'totals' => $rows->pluck('total')->map(fn($v) => (float) $v)->toArray(),
-            'counts' => $rows->pluck('count')->map(fn($v) => (int) $v)->toArray(),
-        ];
-    }
-
-    private function getDeviceChartData(int $orgId): array
-    {
-        $rows = Donation::where('donations.organization_id', $orgId)
-            ->where('payment_status', 'completed')
-            ->join('devices', 'donations.device_id', '=', 'devices.id')
-            ->selectRaw('devices.name as device_name, SUM(donations.amount) as total, COUNT(*) as count')
-            ->groupBy('devices.id', 'devices.name')
-            ->orderByDesc('total')
-            ->limit(8)
-            ->get();
-
-        return [
-            'labels' => $rows->pluck('device_name')->toArray(),
-            'totals' => $rows->pluck('total')->map(fn($v) => (float) $v)->toArray(),
-            'counts' => $rows->pluck('count')->map(fn($v) => (int) $v)->toArray(),
-        ];
-    }
-
-    private function getHourlyData(int $orgId): array
-    {
-        $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'completed')
-            ->where('created_at', '>=', Carbon::now()->subDays(29))
-            ->selectRaw('HOUR(created_at) as hour, SUM(amount) as total, COUNT(*) as count')
-            ->groupBy('hour')
-            ->orderBy('hour')
-            ->get()
-            ->keyBy('hour');
-
-        $labels = [];
-        $totals = [];
-        $counts = [];
-
-        for ($h = 0; $h <= 23; $h++) {
-            $labels[] = str_pad($h, 2, '0', STR_PAD_LEFT) . ':00';
-            $totals[] = isset($rows[$h]) ? (float) $rows[$h]->total : 0;
-            $counts[] = isset($rows[$h]) ? (int) $rows[$h]->count : 0;
-        }
-
-        return compact('labels', 'totals', 'counts');
-    }
-
-    private function getDayOfWeekData(int $orgId): array
-    {
-        $rows = Donation::where('organization_id', $orgId)
-            ->where('payment_status', 'completed')
-            ->where('created_at', '>=', Carbon::now()->subDays(89))
-            ->selectRaw('DAYOFWEEK(created_at) as dow, SUM(amount) as total, COUNT(*) as count')
-            ->groupBy('dow')
-            ->orderBy('dow')
-            ->get()
-            ->keyBy('dow');
-
-        $dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        $labels = [];
-        $totals = [];
-        $counts = [];
-
-        // DAYOFWEEK: 1=Sunday, 2=Monday, ..., 7=Saturday
-        for ($d = 1; $d <= 7; $d++) {
-            $labels[] = $dayNames[$d - 1];
-            $totals[] = isset($rows[$d]) ? (float) $rows[$d]->total : 0;
-            $counts[] = isset($rows[$d]) ? (int) $rows[$d]->count : 0;
-        }
-
-        return compact('labels', 'totals', 'counts');
     }
 }

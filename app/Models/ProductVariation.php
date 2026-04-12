@@ -12,6 +12,7 @@ class ProductVariation extends Model
         'product_id',
         'name',
         'sku',
+        'image_path',
         'price',
         'compare_price',
         'quantity',
@@ -151,5 +152,41 @@ class ProductVariation extends Model
     public function scopeInStock($query)
     {
         return $query->where('is_active', true)->where('quantity', '>', 0);
+    }
+
+    /**
+     * Get variation image URL or fallback to product primary image
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image_path) {
+            // Check if the image_path is an external URL (http/https)
+            if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+                return $this->image_path;
+            }
+            // Otherwise, treat as local storage path - use relative path with leading slash
+            return '/' . 'storage/' . $this->image_path;
+        }
+
+        // Fallback to parent product's primary image
+        return $this->product->image_url;
+    }
+
+    /**
+     * Get thumbnail URL for variation image
+     */
+    public function getThumbnailUrlAttribute(): string
+    {
+        // For now, return same as image_url
+        // In the future, you could generate actual thumbnails
+        return $this->image_url;
+    }
+
+    /**
+     * Check if variation has its own image
+     */
+    public function hasOwnImage(): bool
+    {
+        return !empty($this->image_path);
     }
 }

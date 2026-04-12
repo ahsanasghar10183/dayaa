@@ -22,6 +22,7 @@ class ProductVariationController extends Controller
             'quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // Ensure product is set to variable type
@@ -29,10 +30,17 @@ class ProductVariationController extends Controller
             $product->update(['product_type' => 'variable']);
         }
 
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products/variations', 'public');
+        }
+
         ProductVariation::create([
             'product_id' => $product->id,
             'name' => $request->name,
             'sku' => $request->sku,
+            'image_path' => $imagePath,
             'price' => $request->price,
             'compare_price' => $request->compare_price,
             'quantity' => $request->quantity,
@@ -61,9 +69,11 @@ class ProductVariationController extends Controller
             'quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $variation->update([
+        // Handle image upload
+        $updateData = [
             'name' => $request->name,
             'sku' => $request->sku,
             'price' => $request->price,
@@ -71,7 +81,18 @@ class ProductVariationController extends Controller
             'quantity' => $request->quantity,
             'is_active' => $request->has('is_active') ? true : false,
             'sort_order' => $request->sort_order ?? $variation->sort_order,
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($variation->image_path && \Storage::disk('public')->exists($variation->image_path)) {
+                \Storage::disk('public')->delete($variation->image_path);
+            }
+            // Store new image
+            $updateData['image_path'] = $request->file('image')->store('products/variations', 'public');
+        }
+
+        $variation->update($updateData);
 
         return back()->with('success', 'Variation updated successfully.');
     }
@@ -84,6 +105,11 @@ class ProductVariationController extends Controller
         // Verify variation belongs to product
         if ($variation->product_id !== $product->id) {
             abort(403);
+        }
+
+        // Delete variation image if exists
+        if ($variation->image_path && \Storage::disk('public')->exists($variation->image_path)) {
+            \Storage::disk('public')->delete($variation->image_path);
         }
 
         $variation->delete();

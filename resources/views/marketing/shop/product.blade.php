@@ -76,26 +76,43 @@
                         @endif
                     </div>
 
-                    <!-- Variation Selector (if product has variations) -->
+                    <!-- Variation Selector with Thumbnails (if product has variations) -->
                     @if($product->isVariable() && $product->inStockVariations->count() > 0)
                     <div class="variation-selector mb-4">
-                        <label for="variation-select" class="form-label fw-bold">{{ __('marketing.shop.select_variation', [], 'Select Variation') }}</label>
-                        <select class="form-select" id="variation-select" required onchange="updateVariationInfo()">
-                            <option value="">-- {{ __('marketing.shop.choose_option', [], 'Choose an option') }} --</option>
-                            @foreach($product->inStockVariations as $variation)
-                            <option value="{{ $variation->id }}"
-                                    data-price="{{ $variation->effective_price }}"
-                                    data-compare-price="{{ $variation->effective_compare_price ?? '' }}"
-                                    data-stock="{{ $variation->quantity }}"
-                                    data-name="{{ $variation->name }}">
-                                {{ $variation->name }}
-                                @if($variation->price)
-                                    - {{ $variation->formatted_price }}
-                                @endif
-                                ({{ $variation->quantity }} {{ __('marketing.shop.available', [], 'available') }})
-                            </option>
+                        <label class="form-label fw-bold mb-3">{{ __('marketing.shop.select_variation') }}</label>
+                        <div class="row g-3" id="variation-thumbnails">
+                            @foreach($product->inStockVariations as $index => $variation)
+                            <div class="col-auto">
+                                <div class="variation-thumbnail {{ $index === 0 ? 'selected' : '' }}"
+                                     data-variation-id="{{ $variation->id }}"
+                                     data-price="{{ $variation->effective_price }}"
+                                     data-compare-price="{{ $variation->effective_compare_price ?? '' }}"
+                                     data-stock="{{ $variation->quantity }}"
+                                     data-name="{{ $variation->name }}"
+                                     data-image="{{ $variation->image_url }}"
+                                     onclick="selectVariation(this)"
+                                     style="cursor: pointer; position: relative;">
+                                    <div style="width: 100px; height: 100px; border: 3px solid {{ $index === 0 ? '#0F69F3' : '#dee2e6' }}; border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
+                                        <img src="{{ $variation->image_url }}" alt="{{ $variation->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <small class="fw-semibold d-block text-truncate" style="max-width: 100px;">{{ $variation->name }}</small>
+                                        @if($variation->price)
+                                        <small class="text-muted">{{ $variation->formatted_price }}</small>
+                                        @endif
+                                    </div>
+                                    <!-- Selected checkmark -->
+                                    <div class="variation-checkmark" style="position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; background: #0F69F3; border-radius: 50%; display: {{ $index === 0 ? 'flex' : 'none' }}; align-items: center; justify-content: center;">
+                                        <svg width="14" height="14" fill="white" viewBox="0 0 16 16">
+                                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
-                        </select>
+                        </div>
+                        <!-- Hidden input to store selected variation ID -->
+                        <input type="hidden" id="selected-variation-id" value="{{ $product->inStockVariations->first()->id ?? '' }}">
                     </div>
                     @endif
 
@@ -253,41 +270,76 @@ function changeMainImage(url) {
     });
 }
 
-function updateVariationInfo() {
-    const select = document.getElementById('variation-select');
-    if (!select) return;
-
-    const selectedOption = select.options[select.selectedIndex];
-    if (selectedOption.value) {
-        const price = parseFloat(selectedOption.dataset.price);
-        const stock = parseInt(selectedOption.dataset.stock);
-
-        // Update quantity max
-        document.getElementById('product-quantity').max = stock;
-
-        // Update stock badge
-        const stockBadge = document.getElementById('stock-badge');
-        if (stockBadge) {
-            stockBadge.textContent = `{{ __('marketing.shop.in_stock') }} (${stock} {{ __('marketing.shop.available') }})`;
+function selectVariation(element) {
+    // Remove selection from all thumbnails
+    document.querySelectorAll('.variation-thumbnail').forEach(thumb => {
+        const border = thumb.querySelector('div[style*="border"]');
+        if (border) {
+            border.style.borderColor = '#dee2e6';
         }
+        const checkmark = thumb.querySelector('.variation-checkmark');
+        if (checkmark) {
+            checkmark.style.display = 'none';
+        }
+        thumb.classList.remove('selected');
+    });
 
-        // Enable buttons
-        document.getElementById('add-to-cart-btn').disabled = false;
-        document.getElementById('buy-now-btn').disabled = false;
-    } else {
-        // Disable buttons if no variation selected
-        document.getElementById('add-to-cart-btn').disabled = true;
-        document.getElementById('buy-now-btn').disabled = true;
+    // Add selection to clicked thumbnail
+    const border = element.querySelector('div[style*="border"]');
+    if (border) {
+        border.style.borderColor = '#0F69F3';
     }
+    const checkmark = element.querySelector('.variation-checkmark');
+    if (checkmark) {
+        checkmark.style.display = 'flex';
+    }
+    element.classList.add('selected');
+
+    // Update hidden input
+    const variationId = element.dataset.variationId;
+    document.getElementById('selected-variation-id').value = variationId;
+
+    // Update main product image if variation has its own image
+    const variationImage = element.dataset.image;
+    if (variationImage) {
+        document.getElementById('mainImage').src = variationImage;
+    }
+
+    // Update variation info
+    updateVariationInfo(element);
+}
+
+function updateVariationInfo(element) {
+    if (!element) {
+        // Find selected variation thumbnail
+        element = document.querySelector('.variation-thumbnail.selected');
+        if (!element) return;
+    }
+
+    const stock = parseInt(element.dataset.stock);
+    const name = element.dataset.name;
+
+    // Update quantity max
+    document.getElementById('product-quantity').max = stock;
+
+    // Update stock badge
+    const stockBadge = document.getElementById('stock-badge');
+    if (stockBadge) {
+        stockBadge.textContent = `{{ __('marketing.shop.in_stock') }} (${stock} {{ __('marketing.shop.available') }})`;
+    }
+
+    // Enable buttons
+    document.getElementById('add-to-cart-btn').disabled = false;
+    document.getElementById('buy-now-btn').disabled = false;
 }
 
 function getSelectedVariationId() {
     if (!productIsVariable) return null;
 
-    const select = document.getElementById('variation-select');
-    if (!select) return null;
+    const hiddenInput = document.getElementById('selected-variation-id');
+    if (!hiddenInput) return null;
 
-    return select.value || null;
+    return hiddenInput.value || null;
 }
 
 function addToCart(productId) {
@@ -414,12 +466,18 @@ function buyNow(productId) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (productIsVariable) {
-        // Disable buttons initially
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        const buyNowBtn = document.getElementById('buy-now-btn');
+        // Initialize with first variation selected
+        const firstVariation = document.querySelector('.variation-thumbnail.selected');
+        if (firstVariation) {
+            updateVariationInfo(firstVariation);
+        } else {
+            // Disable buttons initially if no variation selected
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            const buyNowBtn = document.getElementById('buy-now-btn');
 
-        if (addToCartBtn) addToCartBtn.disabled = true;
-        if (buyNowBtn) buyNowBtn.disabled = true;
+            if (addToCartBtn) addToCartBtn.disabled = true;
+            if (buyNowBtn) buyNowBtn.disabled = true;
+        }
     }
 });
 </script>

@@ -121,13 +121,22 @@
                             <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.donations') }}</span>
                         </a>
 
+                        <!-- Analytics -->
+                        <a href="{{ route('organization.analytics.index') }}"
+                           class="flex items-center px-4 py-3 rounded-xl transition-all group {{ request()->routeIs('organization.analytics.*') ? 'bg-gradient-dayaa text-white shadow-lg shadow-primary-500/30' : 'text-gray-700 hover:bg-gray-50' }}">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Analytics</span>
+                        </a>
+
                         <!-- Reports -->
                         <a href="{{ route('organization.reports.index') }}"
                            class="flex items-center px-4 py-3 rounded-xl transition-all group {{ request()->routeIs('organization.reports.*') ? 'bg-gradient-dayaa text-white shadow-lg shadow-primary-500/30' : 'text-gray-700 hover:bg-gray-50' }}">
                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">{{ __('admin.organization.reports') }}</span>
+                            <span x-show="sidebarOpen" class="ml-3 font-semibold text-sm">Reports</span>
                         </a>
 
                         <!-- Billing -->
@@ -275,5 +284,8 @@
                 </main>
             </div>
         </div>
+
+        <!-- Page-specific scripts -->
+        @stack('scripts')
     </body>
 </html>

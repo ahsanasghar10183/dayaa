@@ -162,6 +162,7 @@ Create these products:
 
 **Note:** Enterprise tier is handled manually, no Stripe product needed.
 
+
 ### Step 2: Update Seeder with Price IDs
 
 Edit `/Users/apple/Herd/dayaa/database/seeders/SubscriptionTierSeeder.php`:

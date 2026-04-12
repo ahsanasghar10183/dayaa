@@ -180,7 +180,10 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
     // Donations
     Route::get('/donations', [\App\Http\Controllers\Organization\DonationController::class, 'index'])->name('donations.index');
 
-    // Reports & Analytics
+    // Analytics
+    Route::get('/analytics', [\App\Http\Controllers\Organization\AnalyticsController::class, 'index'])->name('analytics.index');
+
+    // Reports
     Route::get('/reports', [\App\Http\Controllers\Organization\ReportingController::class, 'index'])->name('reports.index');
     Route::get('/reports/export', [\App\Http\Controllers\Organization\ReportingController::class, 'export'])->name('reports.export');
 

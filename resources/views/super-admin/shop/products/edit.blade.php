@@ -311,7 +311,7 @@
             @endif
 
             <!-- Add Variation Form -->
-            <form action="{{ route('super-admin.shop.products.variations.store', $product) }}" method="POST" class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <form action="{{ route('super-admin.shop.products.variations.store', $product) }}" method="POST" enctype="multipart/form-data" class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                 @csrf
                 <h4 class="font-medium text-gray-700 mb-4">Add New Variation</h4>
                 <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
@@ -341,6 +341,12 @@
                         </button>
                     </div>
                 </div>
+                <div class="mt-4">
+                    <label for="variation_image" class="block text-sm font-medium text-gray-700 mb-1">Variation Image (Optional)</label>
+                    <input type="file" name="image" id="variation_image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-xs text-gray-500">Upload a specific image for this variation. If no image is uploaded, the product's primary image will be used.</p>
+                </div>
                 <div class="mt-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -355,6 +361,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
@@ -366,6 +373,18 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($product->variations as $variation)
                         <tr id="variation-{{ $variation->id }}" class="hover:bg-gray-50">
+                            <td class="px-4 py-3">
+                                <div class="relative w-16 h-16 rounded-lg overflow-hidden border-2 {{ $variation->hasOwnImage() ? 'border-blue-300' : 'border-gray-200' }}">
+                                    <img src="{{ $variation->image_url }}" alt="{{ $variation->name }}" class="w-full h-full object-cover">
+                                    @if($variation->hasOwnImage())
+                                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs px-1 rounded-bl" title="Has own image">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    @endif
+                                </div>
+                            </td>
                             <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $variation->name }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">{{ $variation->sku ?? '-' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-900">
@@ -389,7 +408,7 @@
                                 </form>
                             </td>
                             <td class="px-4 py-3 text-sm text-right space-x-2">
-                                <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }})"
+                                <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }}, '{{ $variation->image_url }}')"
                                         class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
                                 <form action="{{ route('super-admin.shop.products.variations.destroy', [$product, $variation]) }}" method="POST" class="inline"
                                       onsubmit="return confirm('Are you sure you want to delete this variation?');">
@@ -415,12 +434,20 @@
 
         <!-- Edit Variation Modal (Hidden by default) -->
         <div id="edit-variation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-semibold mb-4">Edit Variation</h3>
-                <form id="edit-variation-form" method="POST">
+                <form id="edit-variation-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="space-y-4">
+                        <!-- Current Image Preview -->
+                        <div id="edit_variation_current_image_container" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Image</label>
+                            <div class="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-300">
+                                <img id="edit_variation_current_image" src="" alt="Current variation image" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
                             <input type="text" name="name" id="edit_variation_name" required
@@ -442,6 +469,12 @@
                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Update Image (Optional)</label>
+                            <input type="file" name="image" id="edit_variation_image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                                   class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <p class="mt-1 text-xs text-gray-500">Upload a new image to replace the current one</p>
+                        </div>
+                        <div>
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" id="edit_variation_active" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                 <span class="ml-2 text-sm text-gray-700">Active</span>
@@ -461,7 +494,7 @@
         </div>
 
         <script>
-            function editVariation(id, name, sku, price, quantity) {
+            function editVariation(id, name, sku, price, quantity, imageUrl) {
                 const form = document.getElementById('edit-variation-form');
                 form.action = `/super-admin/shop/products/{{ $product->id }}/variations/${id}`;
 
@@ -469,6 +502,14 @@
                 document.getElementById('edit_variation_sku').value = sku || '';
                 document.getElementById('edit_variation_price').value = price || '';
                 document.getElementById('edit_variation_quantity').value = quantity;
+
+                // Show current image if exists
+                if (imageUrl) {
+                    document.getElementById('edit_variation_current_image').src = imageUrl;
+                    document.getElementById('edit_variation_current_image_container').classList.remove('hidden');
+                } else {
+                    document.getElementById('edit_variation_current_image_container').classList.add('hidden');
+                }
 
                 document.getElementById('edit-variation-modal').classList.remove('hidden');
             }
