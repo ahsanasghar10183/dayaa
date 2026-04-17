@@ -393,6 +393,7 @@
     </div>
 </section>
 
+{{-- Testimonials section commented out - not needed
 <!-- Pp-testimonial Section Start -->
 <section class="pp-testimonial-section section-padding fix">
     <div class="container">
@@ -446,6 +447,7 @@
         </div>
     </div>
 </section>
+--}}
 
 <!-- Pp-Trust Section Start -->
 <section class="pp-trust-section section-padding fix section-bg">

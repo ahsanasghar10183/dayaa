@@ -16,7 +16,9 @@ class ShopProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('primaryImage')->withCount('variations');
+        $query = Product::with(['primaryImage', 'images' => function($q) {
+            $q->orderBy('sort_order')->limit(1);
+        }])->withCount('variations');
 
         // Search
         if ($request->has('search')) {
@@ -51,63 +53,176 @@ class ShopProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Log incoming request for debugging
+        \Log::info('Product creation attempt', [
+            'product_type' => $request->product_type,
+            'has_variations' => $request->has('variations'),
+            'variations_count' => $request->has('variations') ? count($request->variations) : 0,
+        ]);
+
+        // Base validation rules
+        $validationRules = [
             'name' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'name_de' => 'nullable|string|max:255',
             'description' => 'required|string',
             'description_en' => 'nullable|string',
             'description_de' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'compare_price' => 'nullable|numeric|min:0',
-            'sku' => 'required|string|max:100|unique:products,sku',
-            'barcode' => 'nullable|string|max:100',
-            'quantity' => 'required|integer|min:0',
+            'product_type' => 'required|in:simple,variable',
             'weight' => 'nullable|numeric|min:0',
             'dimensions' => 'nullable|string|max:100',
             'specifications' => 'nullable|array',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+        ];
 
-        $product = Product::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'name_en' => $request->name_en,
-            'name_de' => $request->name_de,
-            'description_en' => $request->description_en,
-            'description_de' => $request->description_de,
-            'specifications' => $request->specifications,
-            'price' => $request->price,
-            'compare_price' => $request->compare_price,
-            'sku' => $request->sku,
-            'barcode' => $request->barcode,
-            'quantity' => $request->quantity,
-            'weight' => $request->weight,
-            'dimensions' => $request->dimensions,
-            'is_active' => $request->has('is_active'),
-            'is_featured' => $request->has('is_featured'),
-        ]);
-
-        // Handle multiple images upload
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $imagePath = $image->store('products', 'public');
-
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $imagePath,
-                    'alt_text' => $product->name,
-                    'is_primary' => $index === 0, // First image is primary
-                    'sort_order' => $index + 1,
-                ]);
-            }
+        // Add validation rules based on product type
+        if ($request->product_type === 'simple') {
+            $validationRules['price'] = 'required|numeric|min:0';
+            $validationRules['compare_price'] = 'nullable|numeric|min:0';
+            $validationRules['sku'] = 'required|string|max:100|unique:products,sku';
+            $validationRules['barcode'] = 'nullable|string|max:100';
+            $validationRules['quantity'] = 'required|integer|min:0';
+            $validationRules['images.*'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+        } else {
+            // Variable products - variations are required with SKU and price
+            $validationRules['variations'] = 'required|array|min:1';
+            $validationRules['variations.*.name'] = 'required|string|max:255';
+            $validationRules['variations.*.sku'] = 'required|string|max:100|unique:product_variations,sku';
+            $validationRules['variations.*.price'] = 'required|numeric|min:0';
+            $validationRules['variations.*.compare_price'] = 'nullable|numeric|min:0';
+            $validationRules['variations.*.quantity'] = 'required|integer|min:0';
+            $validationRules['variations.*.is_active'] = 'nullable|boolean';
+            $validationRules['variations.*.images.*'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
         }
 
-        return redirect()->route('super-admin.shop.products.index')
-            ->with('success', 'Product created successfully.');
+        // Custom validation messages
+        $validationMessages = [
+            'name.required' => 'Product name is required.',
+            'description.required' => 'Product description is required.',
+            'product_type.required' => 'Please select a product type.',
+            'sku.unique' => 'This SKU is already in use. Please use a different SKU.',
+            'sku.required' => 'SKU is required.',
+            'price.required' => 'Price is required.',
+            'quantity.required' => 'Stock quantity is required.',
+            'variations.required' => 'Please add at least one variation for variable products.',
+            'variations.*.name.required' => 'Each variation must have a name.',
+            'variations.*.sku.required' => 'Each variation must have an SKU.',
+            'variations.*.sku.unique' => 'This variation SKU is already in use. Each variation must have a unique SKU.',
+            'variations.*.price.required' => 'Each variation must have a price.',
+            'variations.*.quantity.required' => 'Each variation must have a stock quantity.',
+        ];
+
+        try {
+            $request->validate($validationRules, $validationMessages);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Product validation failed', [
+                'errors' => $e->errors(),
+                'request_data' => $request->except(['images', '_token'])
+            ]);
+            throw $e;
+        }
+
+        try {
+            // Prepare product data - common fields
+            $productData = [
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'description' => $request->description,
+                'name_en' => $request->name_en,
+                'name_de' => $request->name_de,
+                'description_en' => $request->description_en,
+                'description_de' => $request->description_de,
+                'specifications' => $request->specifications,
+                'product_type' => $request->product_type,
+                'weight' => $request->weight,
+                'dimensions' => $request->dimensions,
+                'is_active' => $request->has('is_active'),
+                'is_featured' => $request->has('is_featured'),
+            ];
+
+            // Add pricing/inventory fields only for simple products
+            if ($request->product_type === 'simple') {
+                $productData['price'] = $request->price;
+                $productData['compare_price'] = $request->compare_price;
+                $productData['sku'] = $request->sku;
+                $productData['barcode'] = $request->barcode;
+                $productData['quantity'] = $request->quantity;
+            } else {
+                // Variable products: Set minimal required values
+                // Stock and pricing are managed through variations
+                $productData['price'] = 0;
+                $productData['quantity'] = 0;
+            }
+
+            $product = Product::create($productData);
+
+            // Handle simple product images
+            if ($request->product_type === 'simple' && $request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    $imagePath = $image->store('products', 'public');
+
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $imagePath,
+                        'alt_text' => $product->name,
+                        'is_primary' => $index === 0, // First image is primary
+                        'sort_order' => $index + 1,
+                    ]);
+                }
+            }
+
+            // Handle variable product variations
+            if ($request->product_type === 'variable' && $request->has('variations')) {
+                foreach ($request->variations as $index => $variationData) {
+                    $variation = \App\Models\ProductVariation::create([
+                        'product_id' => $product->id,
+                        'name' => $variationData['name'],
+                        'sku' => $variationData['sku'] ?? null,
+                        'price' => $variationData['price'] ?? null,
+                        'compare_price' => $variationData['compare_price'] ?? null,
+                        'quantity' => $variationData['quantity'],
+                        'is_active' => isset($variationData['is_active']) ? true : false,
+                        'sort_order' => $index,
+                    ]);
+
+                    // Handle variation images - they come through request->file()
+                    $variationImagesKey = "variations.{$index}.images";
+                    if ($request->hasFile($variationImagesKey)) {
+                        $variationImages = $request->file($variationImagesKey);
+                        foreach ($variationImages as $imgIndex => $image) {
+                            $imagePath = $image->store('products/variations', 'public');
+
+                            \App\Models\ProductVariationImage::create([
+                                'product_variation_id' => $variation->id,
+                                'image_path' => $imagePath,
+                                'sort_order' => $imgIndex,
+                                'is_primary' => $imgIndex === 0, // First image is primary
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            $message = $request->product_type === 'simple'
+                ? 'Simple product created successfully.'
+                : 'Variable product created successfully with ' . count($request->variations) . ' variations.';
+
+            \Log::info('Product created successfully', ['product_id' => $product->id, 'type' => $product->product_type]);
+
+            return redirect()->route('super-admin.shop.products.index')
+                ->with('success', $message);
+        } catch (\Exception $e) {
+            \Log::error('Product creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->except(['images', '_token'])
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create product: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -133,85 +248,142 @@ class ShopProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'name_en' => 'nullable|string|max:255',
-            'name_de' => 'nullable|string|max:255',
-            'description' => 'required|string',
-            'description_en' => 'nullable|string',
-            'description_de' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'compare_price' => 'nullable|numeric|min:0',
-            'sku' => 'required|string|max:100|unique:products,sku,' . $product->id,
-            'barcode' => 'nullable|string|max:100',
-            'quantity' => 'required|integer|min:0',
-            'weight' => 'nullable|numeric|min:0',
-            'dimensions' => 'nullable|string|max:100',
-            'specifications' => 'nullable|array',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'delete_images' => 'nullable|array',
-            'delete_images.*' => 'exists:product_images,id',
-        ]);
+        try {
+            // Base validation rules
+            $validationRules = [
+                'name' => 'required|string|max:255',
+                'name_en' => 'nullable|string|max:255',
+                'name_de' => 'nullable|string|max:255',
+                'description' => 'required|string',
+                'description_en' => 'nullable|string',
+                'description_de' => 'nullable|string',
+                'product_type' => 'required|in:simple,variable',
+                'weight' => 'nullable|numeric|min:0',
+                'dimensions' => 'nullable|string|max:100',
+                'specifications' => 'nullable|array',
+                'is_active' => 'boolean',
+                'is_featured' => 'boolean',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'delete_images' => 'nullable|array',
+                'delete_images.*' => 'exists:product_images,id',
+            ];
 
-        $product->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'name_en' => $request->name_en,
-            'name_de' => $request->name_de,
-            'description_en' => $request->description_en,
-            'description_de' => $request->description_de,
-            'specifications' => $request->specifications,
-            'price' => $request->price,
-            'compare_price' => $request->compare_price,
-            'sku' => $request->sku,
-            'barcode' => $request->barcode,
-            'quantity' => $request->quantity,
-            'weight' => $request->weight,
-            'dimensions' => $request->dimensions,
-            'is_active' => $request->has('is_active'),
-            'is_featured' => $request->has('is_featured'),
-        ]);
+            // Add validation rules for simple products only
+            if ($request->product_type === 'simple') {
+                $validationRules['price'] = 'required|numeric|min:0';
+                $validationRules['compare_price'] = 'nullable|numeric|min:0';
+                $validationRules['sku'] = 'nullable|string|max:100|unique:products,sku,' . $product->id;
+                $validationRules['barcode'] = 'nullable|string|max:100';
+                $validationRules['quantity'] = 'required|integer|min:0';
+            }
 
-        // Handle image deletions
-        if ($request->has('delete_images')) {
-            foreach ($request->delete_images as $imageId) {
-                $image = ProductImage::where('id', $imageId)
-                    ->where('product_id', $product->id)
-                    ->first();
+            $request->validate($validationRules, [
+                'sku.unique' => 'This SKU is already in use. Please use a different SKU.',
+                'price.required' => 'Price is required for simple products.',
+                'quantity.required' => 'Stock quantity is required for simple products.',
+            ]);
 
-                if ($image) {
-                    // Delete from storage
-                    if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
-                        Storage::disk('public')->delete($image->image_path);
+            // Prepare update data - common fields for all product types
+            $updateData = [
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'description' => $request->description,
+                'name_en' => $request->name_en,
+                'name_de' => $request->name_de,
+                'description_en' => $request->description_en,
+                'description_de' => $request->description_de,
+                'specifications' => $request->specifications,
+                'product_type' => $request->product_type,
+                'weight' => $request->weight,
+                'dimensions' => $request->dimensions,
+                'is_active' => $request->has('is_active'),
+                'is_featured' => $request->has('is_featured'),
+            ];
+
+            // Only update price, SKU, quantity for simple products
+            // Variable products DON'T use these fields - they're managed through variations
+            if ($request->product_type === 'simple') {
+                $updateData['price'] = $request->price;
+                $updateData['compare_price'] = $request->compare_price;
+                $updateData['sku'] = $request->sku;
+                $updateData['barcode'] = $request->barcode;
+                $updateData['quantity'] = $request->quantity;
+            }
+            // For variable products: Don't update price/quantity/sku at all
+            // Leave them as they are - only variations matter for stock and pricing
+
+            $product->update($updateData);
+
+            // Handle image deletions
+            if ($request->has('delete_images')) {
+                foreach ($request->delete_images as $imageId) {
+                    $image = ProductImage::where('id', $imageId)
+                        ->where('product_id', $product->id)
+                        ->first();
+
+                    if ($image) {
+                        // Delete from storage
+                        if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                            Storage::disk('public')->delete($image->image_path);
+                        }
+                        $image->delete();
                     }
-                    $image->delete();
+                }
+
+                // Recalculate has primary after deletions
+                $hasPrimary = ProductImage::where('product_id', $product->id)->where('is_primary', true)->exists();
+
+                // If no primary image exists after deletions, set the first remaining image as primary
+                if (!$hasPrimary) {
+                    $firstImage = ProductImage::where('product_id', $product->id)->orderBy('sort_order')->first();
+                    if ($firstImage) {
+                        $firstImage->update(['is_primary' => true]);
+                    }
                 }
             }
-        }
 
-        // Handle new images upload
-        if ($request->hasFile('images')) {
-            $currentMaxOrder = ProductImage::where('product_id', $product->id)->max('sort_order') ?? 0;
-            $hasPrimary = ProductImage::where('product_id', $product->id)->where('is_primary', true)->exists();
+            // Handle new images upload
+            if ($request->hasFile('images')) {
+                $currentMaxOrder = ProductImage::where('product_id', $product->id)->max('sort_order') ?? 0;
+                $hasPrimary = ProductImage::where('product_id', $product->id)->where('is_primary', true)->exists();
 
-            foreach ($request->file('images') as $index => $image) {
-                $imagePath = $image->store('products', 'public');
+                foreach ($request->file('images') as $index => $image) {
+                    $imagePath = $image->store('products', 'public');
 
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $imagePath,
-                    'alt_text' => $product->name,
-                    'is_primary' => !$hasPrimary && $index === 0, // First new image becomes primary if no primary exists
-                    'sort_order' => $currentMaxOrder + $index + 1,
-                ]);
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $imagePath,
+                        'alt_text' => $product->name,
+                        'is_primary' => !$hasPrimary && $index === 0, // First new image becomes primary if no primary exists
+                        'sort_order' => $currentMaxOrder + $index + 1,
+                    ]);
+                }
             }
-        }
 
-        return redirect()->route('super-admin.shop.products.index')
-            ->with('success', 'Product updated successfully.');
+            \Log::info('Product updated successfully', ['product_id' => $product->id]);
+
+            return redirect()->route('super-admin.shop.products.index')
+                ->with('success', 'Product updated successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Product update validation failed', [
+                'product_id' => $product->id,
+                'errors' => $e->errors(),
+                'request_data' => $request->except(['images', '_token'])
+            ]);
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Product update failed', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->except(['images', '_token'])
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to update product: ' . $e->getMessage());
+        }
     }
 
     /**

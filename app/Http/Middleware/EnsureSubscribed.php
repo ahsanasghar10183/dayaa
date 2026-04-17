@@ -46,9 +46,16 @@ class EnsureSubscribed
             return $next($request);
         }
 
-        // Check for active subscription
+        // Allow access to status pages (pending, rejected, suspended)
+        if ($request->routeIs('organization.pending') ||
+            $request->routeIs('organization.rejected') ||
+            $request->routeIs('organization.suspended')) {
+            return $next($request);
+        }
+
+        // Check for active or trialing subscription
         $subscription = $organization->subscription()
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'trialing'])
             ->first();
 
         if (!$subscription) {
@@ -57,7 +64,7 @@ class EnsureSubscribed
                 ->with('warning', 'Please activate your subscription to access the platform.');
         }
 
-        // Subscription exists and is active
+        // Subscription exists and is active/trialing
         return $next($request);
     }
 }

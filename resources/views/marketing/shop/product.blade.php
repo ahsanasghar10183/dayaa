@@ -45,7 +45,7 @@
                 <div class="product-info">
                     <h1 class="mb-3">{{ $product->localized_name }}</h1>
 
-                    <div class="mb-4">
+                    <div class="mb-4" id="price-container">
                         @php
                             $taxRate = 0.19; // 19% VAT in Germany
                             $priceExclTax = $product->price;
@@ -53,46 +53,47 @@
                             $priceInclTax = $priceExclTax + $taxAmount;
                         @endphp
 
-                        <h2 class="text-primary mb-1">€{{ number_format($priceExclTax, 2) }}</h2>
-                        <p class="text-muted small mb-2">
-                            zzgl. MwSt. €{{ number_format($taxAmount, 2) }} (19%)
+                        <h2 class="text-primary mb-1" id="price-display">€{{ number_format($priceExclTax, 2) }}</h2>
+                        <p class="text-muted small mb-2" id="tax-display">
+                            zzgl. MwSt. <span id="tax-amount">€{{ number_format($taxAmount, 2) }}</span> (19%)
                         </p>
                         <p class="small mb-2">
-                            <strong>€{{ number_format($priceInclTax, 2) }} inkl. MwSt.</strong>
+                            <strong id="price-incl-tax">€{{ number_format($priceInclTax, 2) }} inkl. MwSt.</strong>
                         </p>
                         <p class="text-muted small">
                             zzgl. <a href="#" class="text-decoration-none">Versandkosten</a>
                         </p>
 
-                        @if($product->compare_price)
-                        @php
-                            $comparePriceExclTax = $product->compare_price;
-                            $comparePriceInclTax = $comparePriceExclTax + ($comparePriceExclTax * $taxRate);
-                        @endphp
-                        <p class="text-muted mt-2">
-                            <del>€{{ number_format($comparePriceExclTax, 2) }}</del>
-                            <span class="badge bg-danger ms-2">{{ __('marketing.shop.save_percentage', ['percentage' => $product->discount_percentage]) }}</span>
-                        </p>
-                        @endif
+                        <div id="compare-price-container" style="{{ $product->compare_price ? '' : 'display: none;' }}">
+                            @php
+                                $comparePriceExclTax = $product->compare_price ?? 0;
+                                $comparePriceInclTax = $comparePriceExclTax + ($comparePriceExclTax * $taxRate);
+                            @endphp
+                            <p class="text-muted mt-2">
+                                <del id="compare-price-display">€{{ number_format($comparePriceExclTax, 2) }}</del>
+                                <span class="badge bg-danger ms-2" id="discount-badge">{{ __('marketing.shop.save_percentage', ['percentage' => $product->discount_percentage ?? 0]) }}</span>
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Variation Selector with Thumbnails (if product has variations) -->
-                    @if($product->isVariable() && $product->inStockVariations->count() > 0)
+                    @if($product->isVariable() && $product->activeVariations->count() > 0)
                     <div class="variation-selector mb-4">
                         <label class="form-label fw-bold mb-3">{{ __('marketing.shop.select_variation') }}</label>
                         <div class="row g-3" id="variation-thumbnails">
-                            @foreach($product->inStockVariations as $index => $variation)
+                            @foreach($product->activeVariations as $index => $variation)
                             <div class="col-auto">
-                                <div class="variation-thumbnail {{ $index === 0 ? 'selected' : '' }}"
+                                <div class="variation-thumbnail {{ $index === 0 ? 'selected' : '' }} {{ $variation->quantity <= 0 ? 'out-of-stock' : '' }}"
                                      data-variation-id="{{ $variation->id }}"
                                      data-price="{{ $variation->effective_price }}"
                                      data-compare-price="{{ $variation->effective_compare_price ?? '' }}"
                                      data-stock="{{ $variation->quantity }}"
+                                     data-in-stock="{{ $variation->quantity > 0 ? 'true' : 'false' }}"
                                      data-name="{{ $variation->name }}"
                                      data-image="{{ $variation->image_url }}"
                                      data-images="{{ json_encode($variation->image_gallery) }}"
                                      onclick="selectVariation(this)"
-                                     style="cursor: pointer; position: relative;">
+                                     style="cursor: pointer; position: relative; {{ $variation->quantity <= 0 ? 'opacity: 0.6;' : '' }}">
                                     <div style="width: 100px; height: 100px; border: 3px solid {{ $index === 0 ? '#0F69F3' : '#dee2e6' }}; border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
                                         <img src="{{ $variation->image_url }}" alt="{{ $variation->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                     </div>
@@ -100,6 +101,9 @@
                                         <small class="fw-semibold d-block text-truncate" style="max-width: 100px;">{{ $variation->name }}</small>
                                         @if($variation->price)
                                         <small class="text-muted">{{ $variation->formatted_price }}</small>
+                                        @endif
+                                        @if($variation->quantity <= 0)
+                                        <small class="badge bg-danger mt-1" style="font-size: 9px;">Out of Stock</small>
                                         @endif
                                     </div>
                                     <!-- Selected checkmark -->
@@ -113,7 +117,7 @@
                             @endforeach
                         </div>
                         <!-- Hidden input to store selected variation ID -->
-                        <input type="hidden" id="selected-variation-id" value="{{ $product->inStockVariations->first()->id ?? '' }}">
+                        <input type="hidden" id="selected-variation-id" value="{{ $product->activeVariations->first()->id ?? '' }}">
                     </div>
                     @endif
 
@@ -357,20 +361,60 @@ function updateVariationInfo(element) {
     }
 
     const stock = parseInt(element.dataset.stock);
+    const inStock = element.dataset.inStock === 'true';
     const name = element.dataset.name;
+    const price = parseFloat(element.dataset.price);
+    const comparePrice = element.dataset.comparePrice ? parseFloat(element.dataset.comparePrice) : null;
 
-    // Update quantity max
-    document.getElementById('product-quantity').max = stock;
+    const taxRate = 0.19; // 19% VAT
 
-    // Update stock badge
-    const stockBadge = document.getElementById('stock-badge');
-    if (stockBadge) {
-        stockBadge.textContent = `{{ __('marketing.shop.in_stock') }} (${stock} {{ __('marketing.shop.available') }})`;
+    // Update price display
+    const priceExclTax = price;
+    const taxAmount = priceExclTax * taxRate;
+    const priceInclTax = priceExclTax + taxAmount;
+
+    document.getElementById('price-display').textContent = '€' + priceExclTax.toFixed(2).replace('.', ',');
+    document.getElementById('tax-amount').textContent = '€' + taxAmount.toFixed(2).replace('.', ',');
+    document.getElementById('price-incl-tax').textContent = '€' + priceInclTax.toFixed(2).replace('.', ',') + ' inkl. MwSt.';
+
+    // Update compare price if exists
+    const comparePriceContainer = document.getElementById('compare-price-container');
+    if (comparePrice && comparePrice > price) {
+        const comparePriceExclTax = comparePrice;
+        const discountPercentage = Math.round(((comparePrice - price) / comparePrice) * 100);
+
+        document.getElementById('compare-price-display').textContent = '€' + comparePriceExclTax.toFixed(2).replace('.', ',');
+        document.getElementById('discount-badge').textContent = `{{ __('marketing.shop.save') }} ${discountPercentage}%`;
+        comparePriceContainer.style.display = 'block';
+    } else {
+        comparePriceContainer.style.display = 'none';
     }
 
-    // Enable buttons
-    document.getElementById('add-to-cart-btn').disabled = false;
-    document.getElementById('buy-now-btn').disabled = false;
+    // Update quantity max
+    document.getElementById('product-quantity').max = stock > 0 ? stock : 0;
+
+    // Update stock badge and button state
+    const stockBadge = document.getElementById('stock-badge');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const buyNowBtn = document.getElementById('buy-now-btn');
+
+    if (inStock && stock > 0) {
+        // In stock - show stock count and enable buttons
+        if (stockBadge) {
+            stockBadge.className = 'badge bg-success';
+            stockBadge.textContent = `{{ __('marketing.shop.in_stock') }} (${stock} {{ __('marketing.shop.available') }})`;
+        }
+        if (addToCartBtn) addToCartBtn.disabled = false;
+        if (buyNowBtn) buyNowBtn.disabled = false;
+    } else {
+        // Out of stock - show out of stock badge and disable buttons
+        if (stockBadge) {
+            stockBadge.className = 'badge bg-danger';
+            stockBadge.textContent = '{{ __('marketing.shop.out_of_stock') }}';
+        }
+        if (addToCartBtn) addToCartBtn.disabled = true;
+        if (buyNowBtn) buyNowBtn.disabled = true;
+    }
 }
 
 function getSelectedVariationId() {

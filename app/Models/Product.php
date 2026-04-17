@@ -223,7 +223,13 @@ class Product extends Model
      */
     public function getImageUrlAttribute(): string
     {
+        // Try to get primary image first
         $primaryImage = $this->primaryImage;
+
+        // If no primary image, get the first image
+        if (!$primaryImage) {
+            $primaryImage = $this->images()->orderBy('sort_order')->first();
+        }
 
         if ($primaryImage) {
             // Check if the image_path is an external URL (http/https)
@@ -235,7 +241,7 @@ class Product extends Model
         }
 
         // Return placeholder if no image
-        return '/' . 'marketing/assets/img/placeholder-product.svg';
+        return asset('marketing/assets/img/placeholder-product.svg');
     }
 
     /**

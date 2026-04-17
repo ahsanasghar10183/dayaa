@@ -87,10 +87,10 @@ class StripeService
     /**
      * Create a subscription
      */
-    public function createSubscription(string $customerId, string $priceId, array $metadata = []): Subscription
+    public function createSubscription(string $customerId, string $priceId, array $metadata = [], int $trialPeriodDays = null): Subscription
     {
         try {
-            return Subscription::create([
+            $subscriptionData = [
                 'customer' => $customerId,
                 'items' => [
                     ['price' => $priceId],
@@ -101,11 +101,19 @@ class StripeService
                     'save_default_payment_method' => 'on_subscription',
                 ],
                 'expand' => ['latest_invoice.payment_intent'],
-            ]);
+            ];
+
+            // Add trial period if specified
+            if ($trialPeriodDays !== null) {
+                $subscriptionData['trial_period_days'] = $trialPeriodDays;
+            }
+
+            return Subscription::create($subscriptionData);
         } catch (\Exception $e) {
             Log::error('Stripe: Error creating subscription', [
                 'customer_id' => $customerId,
                 'price_id' => $priceId,
+                'trial_period_days' => $trialPeriodDays,
                 'error' => $e->getMessage(),
             ]);
             throw $e;

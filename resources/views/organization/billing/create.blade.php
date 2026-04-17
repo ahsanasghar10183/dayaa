@@ -23,29 +23,29 @@
             </div>
         </div>
 
-        {{-- Your Recommended Tier --}}
+        {{-- Your Subscription Plan --}}
         <div class="mb-8 bg-white rounded-xl shadow-sm border-2 border-blue-200 overflow-hidden">
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
-                <h3 class="text-lg font-semibold text-white">{{ __('admin.billing.recommended_tier') }}</h3>
-                <p class="text-sm text-blue-50 mt-1">{{ __('admin.billing.based_on_expected_fundraising') }}</p>
+                <h3 class="text-lg font-semibold text-white">{{ __('admin.billing.your_subscription_plan') }}</h3>
+                <p class="text-sm text-blue-50 mt-1">{{ __('admin.billing.starter_tier_description') }}</p>
             </div>
 
             <div class="p-6">
                 <div class="flex items-start justify-between mb-6">
                     <div>
-                        <h4 class="text-3xl font-bold text-gray-900">{{ $recommendedTier->name }}</h4>
+                        <h4 class="text-3xl font-bold text-gray-900">{{ $tier1->name }}</h4>
                         <p class="text-sm text-gray-600 mt-1">
-                            @if($recommendedTier->max_amount)
-                                €{{ number_format($recommendedTier->min_amount, 0) }} - €{{ number_format($recommendedTier->max_amount, 0) }}
+                            @if($tier1->max_amount)
+                                €{{ number_format($tier1->min_amount, 0) }} - €{{ number_format($tier1->max_amount, 0) }}
                             @else
-                                €{{ number_format($recommendedTier->min_amount, 0) }}+
+                                €{{ number_format($tier1->min_amount, 0) }}+
                             @endif
                             <span class="text-gray-500">/ {{ __('admin.billing.12_month_range') }}</span>
                         </p>
                     </div>
                     <div class="text-right">
                         <p class="text-4xl font-bold text-blue-600">
-                            €{{ number_format($recommendedTier->monthly_fee, 0) }}
+                            €{{ number_format($tier1->monthly_fee, 0) }}
                         </p>
                         <p class="text-sm text-gray-600">{{ __('admin.billing.per_month') }}</p>
                     </div>
@@ -53,7 +53,7 @@
 
                 {{-- Features Grid --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 pb-6 border-b border-gray-200">
-                    @foreach($recommendedTier->features as $feature)
+                    @foreach($tier1->features as $feature)
                     <div class="flex items-center gap-2">
                         <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -79,8 +79,6 @@
 
             <form id="payment-form" action="{{ route('organization.billing.store') }}" method="POST">
                 @csrf
-
-                <input type="hidden" name="tier_id" value="{{ $recommendedTier->id }}">
 
                 {{-- Organization Details --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -202,24 +200,21 @@
                     <h4 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.billing.order_summary') }}</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center text-sm">
-                            <span class="text-gray-600">{{ $recommendedTier->name }} {{ __('admin.billing.subscription') }}</span>
-                            <span class="font-semibold text-gray-900">€{{ number_format($recommendedTier->monthly_fee, 2) }}/{{ __('admin.billing.month') }}</span>
+                            <span class="text-gray-600">{{ $tier1->name }} {{ __('admin.billing.subscription') }}</span>
+                            <span class="font-semibold text-gray-900">€{{ number_format($tier1->monthly_fee, 2) }}/{{ __('admin.billing.month') }}</span>
                         </div>
                         <div class="pt-3 border-t border-gray-200">
                             <div class="flex justify-between items-center">
-                                <span class="text-base font-semibold text-gray-900">{{ __('admin.billing.total_today') }}</span>
-                                <span class="text-2xl font-bold text-blue-600">€{{ number_format($recommendedTier->monthly_fee, 2) }}</span>
+                                <span class="text-base font-semibold text-gray-900">{{ __('admin.billing.first_payment') }}</span>
+                                <span class="text-2xl font-bold text-blue-600">€{{ number_format($tier1->monthly_fee, 2) }}</span>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">{{ __('admin.billing.billed_monthly') }}</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ __('admin.billing.payment_in_30_days') }}</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Submit Button --}}
-                <div class="flex items-center justify-between">
-                    <a href="{{ route('organization.billing.plans') }}" class="text-sm text-gray-600 hover:text-gray-800">
-                        {{ __('admin.billing.view_all_tiers') }} →
-                    </a>
+                <div class="flex items-center justify-end">
                     <button type="submit"
                             id="submit-button"
                             class="btn-primary px-8 py-3 text-base font-semibold flex items-center gap-2">

@@ -19,8 +19,9 @@ class MarketingController extends Controller
     {
         $featuredProducts = Product::active()
             ->featured()
-            ->inStock()
-            ->with('primaryImage')
+            ->with(['primaryImage', 'images' => function($q) {
+                $q->orderBy('sort_order')->limit(1);
+            }])
             ->limit(3)
             ->get();
 

@@ -12,6 +12,42 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Error Messages -->
+        @if(session('error'))
+        <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-red-700 font-medium">{{ session('error') }}</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">There were errors with your submission:</h3>
+                    <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <form action="{{ route('super-admin.shop.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow-sm p-6">
             @csrf
             @method('PUT')
@@ -44,6 +80,46 @@
                     @enderror
                 </div>
 
+                <!-- Product Type Selection -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Product Type *</label>
+                    <div class="flex items-center space-x-6">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="product_type" value="simple"
+                                   {{ old('product_type', $product->product_type ?? 'simple') == 'simple' ? 'checked' : '' }}
+                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <div class="ml-3">
+                                <span class="block text-sm font-medium text-gray-900">Single Product</span>
+                                <span class="block text-xs text-gray-500">One product with fixed price and inventory</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="product_type" value="variable"
+                                   {{ old('product_type', $product->product_type) == 'variable' ? 'checked' : '' }}
+                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <div class="ml-3">
+                                <span class="block text-sm font-medium text-gray-900">Variable Product</span>
+                                <span class="block text-xs text-gray-500">Product with multiple variations (e.g., sizes, colors)</span>
+                            </div>
+                        </label>
+                    </div>
+                    @error('product_type')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @if($product->isVariable() && $product->variations->count() > 0)
+                    <p class="mt-2 text-xs text-gray-600">💡 <strong>Note:</strong> This product already has variations. Changing to "Single Product" will keep existing variations but they won't be used.</p>
+                    @endif
+                </div>
+
+                <!-- Product Pricing & Inventory Section -->
+                @if($product->isVariable())
+                <!-- Weight -->
+                <div class="md:col-span-2">
+                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                    <input type="number" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" step="0.01" min="0" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                @else
+                <!-- Simple Product Fields -->
                 <!-- SKU -->
                 <div>
                     <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">SKU *</label>
@@ -83,6 +159,7 @@
                     <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
                     <input type="number" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" step="0.01" min="0" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                 </div>
+                @endif
 
                 <!-- Description -->
                 <div class="md:col-span-2">
@@ -289,17 +366,18 @@
             </div>
         </form>
 
-        <!-- Product Variations Section -->
+        <!-- Product Variations Section (Only for Variable Products) -->
+        @if($product->isVariable())
         <div class="mt-8 bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h3 class="text-xl font-semibold text-gray-800">Product Variations</h3>
-                    <p class="text-sm text-gray-600 mt-1">Add variations like Style-1, Style-2, Style-3, etc.</p>
+                    <p class="text-sm text-gray-600 mt-1">Manage different variations of this product (e.g., different sizes, colors, or models)</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <span class="text-sm font-medium text-gray-700">Product Type:</span>
-                    <span class="px-3 py-1 rounded-full text-sm font-medium {{ $product->isVariable() ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700' }}">
-                        {{ $product->isVariable() ? 'Variable' : 'Simple' }}
+                    <span class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
+                        Variable Product
                     </span>
                 </div>
             </div>
@@ -460,7 +538,7 @@
                                 </form>
                             </td>
                             <td class="px-4 py-3 text-sm text-right space-x-2">
-                                <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }}, '{{ $variation->image_url }}')"
+                                <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }}, {{ $variation->is_active ? 'true' : 'false' }}, '{{ $variation->image_url }}')"
                                         class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
                                 <form action="{{ route('super-admin.shop.products.variations.destroy', [$product, $variation]) }}" method="POST" class="inline"
                                       onsubmit="return confirm('Are you sure you want to delete this variation?');">
@@ -566,7 +644,7 @@
         <script>
             let currentVariationId = null;
 
-            async function editVariation(id, name, sku, price, quantity, imageUrl) {
+            async function editVariation(id, name, sku, price, quantity, isActive, imageUrl) {
                 currentVariationId = id;
                 const form = document.getElementById('edit-variation-form');
                 form.action = `/super-admin/shop/products/{{ $product->id }}/variations/${id}`;
@@ -575,6 +653,7 @@
                 document.getElementById('edit_variation_sku').value = sku || '';
                 document.getElementById('edit_variation_price').value = price || '';
                 document.getElementById('edit_variation_quantity').value = quantity;
+                document.getElementById('edit_variation_active').checked = isActive;
 
                 // Clear previous images and previews
                 document.getElementById('edit_variation_images_grid').innerHTML = '';
@@ -698,5 +777,7 @@
                 }
             });
         </script>
+        @endif
+        {{-- End of Variable Product Variations Section --}}
     </div>
 </x-super-admin-sidebar-layout>

@@ -135,22 +135,18 @@ class SubscriptionController extends Controller
     {
         $organization = auth()->user()->organization;
 
-        // Check if already subscribed
-        if ($organization->subscription()->where('status', 'active')->exists()) {
+        // Check if already subscribed (active or trialing)
+        if ($organization->subscription()->whereIn('status', ['active', 'trialing'])->exists()) {
             return redirect()->route('organization.billing.index')
                 ->with('info', 'You already have an active subscription.');
         }
 
-        // Calculate 12-month donation total to recommend a tier
-        $total12m = $tierService->calculate12MonthDonations($organization);
+        // Always show Tier 1 for initial subscription
+        // All organizations start with Tier 1 and will be automatically upgraded
+        // based on their 12-month donation totals
+        $tier1 = SubscriptionTier::active()->ordered()->first();
 
-        // Determine recommended tier (default to Tier 1 if no donations yet)
-        $recommendedTier = $tierService->determineTierByAmount($total12m);
-        if (!$recommendedTier) {
-            $recommendedTier = SubscriptionTier::active()->ordered()->first();
-        }
-
-        return view('organization.billing.create', compact('recommendedTier'));
+        return view('organization.billing.create', compact('tier1'));
     }
 
     /**
@@ -159,7 +155,6 @@ class SubscriptionController extends Controller
     public function store(Request $request, StripeService $stripeService)
     {
         $request->validate([
-            'tier_id' => 'required|exists:subscription_tiers,id',
             'payment_method' => 'required|string',
             'billing_name' => 'required|string|max:255',
             'billing_email' => 'required|email|max:255',
@@ -172,7 +167,14 @@ class SubscriptionController extends Controller
         ]);
 
         $organization = auth()->user()->organization;
-        $tier = SubscriptionTier::findOrFail($request->tier_id);
+
+        // Always subscribe to Tier 1 - system will auto-upgrade based on donations
+        $tier = SubscriptionTier::active()->ordered()->first();
+
+        if (!$tier) {
+            return redirect()->back()
+                ->with('error', 'No subscription tiers available. Please contact support.');
+        }
 
         DB::beginTransaction();
 
@@ -202,10 +204,16 @@ class SubscriptionController extends Controller
                 ],
             ]);
 
-            // 4. Create Stripe subscription
+            // 4. Create Stripe subscription with 30-day payment delay
+            // Note: First payment will be charged after 30 days
             $stripeSubscription = $stripeService->createSubscription(
                 $customer->id,
-                $tier->stripe_price_id
+                $tier->stripe_price_id,
+                [
+                    'organization_id' => $organization->id,
+                    'organization_name' => $organization->name,
+                ],
+                30 // 30-day trial period before first payment
             );
 
             // 5. Get payment method details for display
@@ -235,10 +243,11 @@ class SubscriptionController extends Controller
                 'organization_id' => $organization->id,
                 'subscription_id' => $subscription->id,
                 'tier' => $tier->name,
+                'trial_period_days' => 30,
             ]);
 
             return redirect()->route('organization.dashboard')
-                ->with('success', 'Subscription activated successfully! Welcome to ' . $tier->name . '.');
+                ->with('success', 'Subscription activated successfully! Your first payment will be charged in 30 days. Welcome to ' . $tier->name . '!');
 
         } catch (\Stripe\Exception\CardException $e) {
             DB::rollBack();

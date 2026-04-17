@@ -14,8 +14,9 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $query = Product::active()
-            ->with('primaryImage')
-            ->inStock();
+            ->with(['primaryImage', 'images' => function($q) {
+                $q->orderBy('sort_order')->limit(1);
+            }]);
 
         // Search
         if ($request->has('search')) {
@@ -57,14 +58,20 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->active()
-            ->with('images', 'inStockVariations')
+            ->with([
+                'images',
+                'activeVariations.images' => function($q) {
+                    $q->orderBy('sort_order');
+                }
+            ])
             ->firstOrFail();
 
         // Related products - just get other available products
         $relatedProducts = Product::active()
             ->where('id', '!=', $product->id)
-            ->inStock()
-            ->with('primaryImage')
+            ->with(['primaryImage', 'images' => function($q) {
+                $q->orderBy('sort_order')->limit(1);
+            }])
             ->limit(4)
             ->inRandomOrder()
             ->get();

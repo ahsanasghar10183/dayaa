@@ -37,15 +37,21 @@
                 <div class="flex items-start justify-between mb-4">
                     <div>
                         <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Current Tier</p>
-                        <h3 class="text-3xl font-bold text-gray-900">{{ $currentTier ? $currentTier->name : 'Free' }}</h3>
+                        <h3 class="text-3xl font-bold text-gray-900">{{ $currentTier ? $currentTier->name : 'No Active Subscription' }}</h3>
+                        @if($currentTier)
                         <p class="text-2xl font-bold text-primary-600 mt-1">
-                            €{{ number_format($currentTier ? $currentTier->monthly_fee : 0, 2) }}
+                            €{{ number_format($currentTier->monthly_fee, 2) }}
                             <span class="text-sm font-normal text-gray-400">/month</span>
                         </p>
+                        @endif
                     </div>
-                    @if($subscription && $subscription->status === 'active')
+                    @if($subscription && in_array($subscription->status, ['active', 'trialing']))
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            Active
+                            @if($subscription->status === 'trialing')
+                                Active (Payment in {{ \Carbon\Carbon::parse($subscription->current_period_end)->diffInDays(now()) }} days)
+                            @else
+                                Active
+                            @endif
                         </span>
                     @endif
                 </div>

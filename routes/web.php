@@ -146,7 +146,7 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'verifie
 });
 
 // Organization Admin Routes
-Route::prefix('organization')->name('organization.')->middleware(['auth', 'verified', 'org_admin'])->group(function () {
+Route::prefix('organization')->name('organization.')->middleware(['auth', 'verified', 'org_admin', 'ensureSubscribed'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'index'])->name('dashboard');
 
     // Organization Profile
