@@ -83,8 +83,8 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $product->quantity }}</div>
-                                @if($product->quantity < 10)
+                                <div class="text-sm text-gray-900">{{ $product->total_stock }}</div>
+                                @if($product->total_stock < 10)
                                 <span class="text-xs text-red-600">Low Stock</span>
                                 @endif
                             </td>

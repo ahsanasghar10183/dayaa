@@ -12,6 +12,36 @@ use Illuminate\Support\Facades\Storage;
 class ShopProductController extends Controller
 {
     /**
+     * Generate a unique slug for the product
+     */
+    private function generateUniqueSlug($name, $excludeId = null)
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        // Check if slug exists, if yes append number
+        while (true) {
+            $query = Product::where('slug', $slug);
+
+            // Exclude current product when updating
+            if ($excludeId) {
+                $query->where('id', '!=', $excludeId);
+            }
+
+            if (!$query->exists()) {
+                break;
+            }
+
+            // Append counter to make it unique
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
@@ -127,7 +157,7 @@ class ShopProductController extends Controller
             // Prepare product data - common fields
             $productData = [
                 'name' => $request->name,
-                'slug' => Str::slug($request->name),
+                'slug' => $this->generateUniqueSlug($request->name),
                 'description' => $request->description,
                 'name_en' => $request->name_en,
                 'name_de' => $request->name_de,
@@ -286,7 +316,7 @@ class ShopProductController extends Controller
             // Prepare update data - common fields for all product types
             $updateData = [
                 'name' => $request->name,
-                'slug' => Str::slug($request->name),
+                'slug' => $this->generateUniqueSlug($request->name, $product->id),
                 'description' => $request->description,
                 'name_en' => $request->name_en,
                 'name_de' => $request->name_de,

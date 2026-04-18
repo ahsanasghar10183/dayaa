@@ -200,9 +200,26 @@ class Product extends Model
 
     /**
      * Get formatted price
+     * For variable products, shows price range from variations
      */
     public function getFormattedPriceAttribute(): string
     {
+        if ($this->isVariable() && $this->variations()->count() > 0) {
+            $minPrice = $this->variations()->min('price');
+            $maxPrice = $this->variations()->max('price');
+
+            if ($minPrice && $maxPrice) {
+                if ($minPrice == $maxPrice) {
+                    // All variations have same price
+                    return '€' . number_format($minPrice, 2, ',', '.');
+                } else {
+                    // Show price range
+                    return '€' . number_format($minPrice, 2, ',', '.') . ' - €' . number_format($maxPrice, 2, ',', '.');
+                }
+            }
+        }
+
+        // Simple product or variable with no variations
         return '€' . number_format($this->price, 2, ',', '.');
     }
 
@@ -258,6 +275,20 @@ class Product extends Model
     public function increaseQuantity(int $amount): void
     {
         $this->increment('quantity', $amount);
+    }
+
+    /**
+     * Get total stock quantity
+     * For variable products, sum all variation quantities
+     * For simple products, return product quantity
+     */
+    public function getTotalStockAttribute(): int
+    {
+        if ($this->isVariable()) {
+            return $this->variations()->sum('quantity');
+        }
+
+        return $this->quantity;
     }
 
     /**

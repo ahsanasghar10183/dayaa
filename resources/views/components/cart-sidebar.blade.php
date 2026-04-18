@@ -451,7 +451,9 @@ function closeCartSidebar() {
 }
 
 function loadCartData() {
-    fetch('{{ route("marketing.cart.data") }}')
+    fetch('{{ route("marketing.cart.data") }}', {
+        credentials: 'include'
+    })
         .then(response => response.json())
         .then(data => {
             renderCartItems(data.items);
@@ -563,9 +565,10 @@ function updateQuantity(itemId, newQuantity) {
 
     fetch(`{{ route('marketing.cart.update', ':itemId') }}`.replace(':itemId', itemId), {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             'Accept': 'application/json'
         },
         body: JSON.stringify({ quantity: newQuantity })
@@ -589,8 +592,9 @@ function removeFromCart(itemId) {
 
     fetch(`{{ route('marketing.cart.remove', ':itemId') }}`.replace(':itemId', itemId), {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             'Accept': 'application/json'
         }
     })

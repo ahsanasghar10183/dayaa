@@ -263,6 +263,17 @@
 <script>
 const productIsVariable = {{ $product->isVariable() ? 'true' : 'false' }};
 
+// Helper function to get CSRF token from meta tag
+function getCsrfToken() {
+    const metaTag = document.querySelector('meta[name="csrf-token"]');
+    const token = metaTag ? metaTag.getAttribute('content') : '';
+    console.log('CSRF Token:', token);  // Debug log
+    if (!token) {
+        console.error('CSRF token not found in meta tag!');
+    }
+    return token;
+}
+
 function changeMainImage(url) {
     document.getElementById('mainImage').src = url;
 
@@ -448,17 +459,31 @@ function addToCart(productId) {
     }
 
     // Use fetch to add to cart without page reload
+    const csrfToken = getCsrfToken();
+    console.log('Add to Cart - Product ID:', productId, 'Quantity:', quantity, 'Variation ID:', variationId);
+
     fetch('{{ route("marketing.cart.add", ":productId") }}'.replace(':productId', productId), {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': csrfToken,
             'Accept': 'application/json'
         },
         body: JSON.stringify(requestData)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('Error response:', text);
+                throw new Error('HTTP error ' + response.status + ': ' + text);
+            });
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Success response:', data);
         if (data.success) {
             // Update cart count if function exists
             if (typeof updateCartCount === 'function') {
@@ -482,7 +507,7 @@ function addToCart(productId) {
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = '_token';
-        csrfToken.value = '{{ csrf_token() }}';
+        csrfToken.value = getCsrfToken();
 
         const quantityInput = document.createElement('input');
         quantityInput.type = 'hidden';
@@ -518,14 +543,19 @@ function buyNow(productId) {
     const quantity = document.getElementById('product-quantity').value;
     const variationId = getSelectedVariationId();
 
+    console.log('Buy Now - Product ID:', productId, 'Quantity:', quantity, 'Variation ID:', variationId);
+
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = '{{ route("marketing.cart.buy-now", ":productId") }}'.replace(':productId', productId);
 
+    const token = getCsrfToken();
+    console.log('Buy Now - CSRF Token being submitted:', token);
+
     const csrfToken = document.createElement('input');
     csrfToken.type = 'hidden';
     csrfToken.name = '_token';
-    csrfToken.value = '{{ csrf_token() }}';
+    csrfToken.value = token;
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'hidden';

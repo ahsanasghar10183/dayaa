@@ -395,7 +395,9 @@
         <!-- Cart Count Update Script -->
         <script>
         function updateCartCount() {
-            fetch('{{ route("marketing.cart.count") }}')
+            fetch('{{ route("marketing.cart.count") }}', {
+                credentials: 'include'
+            })
                 .then(response => response.json())
                 .then(data => {
                     const cartWrapper = document.getElementById('cartIconWrapper');

@@ -51,7 +51,7 @@ class CheckoutController extends Controller
             'address' => 'required|string|max:500',
             'apartment' => 'nullable|string|max:255',
             'city' => 'required|string|max:255',
-            'country' => 'required|string|max:2',
+            'country' => 'required|string|max:100',
             'postal_code' => 'required|string|max:20',
             'customer_phone' => 'nullable|string|max:50',
         ];
@@ -64,7 +64,7 @@ class CheckoutController extends Controller
             $rules['shipping_address'] = 'required|string|max:500';
             $rules['shipping_apartment'] = 'nullable|string|max:255';
             $rules['shipping_city'] = 'required|string|max:255';
-            $rules['shipping_country'] = 'required|string|max:2';
+            $rules['shipping_country'] = 'required|string|max:100';
             $rules['shipping_postal_code'] = 'required|string|max:20';
         }
 

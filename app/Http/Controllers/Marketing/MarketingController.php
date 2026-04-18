@@ -19,9 +19,15 @@ class MarketingController extends Controller
     {
         $featuredProducts = Product::active()
             ->featured()
-            ->with(['primaryImage', 'images' => function($q) {
-                $q->orderBy('sort_order')->limit(1);
-            }])
+            ->with([
+                'primaryImage',
+                'images' => function($q) {
+                    $q->orderBy('sort_order')->limit(1);
+                },
+                'variations' => function($q) {
+                    $q->select('product_id', 'price'); // For price range calculation
+                }
+            ])
             ->limit(3)
             ->get();
 

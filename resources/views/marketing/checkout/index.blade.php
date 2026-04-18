@@ -95,28 +95,28 @@
                                 </div>
                                 <div class="col-12">
                                     <label for="city" class="form-label">{{ __('marketing.checkout.city') }} *</label>
-                                    <input type="text" class="form-control @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city') }}" required>
+                                    <input type="text" class="form-control @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city') }}" required autocomplete="off">
                                     @error('city')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="country" class="form-label">{{ __('marketing.checkout.country') }} *</label>
-                                    <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country') }}" required>
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country') }}" required autocomplete="off">
                                     @error('country')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="postal_code" class="form-label">{{ __('marketing.checkout.postal_code') }} *</label>
-                                    <input type="text" class="form-control @error('postal_code') is-invalid @enderror" id="postal_code" name="postal_code" value="{{ old('postal_code') }}" required>
+                                    <input type="text" class="form-control @error('postal_code') is-invalid @enderror" id="postal_code" name="postal_code" value="{{ old('postal_code') }}" required autocomplete="off">
                                     @error('postal_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-12">
                                     <label for="customer_phone" class="form-label">{{ __('marketing.checkout.phone_number') }} <span class="text-muted">({{ __('marketing.checkout.optional') }})</span></label>
-                                    <input type="tel" class="form-control @error('customer_phone') is-invalid @enderror" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="+49 123 456 7890">
+                                    <input type="tel" class="form-control @error('customer_phone') is-invalid @enderror" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="+49 123 456 7890" autocomplete="off">
                                     @error('customer_phone')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -159,15 +159,15 @@
                                 </div>
                                 <div class="col-12">
                                     <label for="shipping_city" class="form-label">{{ __('marketing.checkout.city') }} *</label>
-                                    <input type="text" class="form-control" id="shipping_city" name="shipping_city" value="{{ old('shipping_city') }}">
+                                    <input type="text" class="form-control" id="shipping_city" name="shipping_city" value="{{ old('shipping_city') }}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="shipping_country" class="form-label">{{ __('marketing.checkout.country') }} *</label>
-                                    <input type="text" class="form-control" id="shipping_country" name="shipping_country" value="{{ old('shipping_country') }}">
+                                    <input type="text" class="form-control" id="shipping_country" name="shipping_country" value="{{ old('shipping_country') }}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="shipping_postal_code" class="form-label">{{ __('marketing.checkout.postal_code') }} *</label>
-                                    <input type="text" class="form-control" id="shipping_postal_code" name="shipping_postal_code" value="{{ old('shipping_postal_code') }}">
+                                    <input type="text" class="form-control" id="shipping_postal_code" name="shipping_postal_code" value="{{ old('shipping_postal_code') }}" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -666,28 +666,26 @@ function fillInAddress(type) {
         addressField.value = fullAddress;
     }
 
-    // Fill in city
+    // Fill in city (disable autocomplete after setting)
     const cityField = document.getElementById(prefix + 'city');
     if (cityField && city) {
         cityField.value = city;
+        cityField.setAttribute('autocomplete', 'off');
     }
 
-    // Fill in postal code
+    // Fill in postal code (disable autocomplete after setting)
     const postalCodeField = document.getElementById(prefix + 'postal_code');
     if (postalCodeField && postalCode) {
         postalCodeField.value = postalCode;
+        postalCodeField.setAttribute('autocomplete', 'off');
     }
 
-    // Fill in country
+    // Fill in country (disable autocomplete after setting)
     const countryField = document.getElementById(prefix + 'country');
     if (countryField && countryCode) {
-        // Try to set country using the short code (e.g., 'DE', 'AT', etc.)
-        countryField.value = countryCode.toUpperCase();
-
-        // If that doesn't work, try the mapping
-        if (!countryField.value && country && countryMapping[country]) {
-            countryField.value = countryMapping[country];
-        }
+        // Use full country name instead of code
+        countryField.value = country;
+        countryField.setAttribute('autocomplete', 'off');
     }
 
     // Trigger change events to update any dependent fields
