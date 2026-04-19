@@ -235,6 +235,9 @@
         <!-- Cart Sidebar -->
         <x-cart-sidebar />
 
+        <!-- Cookie Consent Banner -->
+        <x-cookie-consent />
+
         <!-- Main Content -->
         @yield('content')
 

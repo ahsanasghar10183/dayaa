@@ -47,4 +47,12 @@ return [
         'places_api_key' => env('GOOGLE_PLACES_API_KEY'),
     ],
 
+    'sumup' => [
+        'api_key' => env('SUMUP_API_KEY'),
+        'merchant_code' => env('SUMUP_MERCHANT_CODE'),
+        'base_url' => env('SUMUP_BASE_URL', 'https://api.sumup.com'),
+        'webhook_secret' => env('SUMUP_WEBHOOK_SECRET'),
+        'test_mode' => env('SUMUP_TEST_MODE', true),
+    ],
+
 ];

@@ -93,20 +93,20 @@
         <div class="row g-4">
             @foreach($featuredProducts as $index => $product)
             <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="{{ 0.3 + ($index * 0.2) }}s">
-                <div class="pp-offer-box-item d-flex flex-column">
+                <div class="pp-offer-box-item d-flex flex-column" style="padding-bottom: 20px;">
                     <div class="product-image mb-3" style="aspect-ratio: 1/1; overflow: hidden; position: relative;">
                         <a href="{{ route('marketing.shop.product', $product->slug) }}">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; position: absolute; top: 0; left: 0;">
                         </a>
                     </div>
                     <div class="pp-offer-content flex-grow-1 d-flex flex-column">
-                        <h4>
+                        <h4 style="min-height: 2.5em; line-height: 1.25em;">
                             <a href="{{ route('marketing.shop.product', $product->slug) }}" class="text-decoration-none">
                                 {{ $product->name }}
                             </a>
                         </h4>
 
-                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="d-flex justify-content-between align-items-center mt-2">
                             <span class="h5 mb-0 text-primary">{{ $product->formatted_price }}</span>
                             @if($product->is_in_stock)
                                 <span class="badge bg-success">{{ __('marketing.shop.in_stock') }}</span>
@@ -114,7 +114,7 @@
                                 <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
                             @endif
                         </div>
-                        <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn mt-3 w-100 text-center">
+                        <a href="{{ route('marketing.shop.product', $product->slug) }}" class="pp-theme-btn w-100 text-center" style="margin-top: auto; padding: 14px 24px;">
                             {{ __('marketing.home.shop_view_details') }}
                         </a>
                     </div>

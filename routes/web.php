@@ -268,7 +268,7 @@ Route::prefix('kiosk')->name('kiosk.')->group(function () {
     Route::get('/thankyou', [\App\Http\Controllers\KioskController::class, 'thankYou'])->name('thankyou');
 
     // SumUp Webhook (excluded from CSRF)
-    Route::post('/sumup-webhook', [\App\Http\Controllers\KioskController::class, 'sumupWebhook'])->name('sumup-webhook');
+    Route::post('/sumup-webhook', [\App\Http\Controllers\SumUpWebhookController::class, 'handle'])->name('sumup-webhook');
 });
 
 require __DIR__.'/auth.php';

@@ -134,6 +134,12 @@
                         @endif
                     </div>
 
+                    <div class="product-meta mb-4">
+                        <p class="mb-2"><i class="fa-solid fa-truck"></i> {{ __('marketing.shop.free_shipping') }}</p>
+                        <p class="mb-2"><i class="fa-solid fa-shield-alt"></i> {{ __('marketing.shop.warranty') }}</p>
+                        <p class="mb-0"><i class="fa-solid fa-headset"></i> {{ __('marketing.shop.customer_support') }}</p>
+                    </div>
+
                     @if($product->is_in_stock)
                     <div class="row g-3 mb-4">
                         <div class="col-auto">
@@ -170,12 +176,6 @@
                         </ul>
                     </div>
                     @endif
-
-                    <div class="product-meta">
-                        <p class="mb-2"><i class="fa-solid fa-truck"></i> {{ __('marketing.shop.free_shipping') }}</p>
-                        <p class="mb-2"><i class="fa-solid fa-shield-alt"></i> {{ __('marketing.shop.warranty') }}</p>
-                        <p class="mb-0"><i class="fa-solid fa-headset"></i> {{ __('marketing.shop.customer_support') }}</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -192,20 +192,20 @@
         <div class="row g-4">
             @foreach($relatedProducts as $relatedProduct)
             <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="pp-offer-box-item d-flex flex-column">
+                <div class="pp-offer-box-item d-flex flex-column" style="padding-bottom: 20px;">
                     <div class="product-image mb-3" style="height: 300px; overflow: hidden;">
                         <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}">
                             <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
                         </a>
                     </div>
                     <div class="pp-offer-content flex-grow-1 d-flex flex-column">
-                        <h4>
+                        <h4 style="min-height: 2.5em; line-height: 1.25em;">
                             <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="text-decoration-none">
                                 {{ $relatedProduct->name }}
                             </a>
                         </h4>
 
-                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="d-flex justify-content-between align-items-center mt-2">
                             <span class="h5 mb-0 text-primary">{{ $relatedProduct->formatted_price }}</span>
                             @if($relatedProduct->is_in_stock)
                                 <span class="badge bg-success">{{ __('marketing.shop.in_stock') }}</span>
@@ -213,7 +213,7 @@
                                 <span class="badge bg-danger">{{ __('marketing.shop.out_of_stock') }}</span>
                             @endif
                         </div>
-                        <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="pp-theme-btn mt-3 w-100 text-center">
+                        <a href="{{ route('marketing.shop.product', $relatedProduct->slug) }}" class="pp-theme-btn w-100 text-center" style="margin-top: auto; padding: 14px 24px;">
                             {{ __('marketing.shop.view_details') }}
                         </a>
                     </div>

@@ -35,6 +35,8 @@ Route::middleware('auth:sanctum')->prefix('campaigns')->group(function () {
 // Donation endpoints (protected)
 Route::middleware('auth:sanctum')->prefix('donations')->group(function () {
     Route::post('/', [DonationController::class, 'store']);
+    Route::post('/{id}/sumup/initiate', [DonationController::class, 'initiateSumUpPayment']);
+    Route::get('/{id}/sumup/status', [DonationController::class, 'checkPaymentStatus']);
     Route::patch('/{id}/complete', [DonationController::class, 'complete']);
     Route::patch('/{id}/fail', [DonationController::class, 'fail']);
     Route::post('/{id}/send-receipt', [DonationController::class, 'sendReceipt']);

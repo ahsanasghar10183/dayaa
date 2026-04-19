@@ -517,4 +517,28 @@ return [
         'quality' => 'Qualitätssicherung',
         'quality_desc' => 'Streng getestete Hardware mit umfassender Garantieabdeckung',
     ],
+
+    // Cookie Consent (GDPR Compliant - German regulations)
+    'cookies' => [
+        'title' => 'Wir verwenden Cookies',
+        'message' => 'Diese Website verwendet Cookies, um Ihre Erfahrung zu verbessern. Mit der Nutzung unserer Website stimmen Sie der Verwendung von Cookies zu.',
+        'learn_more' => 'Mehr erfahren',
+        'accept' => 'Akzeptieren',
+        'decline' => 'Ablehnen',
+        'settings' => 'Einstellungen',
+
+        // Cookie Settings Panel
+        'settings_title' => 'Cookie-Einstellungen',
+        'save_preferences' => 'Einstellungen speichern',
+
+        // Cookie Categories (German GDPR/TDDDG compliant)
+        'essential' => 'Notwendige Cookies',
+        'essential_desc' => 'Diese Cookies sind für die Grundfunktionen der Website erforderlich und können nicht deaktiviert werden. Sie speichern Ihre Präferenzen und ermöglichen grundlegende Funktionen wie Seitennavigation und Zugriff auf sichere Bereiche.',
+
+        'analytics' => 'Analyse-Cookies',
+        'analytics_desc' => 'Diese Cookies helfen uns zu verstehen, wie Besucher mit unserer Website interagieren, indem sie Informationen anonym sammeln und melden. Dies hilft uns, die Leistung der Website zu verbessern.',
+
+        'marketing' => 'Marketing-Cookies',
+        'marketing_desc' => 'Diese Cookies werden verwendet, um Ihnen relevante Werbung anzuzeigen und die Effektivität unserer Kampagnen zu messen. Sie verfolgen Ihren Besuch auf unserer Website und anderen Websites.',
+    ],
 ];
