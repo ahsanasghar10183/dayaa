@@ -22,9 +22,36 @@ class SubscriptionTier extends Model
         'min_amount' => 'decimal:2',
         'max_amount' => 'decimal:2',
         'monthly_fee' => 'decimal:2',
-        'features' => 'array',
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Always return features as an array, regardless of how it was stored
+     * (valid JSON, newline-separated string, comma-separated, or null).
+     */
+    public function getFeaturesAttribute($value): array
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode($value, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        $separator = str_contains($value, "\n") ? "\n" : ',';
+        return array_values(array_filter(array_map('trim', explode($separator, $value))));
+    }
+
+    public function setFeaturesAttribute($value): void
+    {
+        $this->attributes['features'] = is_array($value) ? json_encode($value) : $value;
+    }
 
     /**
      * Check if an amount falls within this tier's range

@@ -171,22 +171,5 @@
             </div>
         </div>
 
-        {{-- Current Tier Features --}}
-        @if($currentTier)
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $currentTier->name }} Includes</h3>
-            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                @foreach($currentTier->features as $feature)
-                <li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="text-sm text-gray-700">{{ $feature }}</span>
-                </li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
     </div>
 </x-organization-sidebar-layout>

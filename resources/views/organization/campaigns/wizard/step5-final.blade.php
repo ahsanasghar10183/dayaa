@@ -70,16 +70,6 @@
                     </h3>
 
                     <div class="space-y-6">
-                        <!-- Campaign Type -->
-                        <div>
-                            <label for="campaign_type" class="block text-sm font-medium text-gray-700 mb-2">Campaign Type *</label>
-                            <select name="campaign_type" id="campaign_type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                <option value="one-time">One-Time Donations</option>
-                                <option value="recurring">Recurring Donations</option>
-                            </select>
-                            <p class="mt-1 text-xs text-gray-500">Choose whether donors can make one-time or recurring donations</p>
-                        </div>
-
                         <!-- Reference Code -->
                         <div>
                             <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">Reference Code (Optional)</label>

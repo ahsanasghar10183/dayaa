@@ -41,19 +41,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Campaign Type -->
-                        <div>
-                            <label for="campaign_type" class="block text-sm font-medium text-gray-700 mb-2">Campaign Type *</label>
-                            <select name="campaign_type" id="campaign_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('campaign_type') border-red-500 @enderror">
-                                <option value="">Select type...</option>
-                                <option value="one-time" {{ old('campaign_type') == 'one-time' ? 'selected' : '' }}>One-Time Donation</option>
-                                <option value="recurring" {{ old('campaign_type') == 'recurring' ? 'selected' : '' }}>Recurring Donation</option>
-                            </select>
-                            @error('campaign_type')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <!-- Reference Code -->
                         <div>
                             <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">Reference Code</label>

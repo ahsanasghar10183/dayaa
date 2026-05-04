@@ -97,6 +97,31 @@ class StripeWebhookController extends Controller
     }
 
     /**
+     * Resolve current_period_start/end from a Stripe Subscription object,
+     * tolerating both the legacy (top-level) and the 2024-08-15+ (per-item) shapes.
+     */
+    protected function resolveStripePeriod($stripeSubscription): array
+    {
+        $firstItem = $stripeSubscription->items->data[0] ?? null;
+
+        $startTs = $stripeSubscription->current_period_start
+            ?? ($firstItem->current_period_start ?? null)
+            ?? $stripeSubscription->trial_start
+            ?? $stripeSubscription->start_date
+            ?? null;
+
+        $endTs = $stripeSubscription->current_period_end
+            ?? ($firstItem->current_period_end ?? null)
+            ?? $stripeSubscription->trial_end
+            ?? null;
+
+        return [
+            $startTs ? \Carbon\Carbon::createFromTimestamp($startTs) : null,
+            $endTs ? \Carbon\Carbon::createFromTimestamp($endTs) : null,
+        ];
+    }
+
+    /**
      * Handle subscription created event
      */
     protected function handleSubscriptionCreated($stripeSubscription): void
@@ -104,12 +129,14 @@ class StripeWebhookController extends Controller
         $subscription = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
 
         if ($subscription) {
-            $subscription->update([
+            [$periodStart, $periodEnd] = $this->resolveStripePeriod($stripeSubscription);
+
+            $subscription->update(array_filter([
                 'status' => $stripeSubscription->status,
                 'stripe_status' => $stripeSubscription->status,
-                'current_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start),
-                'current_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
-            ]);
+                'current_period_start' => $periodStart,
+                'current_period_end' => $periodEnd,
+            ], fn ($v) => $v !== null));
 
             Log::info('Subscription created webhook processed', [
                 'subscription_id' => $subscription->id,
@@ -126,12 +153,14 @@ class StripeWebhookController extends Controller
         $subscription = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
 
         if ($subscription) {
-            $updateData = [
+            [$periodStart, $periodEnd] = $this->resolveStripePeriod($stripeSubscription);
+
+            $updateData = array_filter([
                 'status' => $stripeSubscription->status,
                 'stripe_status' => $stripeSubscription->status,
-                'current_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start),
-                'current_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
-            ];
+                'current_period_start' => $periodStart,
+                'current_period_end' => $periodEnd,
+            ], fn ($v) => $v !== null);
 
             // Check if price changed (tier change applied)
             $newPriceId = $stripeSubscription->items->data[0]->price->id ?? null;

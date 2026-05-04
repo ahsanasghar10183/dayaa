@@ -96,16 +96,20 @@ class StripeService
                     ['price' => $priceId],
                 ],
                 'metadata' => $metadata,
-                'payment_behavior' => 'default_incomplete',
                 'payment_settings' => [
                     'save_default_payment_method' => 'on_subscription',
                 ],
-                'expand' => ['latest_invoice.payment_intent'],
             ];
 
             // Add trial period if specified
             if ($trialPeriodDays !== null) {
                 $subscriptionData['trial_period_days'] = $trialPeriodDays;
+                // With trial period, use allow_incomplete to defer payment until trial ends
+                $subscriptionData['payment_behavior'] = 'allow_incomplete';
+            } else {
+                // Without trial, require immediate payment
+                $subscriptionData['payment_behavior'] = 'default_incomplete';
+                $subscriptionData['expand'] = ['latest_invoice.payment_intent'];
             }
 
             return Subscription::create($subscriptionData);

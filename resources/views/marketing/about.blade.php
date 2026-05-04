@@ -26,7 +26,7 @@
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="about-image">
-                        <img src="{{ asset('marketing/assets/img/home-1/about/about-1.jpg') }}" alt="About Dayaa" class="wow img-custom-anim-left" data-wow-duration="1.3s" data-wow-delay="0.3s">
+                        <img src="{{ asset('marketing/assets/img/home-1/about/about-1.png') }}" alt="About Dayaa" class="wow img-custom-anim-left" data-wow-duration="1.3s" data-wow-delay="0.3s" style="width: 100%; height: auto; border-radius: 12px;">
                     </div>
                 </div>
                 <div class="col-lg-6">

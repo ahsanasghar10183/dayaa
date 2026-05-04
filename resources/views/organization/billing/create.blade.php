@@ -51,25 +51,72 @@
                     </div>
                 </div>
 
-                {{-- Features Grid --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 pb-6 border-b border-gray-200">
-                    @foreach($tier1->features as $feature)
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="text-sm text-gray-700">{{ $feature }}</span>
-                    </div>
-                    @endforeach
-                </div>
-
                 {{-- Tier Benefits Notice --}}
-                <div class="bg-blue-50 rounded-lg p-4">
+                <div class="bg-blue-50 rounded-lg p-4 mt-2">
                     <h5 class="text-sm font-semibold text-blue-900 mb-2">{{ __('admin.billing.auto_tier_adjustment') }}</h5>
                     <p class="text-xs text-blue-700 leading-relaxed">
                         {{ __('admin.billing.tier_grows_with_success') }}
                     </p>
                 </div>
+            </div>
+        </div>
+
+        {{-- All Tiers Overview --}}
+        <div class="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.billing.all_tiers_title') }}</h3>
+                <p class="text-sm text-gray-600 mt-1">{{ __('admin.billing.all_tiers_subtitle') }}</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.billing.tier') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.billing.plan_name') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">{{ __('admin.billing.annual_donations') }}</th>
+                            <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap">{{ __('admin.billing.monthly_fee') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach($tiers as $index => $tier)
+                        @php
+                            $isStarter = $tier->id === $tier1->id;
+                            $isEnterprise = $tier->monthly_fee === null || $tier->monthly_fee === '0.00';
+                        @endphp
+                        <tr class="{{ $isStarter ? 'bg-blue-50/60' : 'hover:bg-gray-50' }}">
+                            <td class="px-4 py-3 align-top whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold {{ $isStarter ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' }}">
+                                    {{ $index + 1 }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 align-top">
+                                <div class="font-semibold text-gray-900">{{ $tier->name }}</div>
+                                @if($isStarter)
+                                    <div class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-800 uppercase tracking-wide">
+                                        {{ __('admin.billing.currently_selected') }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 align-top whitespace-nowrap text-gray-700">
+                                @if($tier->max_amount)
+                                    €{{ number_format($tier->min_amount, 0, ',', '.') }} – €{{ number_format($tier->max_amount, 0, ',', '.') }}
+                                @else
+                                    €{{ number_format($tier->min_amount, 0, ',', '.') }}+
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 align-top text-right whitespace-nowrap">
+                                @if($isEnterprise)
+                                    <span class="text-gray-700 font-semibold">{{ __('admin.billing.custom_pricing') }}</span>
+                                @else
+                                    <div class="font-bold text-gray-900">€{{ number_format($tier->monthly_fee, 0, ',', '.') }}</div>
+                                    <div class="text-[11px] text-gray-500">{{ __('admin.billing.per_month') }}</div>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
 

@@ -225,7 +225,6 @@ class CampaignWizardController extends Controller
         }
 
         $validated = $request->validate([
-            'campaign_type' => 'required|in:one-time,recurring',
             'reference_code' => 'nullable|string|max:50',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -266,7 +265,7 @@ class CampaignWizardController extends Controller
             'organization_id' => $organization->id,
             'name' => $wizard['campaign_name'],
             'description' => $wizard['message'] ?? null,
-            'campaign_type' => $validated['campaign_type'],
+            'campaign_type' => 'one-time',
             'reference_code' => $validated['reference_code'],
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],

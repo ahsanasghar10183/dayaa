@@ -298,15 +298,6 @@
                             <div class="tab-content hidden" id="settings-tab">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-6">Campaign Settings</h3>
 
-                                <!-- Campaign Type -->
-                                <div class="mb-6">
-                                    <label for="campaign_type" class="block text-sm font-medium text-gray-700 mb-2">Campaign Type *</label>
-                                    <select name="campaign_type" id="campaign_type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                                        <option value="one-time" {{ $campaign->campaign_type == 'one-time' ? 'selected' : '' }}>One-Time Donations</option>
-                                        <option value="recurring" {{ $campaign->campaign_type == 'recurring' ? 'selected' : '' }}>Recurring Donations</option>
-                                    </select>
-                                </div>
-
                                 <!-- Reference Code -->
                                 <div class="mb-6">
                                     <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">Reference Code</label>

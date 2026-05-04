@@ -28,21 +28,13 @@ class EnsureSubscribed
             return $next($request);
         }
 
-        // Get organization
-        $organization = $user->organization;
-
-        if (!$organization) {
-            return redirect()->route('organization.profile.create')
-                ->with('error', 'Please complete your organization profile first.');
+        // Allow access to profile routes (BEFORE organization check to prevent redirect loop)
+        if ($request->routeIs('organization.profile.*')) {
+            return $next($request);
         }
 
         // Allow access to billing routes (so they can subscribe)
         if ($request->routeIs('organization.billing.*')) {
-            return $next($request);
-        }
-
-        // Allow access to profile routes
-        if ($request->routeIs('organization.profile.*')) {
             return $next($request);
         }
 
@@ -53,9 +45,18 @@ class EnsureSubscribed
             return $next($request);
         }
 
-        // Check for active or trialing subscription
+        // Get organization
+        $organization = $user->organization;
+
+        if (!$organization) {
+            return redirect()->route('organization.profile.create')
+                ->with('error', 'Please complete your organization profile first.');
+        }
+
+        // Check for active subscription
+        // Note: 'trialing' status from Stripe is mapped to 'active' in our database
         $subscription = $organization->subscription()
-            ->whereIn('status', ['active', 'trialing'])
+            ->where('status', 'active')
             ->first();
 
         if (!$subscription) {

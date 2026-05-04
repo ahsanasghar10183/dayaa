@@ -45,7 +45,7 @@
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.call_us') }}</h3>
                         <p class="mb-2">{!! __('marketing.contact.hours') !!}</p>
-                        <a href="tel:+491234567890" class="d-block h4">+49 123 456 7890</a>
+                        <a href="tel:+4915758745325" class="d-block h4">+49 1575 8745325</a>
                     </div>
                 </div>
             </div>
@@ -56,9 +56,9 @@
                     </div>
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.visit_us') }}</h3>
-                        <p class="mb-0">Dayaa Technologies GmbH<br>
-                        Berliner Straße 123<br>
-                        10115 Berlin<br>
+                        <p class="mb-0">Dayaa Tech Solution UG<br>
+                        Ludwigstraße 80<br>
+                        63263 Neu-Isenburg<br>
                         Germany</p>
                     </div>
                 </div>

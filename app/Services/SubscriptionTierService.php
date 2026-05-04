@@ -153,7 +153,16 @@ class SubscriptionTierService
             try {
                 $stripe = app(StripeService::class);
                 $stripeSubscription = $stripe->getSubscription($organization->subscription->stripe_subscription_id);
-                return Carbon::createFromTimestamp($stripeSubscription->current_period_end);
+
+                $firstItem = $stripeSubscription->items->data[0] ?? null;
+                $endTs = $stripeSubscription->current_period_end
+                    ?? ($firstItem->current_period_end ?? null)
+                    ?? $stripeSubscription->trial_end
+                    ?? null;
+
+                if ($endTs) {
+                    return Carbon::createFromTimestamp($endTs);
+                }
             } catch (\Exception $e) {
                 Log::warning('Could not fetch Stripe billing date, using default', [
                     'organization_id' => $organization->id,

@@ -42,7 +42,6 @@ return [
         'inactive'      => 'Inaktiv',
         'scheduled'     => 'Geplant',
         'one_time'      => 'Einmalig',
-        'recurring'     => 'Wiederkehrend',
         'no_campaigns'  => 'Noch keine Kampagnen. Erstellen Sie Ihre erste Kampagne!',
         'duplicate'     => 'Duplizieren',
         'delete'        => 'Löschen',

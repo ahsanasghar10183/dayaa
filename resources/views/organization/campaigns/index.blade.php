@@ -31,13 +31,6 @@
                     <option value="ended" {{ request('status') == 'ended' ? 'selected' : '' }}>Ended</option>
                 </select>
 
-                <!-- Campaign Type Filter -->
-                <select name="type" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                    <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>All Types</option>
-                    <option value="one-time" {{ request('type') == 'one-time' ? 'selected' : '' }}>One-Time</option>
-                    <option value="recurring" {{ request('type') == 'recurring' ? 'selected' : '' }}>Recurring</option>
-                </select>
-
                 <!-- Filter Button -->
                 <button type="submit" class="btn-primary whitespace-nowrap">
                     <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +40,7 @@
                 </button>
 
                 <!-- Reset -->
-                @if(request('search') || request('status') != 'all' || request('type') != 'all')
+                @if(request('search') || request('status') != 'all')
                 <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary whitespace-nowrap">Reset</a>
                 @endif
             </form>
@@ -62,9 +55,6 @@
                         <tr>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 Campaign
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Type
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 Status
@@ -104,23 +94,6 @@
                                         @endif
                                     </div>
                                 </div>
-                            </td>
-
-                            <!-- Type -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $campaign->campaign_type == 'recurring' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
-                                    @if($campaign->campaign_type == 'recurring')
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                        </svg>
-                                        Recurring
-                                    @else
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        One-Time
-                                    @endif
-                                </span>
                             </td>
 
                             <!-- Status -->

@@ -34,38 +34,6 @@
                             <p class="text-muted small">{{ __('marketing.pricing.or') }} €{{ number_format($tier->price_annually, 2) }}/{{ __('marketing.pricing.year') }} ({{ __('marketing.pricing.save_17') }})</p>
                             @endif
                         </div>
-                        @if($tier->features)
-                        <ul class="pp-pricing-list">
-                            @foreach(json_decode($tier->features, true) as $feature)
-                            <li>
-                                <img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                {{ $feature }}
-                            </li>
-                            @endforeach
-                        </ul>
-                        @endif
-                        @if($tier->limits)
-                        <div class="mt-3 mb-3">
-                            <h6>{{ __('marketing.pricing.plan_limits') }}:</h6>
-                            <ul class="pp-pricing-list">
-                                @if(isset($tier->limits['max_campaigns']))
-                                <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_campaigns'] }} {{ __('marketing.pricing.campaigns') }}
-                                </li>
-                                @endif
-                                @if(isset($tier->limits['max_devices']))
-                                <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_devices'] }} {{ __('marketing.pricing.devices') }}
-                                </li>
-                                @endif
-                                @if(isset($tier->limits['max_users']))
-                                <li><img src="{{ asset('marketing/assets/img/home-1/icon/cheak.svg') }}" alt="check">
-                                    {{ __('marketing.pricing.up_to') }} {{ $tier->limits['max_users'] }} {{ __('marketing.pricing.users') }}
-                                </li>
-                                @endif
-                            </ul>
-                        </div>
-                        @endif
                     </div>
                     <div class="pricing-button">
                         <a href="{{ route('marketing.get-started') }}" class="pp-theme-btn">{{ __('marketing.pricing.get_started') }}</a>

@@ -197,7 +197,6 @@
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $donation->campaign->name }}</div>
-                                        <div class="text-xs text-gray-500">{{ $donation->campaign->campaign_type }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="text-sm font-semibold text-green-600">€{{ number_format($donation->amount, 2) }}</span>
@@ -242,7 +241,6 @@
                                 <h4 class="text-sm font-medium text-gray-900">{{ Str::limit($campaign->name, 25) }}</h4>
                                 <span class="badge-success text-xs">{{ __('admin.dashboard.active') }}</span>
                             </div>
-                            <p class="text-xs text-gray-600">{{ ucfirst($campaign->campaign_type) }}</p>
                             <div class="mt-2 flex items-center justify-between">
                                 <span class="text-xs text-gray-500">{{ $campaign->donations_count }} {{ __('admin.dashboard.donations') }}</span>
                                 <a href="{{ route('organization.campaigns.show', $campaign) }}" class="text-xs text-primary-600 hover:text-primary-700">{{ __('admin.common.view') }} →</a>

@@ -128,7 +128,7 @@
                                         <i class="far fa-phone"></i>
                                     </div>
                                     <div class="offcanvas__contact-text">
-                                        <a href="tel:+491234567890">+49 123 456 7890</a>
+                                        <a href="tel:+4915758745325">+49 1575 8745325</a>
                                     </div>
                                 </li>
                             </ul>
@@ -340,7 +340,7 @@
                                     </div>
                                     <div class="pp-content">
                                         <h6>
-                                            <a href="tel:+491234567890">+49 123 456 7890</a>
+                                            <a href="tel:+4915758745325">+49 1575 8745325</a>
                                         </h6>
                                     </div>
                                 </div>

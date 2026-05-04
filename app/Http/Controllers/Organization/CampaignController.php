@@ -45,11 +45,6 @@ class CampaignController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Type filter
-        if ($request->filled('type') && $request->type != 'all') {
-            $query->where('campaign_type', $request->type);
-        }
-
         $campaigns = $query->latest()->paginate(12);
 
         return view('organization.campaigns.index', compact('campaigns'));
@@ -96,7 +91,6 @@ class CampaignController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'campaign_type' => 'required|in:one-time,recurring',
             'reference_code' => 'nullable|string|max:50',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -129,6 +123,7 @@ class CampaignController extends Controller
 
         // Set defaults
         $validated['organization_id'] = $organization->id;
+        $validated['campaign_type'] = 'one-time';
         $validated['language'] = 'en';
         $validated['currency'] = 'EUR';
 
@@ -253,7 +248,6 @@ class CampaignController extends Controller
         $validated = $request->validate([
             // Basic info
             'campaign_name' => 'required|string|max:255',
-            'campaign_type' => 'required|in:one-time,recurring',
             'reference_code' => 'nullable|string|max:50',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -322,7 +316,7 @@ class CampaignController extends Controller
         $campaign->update([
             'name' => $validated['campaign_name'],
             'description' => $validated['message'] ?? $campaign->description,
-            'campaign_type' => $validated['campaign_type'],
+            'campaign_type' => 'one-time',
             'reference_code' => $validated['reference_code'],
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],

@@ -54,33 +54,6 @@ Route::domain(config('app.marketing_domain'))->name('marketing.')->group(functio
     // Cart
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
-
-        // Debug route to test CSRF
-        Route::get('/test-csrf', function() {
-            return response()->json([
-                'session_id' => session()->getId(),
-                'csrf_token' => csrf_token(),
-                'session_domain' => config('session.domain'),
-                'cookie_domain' => config('session.domain'),
-                'has_session' => session()->isStarted(),
-            ]);
-        })->name('test-csrf');
-
-        // Debug POST to verify CSRF
-        Route::post('/test-csrf-post', function(\Illuminate\Http\Request $request) {
-            return response()->json([
-                'success' => true,
-                'message' => 'CSRF token is valid!',
-                'received_token' => $request->header('X-CSRF-TOKEN'),
-                'session_token' => csrf_token(),
-                'tokens_match' => $request->header('X-CSRF-TOKEN') === csrf_token(),
-                'session_id_from_request' => session()->getId(),
-                'cookies_received' => array_keys($request->cookies->all()),
-                'session_cookie_name' => config('session.cookie'),
-                'has_session_cookie' => $request->hasCookie(config('session.cookie')),
-            ]);
-        })->name('test-csrf-post');
-
         Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
         Route::post('/buy-now/{product}', [CartController::class, 'buyNow'])->name('buy-now');
         Route::patch('/update/{cartItem}', [CartController::class, 'update'])->name('update');
@@ -225,15 +198,18 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
 
     // Status pages
     Route::get('/pending', function () {
-        return view('organization.status.pending');
+        $organization = auth()->user()->organization;
+        return view('organization.status.pending', compact('organization'));
     })->name('pending');
 
     Route::get('/rejected', function () {
-        return view('organization.status.rejected');
+        $organization = auth()->user()->organization;
+        return view('organization.status.rejected', compact('organization'));
     })->name('rejected');
 
     Route::get('/suspended', function () {
-        return view('organization.status.suspended');
+        $organization = auth()->user()->organization;
+        return view('organization.status.suspended', compact('organization'));
     })->name('suspended');
 });
 
