@@ -147,6 +147,7 @@
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Campaign</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Device</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Reader</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Payment Method</th>
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date & Time</th>
                     </tr>
@@ -164,6 +165,13 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-sm text-gray-600">{{ $donation->device->name ?? 'N/A' }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($donation->reader)
+                                <span class="text-sm text-gray-600">{{ $donation->reader->name }}</span>
+                            @else
+                                <span class="text-sm text-gray-400">&mdash;</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm text-gray-600">{{ ucfirst($donation->payment_method) }}</span>

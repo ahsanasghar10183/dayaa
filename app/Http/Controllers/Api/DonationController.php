@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\DonationReceipt;
 use App\Models\Campaign;
 use App\Models\Donation;
+use App\Models\SumUpReader;
 use App\Services\SumUpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -89,13 +90,15 @@ class DonationController extends Controller
     }
 
     /**
-     * Initiate SumUp payment for a donation
+     * Initiate SumUp Solo reader checkout for a donation.
+     *
+     * Required body: reader_id (id of one of the org's paired SumUp readers).
+     * Returns client_transaction_id which the device will poll on.
      */
     public function initiateSumUpPayment(Request $request, $id): JsonResponse
     {
         $device = $request->user();
 
-        // Find donation
         $donation = Donation::where('id', $id)
             ->where('device_id', $device->id)
             ->first();
@@ -103,61 +106,105 @@ class DonationController extends Controller
         if (!$donation) {
             return response()->json([
                 'success' => false,
-                'message' => 'Donation not found or does not belong to this device'
+                'message' => 'Donation not found or does not belong to this device',
             ], 404);
         }
 
-        // Check if already processed
         if ($donation->payment_status === 'completed') {
             return response()->json([
                 'success' => false,
-                'message' => 'Donation already completed'
+                'message' => 'Donation already completed',
             ], 400);
         }
 
-        try {
-            $sumupService = app(SumUpService::class);
+        $validator = Validator::make($request->all(), [
+            'reader_id' => 'required|integer|exists:sumup_readers,id',
+        ]);
 
-            // Create SumUp checkout using donation ID as reference
-            $result = $sumupService->processPayment(
-                $donation->amount,
-                (string)$donation->id,
-                "DAYAA Donation - {$donation->campaign->name}"
-            );
-
-            // Store checkout ID in donation notes for reference
-            $donation->update([
-                'notes' => json_encode(['sumup_checkout_id' => $result['checkout_id']]),
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Payment initiated successfully',
-                'data' => [
-                    'donation_id' => $donation->id,
-                    'checkout_id' => $result['checkout_id'],
-                    'status' => $result['status'],
-                    'amount' => $donation->amount,
-                    'polling_required' => true,
-                    'instruction' => 'Please complete payment on terminal',
-                ]
-            ]);
-        } catch (\Exception $e) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to initiate payment: ' . $e->getMessage(),
-            ], 500);
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
+        // SumUp enforces a €1 minimum charge on card readers. Reject sub-€1
+        // amounts here so we don't waste a round-trip and get a generic error.
+        if ((float) $donation->amount < 1.00) {
+            return response()->json([
+                'success' => false,
+                'message' => 'SumUp requires a minimum donation of €1.00. Please choose a higher amount.',
+                'reason' => 'amount_below_minimum',
+            ], 422);
+        }
+
+        $organization = $donation->organization;
+
+        if (!$organization || !$organization->isSumUpConnected()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization has not connected a SumUp account.',
+            ], 422);
+        }
+
+        $reader = SumUpReader::where('id', $request->reader_id)
+            ->where('organization_id', $organization->id)
+            ->first();
+
+        if (!$reader) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Reader not found for this organization.',
+            ], 404);
+        }
+
+        $sumupService = app(SumUpService::class);
+        $result = $sumupService->initiateReaderCheckout(
+            $organization,
+            $reader,
+            (float) $donation->amount,
+            "DAYAA Donation - {$donation->campaign->name}",
+            $donation->currency ?? 'EUR',
+        );
+
+        if (!$result['ok']) {
+            return response()->json([
+                'success' => false,
+                'message' => $result['error'] ?? 'Failed to initiate payment.',
+                'reason' => $result['reason'] ?? null,
+            ], 502);
+        }
+
+        $donation->update([
+            'sumup_reader_id' => $reader->id,
+            'client_transaction_id' => $result['client_transaction_id'],
+            'sumup_status' => 'PENDING',
+            'payment_status' => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment initiated successfully',
+            'data' => [
+                'donation_id' => $donation->id,
+                'client_transaction_id' => $result['client_transaction_id'],
+                'status' => 'PENDING',
+                'amount' => $donation->amount,
+                'polling_required' => true,
+                'instruction' => 'Please complete payment on terminal',
+                'mock' => $result['mock'] ?? false,
+            ],
+        ]);
     }
 
     /**
-     * Check payment status (for polling)
+     * Poll the Transactions API for the donation's current SumUp status.
      */
     public function checkPaymentStatus(Request $request, $id): JsonResponse
     {
         $device = $request->user();
 
-        // Find donation
         $donation = Donation::where('id', $id)
             ->where('device_id', $device->id)
             ->first();
@@ -165,67 +212,137 @@ class DonationController extends Controller
         if (!$donation) {
             return response()->json([
                 'success' => false,
-                'message' => 'Donation not found or does not belong to this device'
+                'message' => 'Donation not found or does not belong to this device',
             ], 404);
         }
 
-        // If already completed or failed, return current status
         if (in_array($donation->payment_status, ['completed', 'failed'])) {
             return response()->json([
                 'success' => true,
                 'data' => [
                     'donation_id' => $donation->id,
                     'payment_status' => $donation->payment_status,
+                    'sumup_status' => $donation->sumup_status,
                     'sumup_transaction_id' => $donation->sumup_transaction_id,
                     'sumup_transaction_code' => $donation->sumup_transaction_code,
-                ]
+                ],
             ]);
         }
 
-        // Extract checkout ID from notes
-        $notes = json_decode($donation->notes, true);
-        $checkoutId = $notes['sumup_checkout_id'] ?? null;
-
-        if (!$checkoutId) {
+        if (!$donation->client_transaction_id) {
             return response()->json([
                 'success' => false,
-                'message' => 'No active checkout found for this donation'
+                'message' => 'No active SumUp checkout for this donation.',
             ], 400);
         }
 
-        try {
-            $sumupService = app(SumUpService::class);
-            $status = $sumupService->getCheckoutStatus($checkoutId);
+        $organization = $donation->organization;
+        if (!$organization) {
+            return response()->json(['success' => false, 'message' => 'Organization not found.'], 404);
+        }
 
-            // Update donation based on status
-            if ($status['status'] === 'PAID') {
-                $donation->update([
-                    'payment_status' => 'completed',
-                    'sumup_transaction_id' => $status['transaction_id'],
-                    'sumup_transaction_code' => $status['transaction_code'],
-                ]);
-            } elseif ($status['status'] === 'FAILED') {
-                $donation->update([
-                    'payment_status' => 'failed',
+        $result = app(SumUpService::class)
+            ->getTransactionByClientId($organization, $donation->client_transaction_id);
+
+        if (!$result['ok']) {
+            // Not-found is normal while the cardholder is still tapping; surface as still pending.
+            if (($result['reason'] ?? null) === 'not_found') {
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'donation_id' => $donation->id,
+                        'payment_status' => $donation->payment_status,
+                        'sumup_status' => 'PENDING',
+                    ],
                 ]);
             }
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'donation_id' => $donation->id,
-                    'payment_status' => $donation->payment_status,
-                    'sumup_status' => $status['status'],
-                    'sumup_transaction_id' => $donation->sumup_transaction_id,
-                    'sumup_transaction_code' => $donation->sumup_transaction_code,
-                ]
-            ]);
-        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to check payment status: ' . $e->getMessage(),
-            ], 500);
+                'message' => $result['error'] ?? 'Failed to check payment status.',
+            ], 502);
         }
+
+        $sumupStatus = strtoupper((string) $result['status']);
+
+        $update = ['sumup_status' => $sumupStatus];
+
+        if ($sumupStatus === 'SUCCESSFUL') {
+            $update['payment_status'] = 'completed';
+            $update['sumup_transaction_id'] = $result['transaction_id'];
+            $update['sumup_transaction_code'] = $result['transaction_code'];
+        } elseif (in_array($sumupStatus, ['FAILED', 'CANCELLED'], true)) {
+            $update['payment_status'] = 'failed';
+        }
+
+        $donation->update($update);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'donation_id' => $donation->id,
+                'payment_status' => $donation->payment_status,
+                'sumup_status' => $sumupStatus,
+                'sumup_transaction_id' => $donation->sumup_transaction_id,
+                'sumup_transaction_code' => $donation->sumup_transaction_code,
+                'mock' => $result['mock'] ?? false,
+            ],
+        ]);
+    }
+
+    /**
+     * Cancel an in-progress SumUp checkout on the paired reader.
+     */
+    public function cancelSumUpPayment(Request $request, $id): JsonResponse
+    {
+        $device = $request->user();
+
+        $donation = Donation::with('reader')
+            ->where('id', $id)
+            ->where('device_id', $device->id)
+            ->first();
+
+        if (!$donation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Donation not found or does not belong to this device',
+            ], 404);
+        }
+
+        if (in_array($donation->payment_status, ['completed', 'failed'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Donation is already ' . $donation->payment_status . '.',
+            ], 400);
+        }
+
+        $organization = $donation->organization;
+        $reader = $donation->reader;
+
+        if ($organization && $reader) {
+            $result = app(SumUpService::class)->terminateReaderCheckout($organization, $reader);
+            if (!$result['ok'] && ($result['reason'] ?? null) === 'rejected') {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['error'] ?? 'Could not cancel checkout.',
+                ], 502);
+            }
+        }
+
+        $donation->update([
+            'payment_status' => 'failed',
+            'sumup_status' => 'CANCELLED',
+            'notes' => trim(($donation->notes ? $donation->notes . ' | ' : '') . 'Cancelled by device.'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment cancelled.',
+            'data' => [
+                'donation_id' => $donation->id,
+                'payment_status' => $donation->payment_status,
+                'sumup_status' => $donation->sumup_status,
+            ],
+        ]);
     }
 
     /**

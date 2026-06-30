@@ -48,11 +48,20 @@ return [
     ],
 
     'sumup' => [
+        // Partner-level (Dayaa) credentials — embedded in every Reader Checkout for partner attribution.
+        'app_id' => env('SUMUP_APP_ID'),
+        'affiliate_key' => env('SUMUP_AFFILIATE_KEY'),
+
+        // Global API config
+        'base_url' => env('SUMUP_BASE_URL', 'https://api.sumup.com'),
+        'test_mode' => env('SUMUP_TEST_MODE', true),
+
+        // Legacy/global merchant credentials — kept for backwards compat with the existing
+        // SumUpService until it's rewritten in Phase 3. Per-organization keys live on the
+        // organizations table (sumup_api_key, sumup_merchant_code).
         'api_key' => env('SUMUP_API_KEY'),
         'merchant_code' => env('SUMUP_MERCHANT_CODE'),
-        'base_url' => env('SUMUP_BASE_URL', 'https://api.sumup.com'),
         'webhook_secret' => env('SUMUP_WEBHOOK_SECRET'),
-        'test_mode' => env('SUMUP_TEST_MODE', true),
     ],
 
 ];

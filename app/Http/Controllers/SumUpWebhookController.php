@@ -9,153 +9,90 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
- * SumUp Webhook Controller
+ * SumUp webhook endpoint.
  *
- * Handles webhooks from SumUp for payment events
+ * SumUp does not sign webhooks (confirmed by SumUp support — no HMAC). The
+ * payload alone cannot be trusted, so for every callback we look up the
+ * referenced transaction via the Transactions API and treat that authoritative
+ * response as the source of truth.
  */
 class SumUpWebhookController extends Controller
 {
-    private SumUpService $sumupService;
+    public function __construct(private SumUpService $sumupService) {}
 
-    public function __construct(SumUpService $sumupService)
-    {
-        $this->sumupService = $sumupService;
-    }
-
-    /**
-     * Handle SumUp webhook
-     *
-     * Events:
-     * - payment.successful
-     * - payment.failed
-     * - payment.refunded
-     */
     public function handle(Request $request): JsonResponse
     {
         Log::info('SumUp webhook received', [
-            'headers' => $request->headers->all(),
             'payload' => $request->all(),
         ]);
 
-        // Get signature from header
-        $signature = $request->header('X-Sumup-Signature', '');
-        $payload = $request->getContent();
+        $payload = $request->all();
+        $clientTransactionId = $payload['client_transaction_id']
+            ?? $payload['payload']['client_transaction_id']
+            ?? null;
+        $sumupTransactionId = $payload['id']
+            ?? $payload['payload']['id']
+            ?? null;
 
-        // Verify signature (skip in test mode)
-        if (!$this->sumupService->isTestMode()) {
-            if (!$this->sumupService->verifyWebhookSignature($payload, $signature)) {
-                Log::warning('SumUp webhook signature verification failed');
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid signature'
-                ], 401);
-            }
+        // Locate the donation. Prefer client_transaction_id (we generated it),
+        // fall back to sumup_transaction_id if SumUp only sent its own id.
+        $donation = null;
+        if ($clientTransactionId) {
+            $donation = Donation::where('client_transaction_id', $clientTransactionId)->first();
         }
-
-        // Parse webhook data
-        $data = $request->all();
-        $eventType = $data['event_type'] ?? '';
-        $checkoutReference = $data['checkout_reference'] ?? '';
-        $transactionId = $data['transaction_id'] ?? '';
-        $transactionCode = $data['transaction_code'] ?? '';
-        $amount = $data['amount'] ?? 0;
-        $currency = $data['currency'] ?? 'EUR';
-
-        // Find donation by checkout reference (which is our donation ID)
-        $donation = Donation::find($checkoutReference);
+        if (!$donation && $sumupTransactionId) {
+            $donation = Donation::where('sumup_transaction_id', $sumupTransactionId)->first();
+        }
 
         if (!$donation) {
-            Log::warning('SumUp webhook: Donation not found', [
-                'checkout_reference' => $checkoutReference,
+            Log::warning('SumUp webhook: donation not found', [
+                'client_transaction_id' => $clientTransactionId,
+                'sumup_transaction_id' => $sumupTransactionId,
             ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Donation not found'
-            ], 404);
+            // Return 200 to avoid SumUp retry storms for legitimately unknown events.
+            return response()->json(['success' => true, 'message' => 'No matching donation, ignored.']);
         }
 
-        // Handle different event types
-        switch ($eventType) {
-            case 'payment.successful':
-                $this->handlePaymentSuccessful($donation, $transactionId, $transactionCode);
-                break;
-
-            case 'payment.failed':
-                $this->handlePaymentFailed($donation, $data['failure_reason'] ?? 'Unknown error');
-                break;
-
-            case 'payment.refunded':
-                $this->handlePaymentRefunded($donation, $data);
-                break;
-
-            default:
-                Log::info('SumUp webhook: Unknown event type', [
-                    'event_type' => $eventType,
-                ]);
+        $organization = $donation->organization;
+        if (!$organization) {
+            return response()->json(['success' => false, 'message' => 'Donation has no organization.'], 422);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Webhook processed successfully'
-        ]);
-    }
+        // Always verify via the Transactions API — the webhook itself is unsigned.
+        $lookup = $this->sumupService->getTransactionByClientId(
+            $organization,
+            $donation->client_transaction_id ?? $clientTransactionId ?? ''
+        );
 
-    /**
-     * Handle successful payment
-     */
-    private function handlePaymentSuccessful(
-        Donation $donation,
-        string $transactionId,
-        string $transactionCode
-    ): void {
-        Log::info('SumUp payment successful', [
+        if (!$lookup['ok']) {
+            Log::warning('SumUp webhook: verification failed', [
+                'donation_id' => $donation->id,
+                'reason' => $lookup['reason'] ?? null,
+                'error' => $lookup['error'] ?? null,
+            ]);
+            return response()->json(['success' => false, 'message' => 'Could not verify transaction.'], 502);
+        }
+
+        $status = strtoupper((string) $lookup['status']);
+
+        $update = ['sumup_status' => $status];
+
+        if ($status === 'SUCCESSFUL') {
+            $update['payment_status'] = 'completed';
+            $update['sumup_transaction_id'] = $lookup['transaction_id'];
+            $update['sumup_transaction_code'] = $lookup['transaction_code'];
+        } elseif (in_array($status, ['FAILED', 'CANCELLED'], true)) {
+            $update['payment_status'] = 'failed';
+        }
+
+        $donation->update($update);
+
+        Log::info('SumUp webhook: donation updated', [
             'donation_id' => $donation->id,
-            'transaction_id' => $transactionId,
+            'sumup_status' => $status,
+            'payment_status' => $donation->payment_status,
         ]);
 
-        $donation->update([
-            'payment_status' => 'completed',
-            'sumup_transaction_id' => $transactionId,
-            'sumup_transaction_code' => $transactionCode,
-        ]);
-
-        // TODO: Send confirmation email if donor email provided
-        // TODO: Trigger any post-payment workflows
-    }
-
-    /**
-     * Handle failed payment
-     */
-    private function handlePaymentFailed(Donation $donation, string $reason): void
-    {
-        Log::warning('SumUp payment failed', [
-            'donation_id' => $donation->id,
-            'reason' => $reason,
-        ]);
-
-        $donation->update([
-            'payment_status' => 'failed',
-            'notes' => 'Payment failed: ' . $reason,
-        ]);
-    }
-
-    /**
-     * Handle refunded payment
-     */
-    private function handlePaymentRefunded(Donation $donation, array $data): void
-    {
-        Log::info('SumUp payment refunded', [
-            'donation_id' => $donation->id,
-            'refund_data' => $data,
-        ]);
-
-        $donation->update([
-            'payment_status' => 'refunded',
-            'notes' => 'Payment refunded via SumUp',
-        ]);
-
-        // TODO: Notify organization about refund
+        return response()->json(['success' => true]);
     }
 }

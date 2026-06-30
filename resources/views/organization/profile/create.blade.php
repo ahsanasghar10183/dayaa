@@ -32,7 +32,7 @@
                     <!-- Organization Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Organization Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror" placeholder="e.g., Red Cross Berlin">
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" required minlength="2" maxlength="255" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror" placeholder="e.g., Red Cross Berlin">
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -41,7 +41,8 @@
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                        <textarea name="description" id="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror" placeholder="Tell us about your organization's mission and activities...">{{ old('description') }}</textarea>
+                        <textarea name="description" id="description" rows="4" maxlength="2000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror" placeholder="Tell us about your organization's mission and activities...">{{ old('description') }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">Up to 2000 characters (optional)</p>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -50,8 +51,8 @@
                     <!-- Logo Upload -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Organization Logo</label>
-                        <input type="file" name="logo" id="logo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
-                        <p class="mt-1 text-xs text-gray-500">PNG, JPG up to 2MB (optional)</p>
+                        <input type="file" name="logo" id="logo" accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                        <p class="mt-1 text-xs text-gray-500">JPG, PNG, SVG or WEBP. Max 5MB, max 4000×4000 px (optional)</p>
                         @error('logo')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -67,7 +68,7 @@
                     <!-- Contact Person -->
                     <div>
                         <label for="contact_person" class="block text-sm font-medium text-gray-700 mb-2">Contact Person *</label>
-                        <input type="text" name="contact_person" id="contact_person" value="{{ old('contact_person') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('contact_person') border-red-500 @enderror" placeholder="John Doe">
+                        <input type="text" name="contact_person" id="contact_person" value="{{ old('contact_person') }}" required minlength="2" maxlength="255" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('contact_person') border-red-500 @enderror" placeholder="John Doe">
                         @error('contact_person')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -76,7 +77,8 @@
                     <!-- Phone -->
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
-                        <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('phone') border-red-500 @enderror" placeholder="+49 30 12345678">
+                        <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required inputmode="tel" minlength="7" maxlength="25" pattern="[\+]?[0-9\s\-\(\)\.\/]+" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('phone') border-red-500 @enderror" placeholder="+49 30 12345678">
+                        <p class="mt-1 text-xs text-gray-500">Digits, +, spaces, ( ), - and . are allowed</p>
                         @error('phone')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -85,7 +87,8 @@
                     <!-- Website -->
                     <div class="md:col-span-2">
                         <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Website</label>
-                        <input type="url" name="website" id="website" value="{{ old('website') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('website') border-red-500 @enderror" placeholder="https://example.com">
+                        <input type="text" name="website" id="website" value="{{ old('website') }}" inputmode="url" maxlength="255" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('website') border-red-500 @enderror" placeholder="example.com or https://example.com">
+                        <p class="mt-1 text-xs text-gray-500">If you omit https://, we'll add it automatically</p>
                         @error('website')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -94,7 +97,8 @@
                     <!-- Address -->
                     <div class="md:col-span-2">
                         <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
-                        <textarea name="address" id="address" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('address') border-red-500 @enderror" placeholder="Street, City, Postal Code, Country">{{ old('address') }}</textarea>
+                        <textarea name="address" id="address" rows="3" required minlength="10" maxlength="500" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('address') border-red-500 @enderror" placeholder="Street, City, Postal Code, Country">{{ old('address') }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">Include street, city, postal code and country</p>
                         @error('address')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -110,8 +114,8 @@
                     <!-- Charity Number -->
                     <div>
                         <label for="charity_number" class="block text-sm font-medium text-gray-700 mb-2">Charity Number</label>
-                        <input type="text" name="charity_number" id="charity_number" value="{{ old('charity_number') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('charity_number') border-red-500 @enderror" placeholder="e.g., CHY1234">
-                        <p class="mt-1 text-xs text-gray-500">If applicable</p>
+                        <input type="text" name="charity_number" id="charity_number" value="{{ old('charity_number') }}" maxlength="50" pattern="[A-Za-z0-9\-/\s]+" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('charity_number') border-red-500 @enderror" placeholder="e.g., CHY1234">
+                        <p class="mt-1 text-xs text-gray-500">Letters, digits, hyphens or slashes (optional)</p>
                         @error('charity_number')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -120,8 +124,8 @@
                     <!-- Tax ID -->
                     <div>
                         <label for="tax_id" class="block text-sm font-medium text-gray-700 mb-2">Tax ID</label>
-                        <input type="text" name="tax_id" id="tax_id" value="{{ old('tax_id') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('tax_id') border-red-500 @enderror" placeholder="e.g., DE123456789">
-                        <p class="mt-1 text-xs text-gray-500">If applicable</p>
+                        <input type="text" name="tax_id" id="tax_id" value="{{ old('tax_id') }}" maxlength="30" pattern="[A-Za-z0-9\-/\s]+" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('tax_id') border-red-500 @enderror" placeholder="e.g., DE123456789">
+                        <p class="mt-1 text-xs text-gray-500">German VAT: DE + 9 digits (optional)</p>
                         @error('tax_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -134,9 +138,12 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-6">Verification Documents (Optional)</h3>
                 <p class="text-sm text-gray-600 mb-4">Upload documents to verify your organization (e.g., registration certificate, tax exemption letter)</p>
 
-                <input type="file" name="verification_documents[]" id="verification_documents" accept=".pdf,.jpg,.jpeg,.png" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
-                <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG up to 5MB each. You can select multiple files.</p>
+                <input type="file" name="verification_documents[]" id="verification_documents" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                <p class="mt-1 text-xs text-gray-500">PDF, JPG or PNG. Max 10MB per file, up to 10 files.</p>
                 @error('verification_documents')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                @error('verification_documents.*')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>

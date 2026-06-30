@@ -34,6 +34,11 @@ class Organization extends Model
         'approved_at',
         'approved_by',
         'rejection_reason',
+        'sumup_merchant_code',
+        'sumup_api_key',
+        'sumup_connection_status',
+        'sumup_connected_at',
+        'sumup_merchant_name',
     ];
 
     /**
@@ -46,7 +51,16 @@ class Organization extends Model
         return [
             'approved_at' => 'datetime',
             'deleted_at' => 'datetime',
+            'sumup_connected_at' => 'datetime',
+            'sumup_api_key' => 'encrypted',
         ];
+    }
+
+    public function isSumUpConnected(): bool
+    {
+        return $this->sumup_connection_status === 'connected'
+            && !empty($this->sumup_api_key)
+            && !empty($this->sumup_merchant_code);
     }
 
     /**
@@ -111,6 +125,11 @@ class Organization extends Model
     public function devices(): HasMany
     {
         return $this->hasMany(Device::class);
+    }
+
+    public function sumupReaders(): HasMany
+    {
+        return $this->hasMany(SumUpReader::class);
     }
 
     /**

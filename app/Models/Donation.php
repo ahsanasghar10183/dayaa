@@ -17,6 +17,7 @@ class Donation extends Model
         'organization_id',
         'campaign_id',
         'device_id',
+        'sumup_reader_id',
         'amount',
         'receipt_number',
         'donor_name',
@@ -27,6 +28,8 @@ class Donation extends Model
         'payment_status',
         'transaction_id',
         'sumup_transaction_id',
+        'client_transaction_id',
+        'sumup_status',
         'sumup_transaction_code',
         'sumup_fee',
         'net_amount',
@@ -120,5 +123,10 @@ class Donation extends Model
     public function device(): BelongsTo
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function reader(): BelongsTo
+    {
+        return $this->belongsTo(SumUpReader::class, 'sumup_reader_id');
     }
 }

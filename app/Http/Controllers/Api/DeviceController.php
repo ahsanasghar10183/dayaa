@@ -241,4 +241,38 @@ class DeviceController extends Controller
             'data' => $donations
         ]);
     }
+
+    /**
+     * List SumUp readers paired to this device's organization.
+     */
+    public function sumupReaders(Request $request): JsonResponse
+    {
+        $device = $request->user();
+        $organization = $device->organization;
+
+        if (!$organization) {
+            return response()->json(['success' => false, 'message' => 'No organization for this device.'], 404);
+        }
+
+        $readers = $organization->sumupReaders()
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn ($r) => [
+                'id' => $r->id,
+                'name' => $r->name,
+                'status' => $r->status,
+                'device_model' => $r->device_model,
+                'device_serial_number' => $r->device_serial_number,
+                'paired_at' => optional($r->last_seen_at)->toIso8601String(),
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $readers,
+            'meta' => [
+                'sumup_connected' => $organization->isSumUpConnected(),
+                'count' => $readers->count(),
+            ],
+        ]);
+    }
 }

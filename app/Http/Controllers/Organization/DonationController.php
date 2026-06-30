@@ -23,7 +23,7 @@ class DonationController extends Controller
 
         // Get donations with filters
         $query = $organization->donations()
-            ->with(['campaign', 'device'])
+            ->with(['campaign', 'device', 'reader'])
             ->where('payment_status', 'completed');
 
         // Filter by campaign if requested

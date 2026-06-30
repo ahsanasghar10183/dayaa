@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Organization;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Organization\StoreOrganizationProfileRequest;
+use App\Http\Requests\Organization\UpdateOrganizationProfileRequest;
 use App\Models\Organization;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
@@ -50,7 +52,7 @@ class ProfileController extends Controller
     /**
      * Store new organization
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreOrganizationProfileRequest $request): RedirectResponse
     {
         // Check if user already has an organization
         if (auth()->user()->organization) {
@@ -58,19 +60,7 @@ class ProfileController extends Controller
                 ->with('error', 'You already have an organization profile.');
         }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'contact_person' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
-            'charity_number' => 'nullable|string|max:100',
-            'tax_id' => 'nullable|string|max:100',
-            'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'verification_documents' => 'nullable|array',
-            'verification_documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-        ]);
+        $validated = $request->validated();
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
@@ -113,7 +103,7 @@ class ProfileController extends Controller
     /**
      * Update organization profile
      */
-    public function update(Request $request): RedirectResponse
+    public function update(UpdateOrganizationProfileRequest $request): RedirectResponse
     {
         $organization = auth()->user()->organization;
 
@@ -122,18 +112,8 @@ class ProfileController extends Controller
                 ->with('error', 'Please create your organization profile first.');
         }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'contact_person' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
-            'charity_number' => 'nullable|string|max:100',
-            'tax_id' => 'nullable|string|max:100',
-            'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'bank_account' => 'nullable|string|max:100',
-        ]);
+        $validated = $request->validated();
+        unset($validated['remove_logo']);
 
         // Handle logo removal
         if ($request->has('remove_logo') && $request->remove_logo) {

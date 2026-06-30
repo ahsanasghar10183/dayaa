@@ -178,6 +178,49 @@
             </div>
         </div>
 
+        <!-- Payment Overlay -->
+        <div id="paymentOverlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-8">
+            <div class="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full text-center">
+                <!-- Processing state -->
+                <div id="paymentProcessing">
+                    <div class="inline-flex items-center justify-center w-32 h-32 rounded-full mb-8" style="background-color: {{ $primaryColor }}1A;">
+                        <svg class="animate-spin h-20 w-20" fill="none" viewBox="0 0 24 24" style="color: {{ $primaryColor }};">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                    <h2 id="paymentTitle" class="text-5xl font-bold text-gray-900 mb-4">Tap or insert your card</h2>
+                    <p id="paymentSubtitle" class="text-2xl text-gray-600 mb-2">Please complete payment on the terminal</p>
+                    <p class="text-4xl font-bold mt-6 mb-8" style="color: {{ $primaryColor }};">€<span id="paymentAmount">0</span></p>
+                    <div id="paymentMockBanner" class="hidden bg-yellow-50 border-2 border-yellow-300 text-yellow-800 rounded-2xl px-6 py-3 mb-6 text-lg">
+                        Test mode — no real charge will be made
+                    </div>
+                    <button onclick="cancelPayment()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-xl font-bold py-4 px-10 rounded-2xl transition-colors">
+                        Cancel
+                    </button>
+                </div>
+
+                <!-- Error state -->
+                <div id="paymentError" class="hidden">
+                    <div class="inline-flex items-center justify-center w-32 h-32 bg-red-100 rounded-full mb-8">
+                        <svg class="w-20 h-20 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-5xl font-bold text-gray-900 mb-4">Payment Failed</h2>
+                    <p id="paymentErrorMessage" class="text-2xl text-gray-600 mb-8">Please try again</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="closePaymentOverlay()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-xl font-bold py-5 rounded-2xl transition-colors">
+                            Close
+                        </button>
+                        <button onclick="retryPayment()" class="touch-btn text-white text-xl font-bold py-5 rounded-2xl transition-colors" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Custom Amount Modal -->
         <div id="customAmountModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
             <div class="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full mx-4">
@@ -272,20 +315,153 @@
             }
         }
 
+        // Active SumUp checkout state
+        let currentDonationId = null;
+        let statusPollTimer = null;
+        let statusPollAttempts = 0;
+        const STATUS_POLL_INTERVAL_MS = 2000;
+        const STATUS_POLL_MAX_ATTEMPTS = 45; // ~90s upper bound
+
         // Proceed to payment
         function proceedToPayment() {
-            console.log('Proceeding with amount:', selectedAmount);
-            // TODO: Implement payment flow in next step
-            alert('Payment processing will be implemented in the next phase.\nSelected amount: €' + selectedAmount);
+            if (!selectedAmount || selectedAmount <= 0) return;
+            if (selectedAmount < 1) {
+                showPaymentError('Minimum donation is €1.00');
+                return;
+            }
 
-            // Reset after 3 seconds
-            setTimeout(resetKiosk, 3000);
+            clearInterval(statusPollTimer);
+            clearTimeout(inactivityTimer);
+            statusPollAttempts = 0;
+            currentDonationId = null;
+
+            showPaymentProcessing();
+
+            fetch('{{ route('kiosk.initiate-payment') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    campaign_id: campaignData.id,
+                    amount: selectedAmount,
+                }),
+            })
+            .then(async (response) => {
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Failed to start payment.');
+                }
+                return data.data;
+            })
+            .then((data) => {
+                currentDonationId = data.donation_id;
+                const banner = document.getElementById('paymentMockBanner');
+                if (banner) banner.classList.toggle('hidden', !data.mock);
+                startStatusPolling(data.donation_id);
+            })
+            .catch((err) => {
+                console.error('Initiate payment error:', err);
+                showPaymentError(err.message || 'Could not start payment. Please try again.');
+            });
+        }
+
+        function startStatusPolling(donationId) {
+            statusPollAttempts = 0;
+            statusPollTimer = setInterval(() => pollPaymentStatus(donationId), STATUS_POLL_INTERVAL_MS);
+        }
+
+        function pollPaymentStatus(donationId) {
+            statusPollAttempts++;
+            if (statusPollAttempts > STATUS_POLL_MAX_ATTEMPTS) {
+                clearInterval(statusPollTimer);
+                showPaymentError('Payment timed out. Please try again.');
+                return;
+            }
+
+            const url = '{{ url('kiosk/payment-status') }}/' + encodeURIComponent(donationId);
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+            })
+            .then((response) => response.json())
+            .then((res) => {
+                if (!res.success) {
+                    // Soft error — keep polling unless it's terminal.
+                    return;
+                }
+                const status = res.data.payment_status;
+                if (status === 'completed') {
+                    clearInterval(statusPollTimer);
+                    window.location.href = '{{ route('kiosk.thankyou') }}?donation=' + encodeURIComponent(donationId);
+                } else if (status === 'failed') {
+                    clearInterval(statusPollTimer);
+                    const reason = res.data.sumup_status === 'CANCELLED'
+                        ? 'Payment cancelled.'
+                        : 'Payment was not successful. Please try again.';
+                    showPaymentError(reason);
+                }
+                // else still pending — keep polling
+            })
+            .catch((err) => {
+                console.warn('Status poll error:', err);
+                // Transient network error — keep polling
+            });
+        }
+
+        function showPaymentProcessing() {
+            document.getElementById('paymentAmount').textContent = Number(selectedAmount).toFixed(2);
+            document.getElementById('paymentProcessing').classList.remove('hidden');
+            document.getElementById('paymentError').classList.add('hidden');
+            document.getElementById('paymentOverlay').classList.remove('hidden');
+        }
+
+        function showPaymentError(message) {
+            clearInterval(statusPollTimer);
+            document.getElementById('paymentErrorMessage').textContent = message;
+            document.getElementById('paymentProcessing').classList.add('hidden');
+            document.getElementById('paymentError').classList.remove('hidden');
+            document.getElementById('paymentOverlay').classList.remove('hidden');
+        }
+
+        function closePaymentOverlay() {
+            clearInterval(statusPollTimer);
+            document.getElementById('paymentOverlay').classList.add('hidden');
+            resetKiosk();
+        }
+
+        function retryPayment() {
+            document.getElementById('paymentError').classList.add('hidden');
+            document.getElementById('paymentProcessing').classList.remove('hidden');
+            proceedToPayment();
+        }
+
+        function cancelPayment() {
+            clearInterval(statusPollTimer);
+            if (currentDonationId) {
+                // Best-effort: mark donation failed server-side. Failure is logged
+                // but not surfaced — we still want the user to escape the overlay.
+                fetch('{{ url('kiosk/payment-status') }}/' + encodeURIComponent(currentDonationId), {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                }).catch(() => {});
+            }
+            closePaymentOverlay();
         }
 
         // Reset kiosk to initial state
         function resetKiosk() {
             selectedAmount = 0;
             customAmountValue = '';
+            currentDonationId = null;
             closeCustomAmount();
             resetInactivityTimer();
         }

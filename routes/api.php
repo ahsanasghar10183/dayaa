@@ -23,6 +23,7 @@ Route::prefix('devices')->group(function () {
         Route::post('/unpair', [DeviceController::class, 'unpair']);
         Route::get('/stats', [DeviceController::class, 'stats']);
         Route::get('/donations', [DeviceController::class, 'donations']);
+        Route::get('/sumup-readers', [DeviceController::class, 'sumupReaders']);
     });
 });
 
@@ -37,6 +38,7 @@ Route::middleware('auth:sanctum')->prefix('donations')->group(function () {
     Route::post('/', [DonationController::class, 'store']);
     Route::post('/{id}/sumup/initiate', [DonationController::class, 'initiateSumUpPayment']);
     Route::get('/{id}/sumup/status', [DonationController::class, 'checkPaymentStatus']);
+    Route::post('/{id}/sumup/cancel', [DonationController::class, 'cancelSumUpPayment']);
     Route::patch('/{id}/complete', [DonationController::class, 'complete']);
     Route::patch('/{id}/fail', [DonationController::class, 'fail']);
     Route::post('/{id}/send-receipt', [DonationController::class, 'sendReceipt']);

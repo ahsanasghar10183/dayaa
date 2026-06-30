@@ -196,6 +196,17 @@ Route::prefix('organization')->name('organization.')->middleware(['auth', 'verif
     Route::get('/billing/plans', [\App\Http\Controllers\Organization\SubscriptionController::class, 'plans'])->name('billing.plans');
     Route::post('/billing/plan', [\App\Http\Controllers\Organization\SubscriptionController::class, 'changePlan'])->name('billing.change-plan');
 
+    // SumUp account connection
+    Route::get('/sumup', [\App\Http\Controllers\Organization\SumUpController::class, 'show'])->name('sumup.show');
+    Route::post('/sumup', [\App\Http\Controllers\Organization\SumUpController::class, 'store'])->name('sumup.store');
+    Route::post('/sumup/test', [\App\Http\Controllers\Organization\SumUpController::class, 'test'])->name('sumup.test');
+    Route::delete('/sumup', [\App\Http\Controllers\Organization\SumUpController::class, 'destroy'])->name('sumup.destroy');
+
+    // SumUp Solo card readers
+    Route::get('/sumup/readers', [\App\Http\Controllers\Organization\SumUpReaderController::class, 'index'])->name('sumup.readers.index');
+    Route::post('/sumup/readers', [\App\Http\Controllers\Organization\SumUpReaderController::class, 'store'])->name('sumup.readers.store');
+    Route::delete('/sumup/readers/{reader}', [\App\Http\Controllers\Organization\SumUpReaderController::class, 'destroy'])->name('sumup.readers.destroy');
+
     // Status pages
     Route::get('/pending', function () {
         $organization = auth()->user()->organization;
