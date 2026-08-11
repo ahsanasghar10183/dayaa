@@ -132,7 +132,7 @@
                     </p>
                     <p class="help-text mb-0">
                         <i class="fa-solid fa-phone me-2"></i>
-                        {{ __('marketing.checkout.or_call', ['phone' => '+49 1575 8745325']) }}
+                        {{ __('marketing.checkout.or_call', ['phone' => '+49 1551 0445150']) }}
                     </p>
                 </div>
             </div>

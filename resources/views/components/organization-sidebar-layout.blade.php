@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ sidebarOpen: true }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ sidebarOpen: true, mobileSidebarOpen: false }">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,11 +54,18 @@
     </head>
     <body class="font-sans antialiased bg-gray-50">
         <div class="flex h-screen overflow-hidden">
+            <!-- Mobile Sidebar Backdrop -->
+            <div x-show="mobileSidebarOpen"
+                 x-cloak
+                 x-transition.opacity
+                 @click="mobileSidebarOpen = false"
+                 class="fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
+
             <!-- Sidebar -->
             <aside
                 x-cloak
-                :class="sidebarOpen ? 'w-72' : 'w-20'"
-                class="sidebar-transition bg-white flex-shrink-0 overflow-hidden shadow-xl border-r border-gray-100"
+                :class="[sidebarOpen ? 'w-72' : 'w-72 lg:w-20', mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']"
+                class="sidebar-transition bg-white flex-shrink-0 overflow-hidden shadow-xl border-r border-gray-100 fixed inset-y-0 left-0 z-50 lg:static lg:z-auto"
             >
                 <div class="flex flex-col h-full">
                     <!-- Logo / Brand -->
@@ -72,6 +79,12 @@
                                 <span class="text-xs text-gray-500 font-medium truncate">{{ Str::limit(auth()->user()->organization->name ?? 'Organization', 20) }}</span>
                             </div>
                         </a>
+                        <!-- Mobile Close Button -->
+                        <button @click="mobileSidebarOpen = false" class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Navigation -->
@@ -212,10 +225,18 @@
             <div class="flex-1 flex flex-col overflow-hidden">
                 <!-- Top Bar -->
                 <header class="bg-white border-b border-gray-100 shadow-sm z-10">
-                    <div class="flex items-center justify-between h-16 px-6">
-                        <!-- Sidebar Toggle -->
+                    <div class="flex items-center justify-between min-h-16 py-2 px-4 sm:px-6">
+                        <!-- Mobile Sidebar Toggle -->
+                        <button @click="mobileSidebarOpen = !mobileSidebarOpen"
+                                class="lg:hidden p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Desktop Sidebar Collapse Toggle -->
                         <button @click="sidebarOpen = !sidebarOpen"
-                                class="p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm">
+                                class="hidden lg:inline-flex p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
@@ -223,13 +244,13 @@
 
                         <!-- Page Title -->
                         @if(isset($header))
-                        <div class="flex-1 ml-6">
+                        <div class="flex-1 min-w-0 ml-3 sm:ml-6">
                             {{ $header }}
                         </div>
                         @endif
 
                         <!-- Right Side Actions -->
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
                             <!-- Language Toggle -->
                             <div x-data="{ langOpen: false }" class="relative">
                                 <button @click="langOpen = !langOpen" class="flex items-center space-x-2 p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm">
@@ -260,7 +281,7 @@
 
                 <!-- Flash Messages -->
                 @if(session('success'))
-                <div class="mx-6 mt-6">
+                <div class="mx-4 sm:mx-6 mt-6">
                     <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-xl shadow-sm animate-fadeIn">
                         <div class="flex">
                             <svg class="h-5 w-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -273,7 +294,7 @@
                 @endif
 
                 @if(session('error'))
-                <div class="mx-6 mt-6">
+                <div class="mx-4 sm:mx-6 mt-6">
                     <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl shadow-sm animate-fadeIn">
                         <div class="flex">
                             <svg class="h-5 w-5 text-red-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -286,8 +307,8 @@
                 @endif
 
                 <!-- Main Content -->
-                <main class="flex-1 overflow-y-auto bg-gray-50">
-                    <div class="p-6">
+                <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50">
+                    <div class="p-4 sm:p-6">
                         {{ $slot }}
                     </div>
                 </main>

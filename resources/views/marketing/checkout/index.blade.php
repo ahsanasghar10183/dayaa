@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-12">
                                     <label for="customer_phone" class="form-label">{{ __('marketing.checkout.phone_number') }} <span class="text-muted">({{ __('marketing.checkout.optional') }})</span></label>
-                                    <input type="tel" class="form-control @error('customer_phone') is-invalid @enderror" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="+49 1575 8745325" autocomplete="off">
+                                    <input type="tel" class="form-control @error('customer_phone') is-invalid @enderror" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="+49 1551 0445150" autocomplete="off">
                                     @error('customer_phone')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

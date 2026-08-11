@@ -102,7 +102,7 @@ class MarketingController extends Controller
         $adminEmail = config('mail.from.address');
         Mail::to($adminEmail)->send(new ContactFormSubmitted($request->all()));
 
-        return back()->with('success', 'Thank you for contacting us! We will get back to you soon.');
+        return back()->with('success', __('marketing.contact.success'));
     }
 
     /**

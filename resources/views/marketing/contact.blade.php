@@ -45,7 +45,7 @@
                     <div class="pp-offer-content">
                         <h3>{{ __('marketing.contact.call_us') }}</h3>
                         <p class="mb-2">{!! __('marketing.contact.hours') !!}</p>
-                        <a href="tel:+4915758745325" class="d-block h4">+49 1575 8745325</a>
+                        <a href="tel:+4915510445150" class="d-block h4">+49 1551 0445150</a>
                     </div>
                 </div>
             </div>

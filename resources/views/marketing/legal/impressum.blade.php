@@ -34,11 +34,11 @@
                             <p style="margin-bottom: 10px;"><strong>Geschäftsführer:</strong> Daoud El Founti</p>
                             <p style="margin-bottom: 10px;">Ludwigstraße 80</p>
                             <p style="margin-bottom: 20px;">63263 Neu-Isenburg</p>
-                            <p style="margin-bottom: 10px;"><strong>Telefon:</strong> <a href="tel:+4915758745325" style="color: #0F69F3; text-decoration: none;">+49 1575 8745325</a></p>
+                            <p style="margin-bottom: 10px;"><strong>Telefon:</strong> <a href="tel:+4915510445150" style="color: #0F69F3; text-decoration: none;">+49 1551 0445150</a></p>
                             <p style="margin-bottom: 10px;"><strong>E-Mail:</strong> <a href="mailto:info@dayaatech.de" style="color: #0F69F3; text-decoration: none;">info@dayaatech.de</a></p>
                             <p style="margin-bottom: 20px;"><strong>Web:</strong> <a href="https://dayaatech.de" style="color: #0F69F3; text-decoration: none;">dayaatech.de</a></p>
-                            <p style="margin-bottom: 10px;"><strong>Handelsregister:</strong> AG Offenbach am Main, HRB folgt (Gesellschaft in Gründung)</p>
-                            <p style="margin-bottom: 0;"><strong>Steueridentifikationsnummer:</strong> wird nach Erteilung ergänzt</p>
+                            <p style="margin-bottom: 10px;"><strong>Handelsregister:</strong> AG Offenbach am Main HRB 58962</p>
+                            <p style="margin-bottom: 0;"><strong>Steueridentifikationsnummer:</strong>Umsatzsteuer-Identifikationsnummer: DE462554856</p>
                         </div>
                     </div>
 

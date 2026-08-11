@@ -137,7 +137,8 @@
 
                             <p style="margin-bottom: 15px;"><strong>Übersicht gespeicherter Cookies</strong></p>
                             <p style="margin-bottom: 10px;">Auf unserer Website werden folgende Cookies gespeichert:</p>
-                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.95rem;">
+                            <div style="width: 100%; overflow-x: auto; margin-bottom: 15px;">
+                            <table style="width: 100%; min-width: 500px; border-collapse: collapse; font-size: 0.95rem;">
                                 <thead>
                                     <tr style="background: #0F69F3; color: white;">
                                         <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Cookie-Name</th>
@@ -173,6 +174,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            </div>
 
                             <p style="margin-bottom: 0;"><strong>Weitere Informationen:</strong> Detaillierte Informationen zu den von uns eingesetzten Drittanbieter-Cookies und deren Datenschutzbestimmungen finden Sie in den jeweiligen Datenschutzerklärungen der Anbieter. Bei Fragen zum Einsatz von Cookies können Sie uns jederzeit unter <a href="mailto:info@dayaatech.de" style="color: #0F69F3; text-decoration: none;">info@dayaatech.de</a> kontaktieren.</p>
                         </div>
