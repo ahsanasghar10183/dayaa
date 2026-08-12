@@ -25,11 +25,15 @@ class SumUpService
 {
     private string $baseUrl;
     private bool $testMode;
+    private ?string $affiliateAppId;
+    private ?string $affiliateKey;
 
     public function __construct()
     {
         $this->baseUrl = config('services.sumup.base_url', 'https://api.sumup.com');
         $this->testMode = (bool) config('services.sumup.test_mode', true);
+        $this->affiliateAppId = config('services.sumup.app_id');
+        $this->affiliateKey = config('services.sumup.affiliate_key');
     }
 
     public function isTestMode(): bool
@@ -65,20 +69,29 @@ class SumUpService
         $clientTransactionId = (string) Str::uuid();
         $minorAmount = (int) round($amount * 100);
 
+        $payload = [
+            'total_amount' => [
+                'value' => $minorAmount,
+                'currency' => $currency,
+                'minor_unit' => 2,
+            ],
+            'description' => Str::limit($description, 100, ''),
+            'client_transaction_id' => $clientTransactionId,
+        ];
+
+        if (!empty($this->affiliateAppId) && !empty($this->affiliateKey)) {
+            $payload['affiliate'] = [
+                'app_id' => $this->affiliateAppId,
+                'key' => $this->affiliateKey,
+            ];
+        }
+
         try {
             $response = Http::withHeaders($this->headers($organization))
                 ->timeout(30)
                 ->post(
                     $this->baseUrl . "/v0.1/merchants/{$organization->sumup_merchant_code}/readers/{$reader->sumup_reader_id}/checkout",
-                    [
-                        'total_amount' => [
-                            'value' => $minorAmount,
-                            'currency' => $currency,
-                            'minor_unit' => 2,
-                        ],
-                        'description' => Str::limit($description, 100, ''),
-                        'client_transaction_id' => $clientTransactionId,
-                    ],
+                    $payload,
                 );
 
             if ($response->status() === 401) {
