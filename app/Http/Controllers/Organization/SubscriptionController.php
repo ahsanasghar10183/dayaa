@@ -56,7 +56,13 @@ class SubscriptionController extends Controller
     public function index()
     {
         $organization = auth()->user()->organization;
-        $subscription = $organization?->subscription;
+
+        if (!$organization) {
+            return redirect()->route('organization.profile.create')
+                ->with('error', 'Please complete your organization profile first.');
+        }
+
+        $subscription = $organization->subscription;
 
         // Calculate 12-month donation total
         $total12m = $organization->donations()

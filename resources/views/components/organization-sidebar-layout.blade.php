@@ -28,18 +28,27 @@
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            /* Custom scrollbar for sidebar */
-            .sidebar-scroll::-webkit-scrollbar {
+            /* Custom scrollbar for sidebar + main content (thin, instead of the default thick browser scrollbar) */
+            .sidebar-scroll,
+            .content-scroll {
+                scrollbar-width: thin;
+                scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+            }
+            .sidebar-scroll::-webkit-scrollbar,
+            .content-scroll::-webkit-scrollbar {
                 width: 5px;
             }
-            .sidebar-scroll::-webkit-scrollbar-track {
+            .sidebar-scroll::-webkit-scrollbar-track,
+            .content-scroll::-webkit-scrollbar-track {
                 background: transparent;
             }
-            .sidebar-scroll::-webkit-scrollbar-thumb {
+            .sidebar-scroll::-webkit-scrollbar-thumb,
+            .content-scroll::-webkit-scrollbar-thumb {
                 background: rgba(0, 0, 0, 0.1);
                 border-radius: 3px;
             }
-            .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            .sidebar-scroll::-webkit-scrollbar-thumb:hover,
+            .content-scroll::-webkit-scrollbar-thumb:hover {
                 background: rgba(0, 0, 0, 0.15);
             }
 
@@ -269,12 +278,6 @@
                                 </div>
                             </div>
 
-                            <!-- Notifications -->
-                            <button class="p-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-all relative hover:shadow-sm">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </header>
@@ -307,7 +310,7 @@
                 @endif
 
                 <!-- Main Content -->
-                <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50">
+                <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 content-scroll">
                     <div class="p-4 sm:p-6">
                         {{ $slot }}
                     </div>

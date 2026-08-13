@@ -23,7 +23,7 @@
 <section class="section-padding fix">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-4">
+            <div class="col-12 col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
                     <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-envelope" style="font-size: 40px; color: #ffffff;"></i>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-12 col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
                     <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-phone" style="font-size: 40px; color: #ffffff;"></i>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-12 col-lg-4">
                 <div class="pp-offer-box-item text-center h-100">
                     <div class="pp-offer-icon mx-auto" style="display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-map-marker-alt" style="font-size: 40px; color: #ffffff;"></i>
@@ -78,13 +78,13 @@
                 </div>
 
                 @if(session('success'))
-                <div class="alert alert-success" role="alert">
+                <div id="contact-form-alert" class="alert alert-success" role="alert">
                     {{ session('success') }}
                 </div>
                 @endif
 
                 @if(session('error'))
-                <div class="alert alert-danger" role="alert">
+                <div id="contact-form-alert" class="alert alert-danger" role="alert">
                     {{ session('error') }}
                 </div>
                 @endif
@@ -197,5 +197,44 @@
 .contact-form textarea.form-control {
     resize: vertical;
 }
+
+.pp-offer-box-item,
+.pp-offer-box-item .pp-offer-content,
+.pp-offer-box-item .pp-offer-content h3,
+.pp-offer-box-item .pp-offer-content p,
+.pp-offer-box-item .pp-offer-content a {
+    text-align: center !important;
+}
+
+/* Tablet/foldable layouts (iPad Mini/Air, Surface Pro 7, Surface Duo, Zenbook Fold, etc.)
+   inherit a shared flex-column rule from dayaa-branding.css meant for shop product cards.
+   That rule lets .pp-offer-content shrink to its content width instead of the full card
+   width, so text-align:center centers text inside a too-narrow box. Force full width +
+   centered cross-axis alignment here, scoped to this page only. */
+.pp-offer-box-item {
+    align-items: center !important;
+}
+
+.pp-offer-box-item .pp-offer-content {
+    width: 100% !important;
+    align-items: center !important;
+}
+
+.pp-offer-box-item .pp-offer-content h3,
+.pp-offer-box-item .pp-offer-content p,
+.pp-offer-box-item .pp-offer-content a {
+    width: 100% !important;
+}
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var alertBox = document.getElementById('contact-form-alert');
+    if (alertBox) {
+        alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
+</script>
 @endpush
