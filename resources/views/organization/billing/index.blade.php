@@ -1,12 +1,12 @@
 <x-organization-sidebar-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div class="flex flex-row flex-wrap items-center justify-between gap-2">
             <div class="min-w-0">
                 <h2 class="text-lg font-bold text-gray-900 break-words md:text-2xl">{{ __('admin.billing.overview_title') }}</h2>
                 <p class="text-xs text-gray-500 mt-0.5 md:text-sm md:mt-1">{{ __('admin.billing.overview_subtitle') }}</p>
             </div>
             <a href="{{ route('organization.billing.plans') }}"
-               class="btn-primary self-start shrink-0 whitespace-nowrap px-3 py-2 text-xs md:self-auto md:px-6 md:py-3 md:text-base">
+               class="btn-primary shrink-0 whitespace-nowrap px-2.5 py-1.5 text-xs md:px-4 md:py-2 md:text-sm">
                 {{ __('admin.billing.view_all_tiers') }}
             </a>
         </div>
