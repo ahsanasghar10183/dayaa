@@ -17,10 +17,10 @@
             <!-- Device Info -->
             <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
                 <div class="text-2xl text-gray-600 mb-2">Device Name</div>
-                <div class="text-3xl font-bold text-gray-900 mb-6">{{ $device->name }}</div>
+                <div class="text-3xl font-bold text-gray-900 mb-6 break-words">{{ $device->name }}</div>
 
                 <div class="text-2xl text-gray-600 mb-2">Device ID</div>
-                <div class="text-3xl font-mono font-bold text-primary-600">{{ $device->device_id }}</div>
+                <div class="text-3xl font-mono font-bold text-primary-600 break-words">{{ $device->device_id }}</div>
             </div>
 
             <!-- Instructions -->
@@ -35,7 +35,7 @@
             <div class="mt-8">
                 <form method="POST" action="{{ route('kiosk.unpair') }}">
                     @csrf
-                    <button type="submit" class="touch-btn bg-gray-600 hover:bg-gray-700 text-white text-2xl font-bold py-6 px-12 rounded-2xl shadow-xl transition-all duration-200">
+                    <button type="submit" class="touch-btn bg-gray-600 hover:bg-gray-700 text-white text-lg sm:text-xl md:text-2xl font-bold py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 rounded-2xl shadow-xl transition-all duration-200">
                         Unpair Device
                     </button>
                 </form>

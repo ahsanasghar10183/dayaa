@@ -150,7 +150,7 @@
                             <button type="button" onclick="addToCart({{ $product->id }})" class="pp-theme-btn" id="add-to-cart-btn">
                                 <i class="fa-solid fa-shopping-cart"></i> {{ __('marketing.shop.add_to_cart') }}
                             </button>
-                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-bordered" id="buy-now-btn" style="background: white; border: 2px solid #0F69F3; color: #0F69F3; border-radius: 100px; padding: 17px 24px; font-weight: 600; font-size: 16px; line-height: 1; transition: all 0.3s ease;">
+                            <button type="button" onclick="buyNow({{ $product->id }})" class="pp-theme-btn-outline" id="buy-now-btn">
                                 <i class="fa-solid fa-bolt"></i> {{ __('marketing.shop.buy_now') }}
                             </button>
                         </div>

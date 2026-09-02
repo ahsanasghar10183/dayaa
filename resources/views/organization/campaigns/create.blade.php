@@ -3,14 +3,14 @@
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Create Campaign</h1>
-                <p class="mt-2 text-gray-600">Set up a new donation campaign</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.create_campaign') }}</h1>
+                <p class="mt-2 text-gray-600">{{ __('admin.organization.campaign_form.create_subtitle') }}</p>
             </div>
             <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">
                 <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Campaigns
+                {{ __('admin.organization.campaign_form.back_to_campaigns') }}
             </a>
         </div>
 
@@ -19,13 +19,13 @@
 
             <!-- Basic Information -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Basic Information</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.profile_edit_page.basic_information') }}</h3>
 
                 <div class="space-y-6">
                     <!-- Campaign Name -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Campaign Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror" placeholder="e.g., Winter Fundraiser 2026">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.campaign_name_required') }}</label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror" placeholder="{{ __('admin.organization.campaign_form.campaign_name_placeholder') }}">
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -33,8 +33,8 @@
 
                     <!-- Description -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                        <textarea name="description" id="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror" placeholder="Describe your campaign...">{{ old('description') }}</textarea>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.description') }}</label>
+                        <textarea name="description" id="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror" placeholder="{{ __('admin.organization.campaign_form.description_placeholder') }}">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -43,9 +43,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Reference Code -->
                         <div>
-                            <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">Reference Code</label>
-                            <input type="text" name="reference_code" id="reference_code" value="{{ old('reference_code') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('reference_code') border-red-500 @enderror" placeholder="e.g., WF2026">
-                            <p class="mt-1 text-xs text-gray-500">Optional internal reference</p>
+                            <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.reference_code_label') }}</label>
+                            <input type="text" name="reference_code" id="reference_code" value="{{ old('reference_code') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('reference_code') border-red-500 @enderror" placeholder="{{ __('admin.organization.campaign_form.reference_code_placeholder') }}">
+                            <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.campaign_form.reference_code_hint') }}</p>
                             @error('reference_code')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -56,12 +56,12 @@
 
             <!-- Schedule & Status -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Schedule & Status</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_form.schedule_status') }}</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Start Date -->
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.start_date') }}</label>
                         <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('start_date') border-red-500 @enderror">
                         @error('start_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -70,7 +70,7 @@
 
                     <!-- End Date -->
                     <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.end_date') }}</label>
                         <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('end_date') border-red-500 @enderror">
                         @error('end_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -79,11 +79,11 @@
 
                     <!-- Status -->
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
-                        <select name="status" id="status" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('status') border-red-500 @enderror">
-                            <option value="inactive" {{ old('status', 'inactive') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.status_required') }}</label>
+                        <select name="status" id="status" required class="select @error('status') border-red-500 @enderror">
+                            <option value="inactive" {{ old('status', 'inactive') == 'inactive' ? 'selected' : '' }}>{{ __('admin.common.inactive') }}</option>
+                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>{{ __('admin.common.active') }}</option>
+                            <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>{{ __('admin.organization.campaign_status_scheduled') }}</option>
                         </select>
                         @error('status')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -94,13 +94,13 @@
 
             <!-- Donation Amounts -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Donation Amounts</h3>
-                <p class="text-sm text-gray-600 mb-4">Configure up to 6 preset donation amounts (leave empty if not needed)</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_form.donation_amounts') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('admin.organization.campaign_form.donation_amounts_hint') }}</p>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                     @for($i = 1; $i <= 6; $i++)
                     <div>
-                        <label for="preset_amount_{{ $i }}" class="block text-sm font-medium text-gray-700 mb-2">Amount {{ $i }}</label>
+                        <label for="preset_amount_{{ $i }}" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.amount_number', ['number' => $i]) }}</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2.5 text-gray-500">€</span>
                             <input type="number" name="preset_amounts[]" id="preset_amount_{{ $i }}" value="{{ old('preset_amounts.'.$i-1) }}" step="0.01" min="0" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="0.00">
@@ -112,7 +112,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Minimum Amount -->
                     <div>
-                        <label for="min_amount" class="block text-sm font-medium text-gray-700 mb-2">Minimum Amount</label>
+                        <label for="min_amount" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.minimum_amount') }}</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2.5 text-gray-500">€</span>
                             <input type="number" name="min_amount" id="min_amount" value="{{ old('min_amount', 1) }}" step="0.01" min="0" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('min_amount') border-red-500 @enderror">
@@ -124,7 +124,7 @@
 
                     <!-- Maximum Amount -->
                     <div>
-                        <label for="max_amount" class="block text-sm font-medium text-gray-700 mb-2">Maximum Amount</label>
+                        <label for="max_amount" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.maximum_amount') }}</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2.5 text-gray-500">€</span>
                             <input type="number" name="max_amount" id="max_amount" value="{{ old('max_amount', 10000) }}" step="0.01" min="0" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('max_amount') border-red-500 @enderror">
@@ -139,18 +139,18 @@
                 <div class="mt-4">
                     <label class="flex items-center">
                         <input type="checkbox" name="allow_custom_amount" value="1" {{ old('allow_custom_amount', true) ? 'checked' : '' }} class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                        <span class="ml-2 text-sm text-gray-700">Allow donors to enter custom amounts</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('admin.organization.campaign_form.allow_custom_amount') }}</span>
                     </label>
                 </div>
             </div>
 
             <!-- Design & Appearance -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Design & Appearance</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_form.design_appearance') }}</h3>
 
                 <!-- Design Templates -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Template</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_form.choose_template') }}</label>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @foreach($templates as $template)
                         <label class="cursor-pointer">
@@ -172,7 +172,7 @@
                 <!-- Color Customization -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                        <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.primary_color') }}</label>
                         <div class="flex gap-3">
                             <input type="color" name="primary_color" id="primary_color" value="#1163F0" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                             <input type="text" id="primary_color_text" value="#1163F0" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" readonly>
@@ -180,7 +180,7 @@
                     </div>
 
                     <div>
-                        <label for="secondary_color" class="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+                        <label for="secondary_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.secondary_color') }}</label>
                         <div class="flex gap-3">
                             <input type="color" name="secondary_color" id="secondary_color" value="#1707B2" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                             <input type="text" id="secondary_color_text" value="#1707B2" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" readonly>
@@ -190,32 +190,32 @@
 
                 <!-- Font Family -->
                 <div class="mb-6">
-                    <label for="font_family" class="block text-sm font-medium text-gray-700 mb-2">Font Family</label>
-                    <select name="font_family" id="font_family" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                        <option value="Inter">Inter - Modern & Clean</option>
-                        <option value="Roboto">Roboto - Professional</option>
-                        <option value="Poppins">Poppins - Friendly</option>
-                        <option value="Lato">Lato - Neutral</option>
-                        <option value="Playfair Display">Playfair Display - Elegant</option>
-                        <option value="Montserrat">Montserrat - Bold</option>
-                        <option value="SF Pro Display">SF Pro Display - Minimal</option>
-                        <option value="Open Sans">Open Sans - Classic</option>
+                    <label for="font_family" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.font_family') }}</label>
+                    <select name="font_family" id="font_family" class="select">
+                        <option value="Inter">{{ __('admin.organization.campaign_form.font_inter') }}</option>
+                        <option value="Roboto">{{ __('admin.organization.campaign_form.font_roboto') }}</option>
+                        <option value="Poppins">{{ __('admin.organization.campaign_form.font_poppins') }}</option>
+                        <option value="Lato">{{ __('admin.organization.campaign_form.font_lato') }}</option>
+                        <option value="Playfair Display">{{ __('admin.organization.campaign_form.font_playfair') }}</option>
+                        <option value="Montserrat">{{ __('admin.organization.campaign_form.font_montserrat') }}</option>
+                        <option value="SF Pro Display">{{ __('admin.organization.campaign_form.font_sfpro') }}</option>
+                        <option value="Open Sans">{{ __('admin.organization.campaign_form.font_opensans') }}</option>
                     </select>
                 </div>
 
                 <!-- Campaign Logo -->
                 <div>
-                    <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">Campaign Logo (Optional)</label>
+                    <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.campaign_logo_optional') }}</label>
                     <input type="file" name="logo" id="logo" accept="image/jpeg,image/png,image/jpg,image/svg+xml" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                    <p class="mt-1 text-xs text-gray-500">Max 2MB. Formats: JPEG, PNG, JPG, SVG</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.campaign_form.logo_hint_2mb') }}</p>
                 </div>
             </div>
 
             <!-- Device Assignment -->
             @if($devices->count() > 0)
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Assign Devices</h3>
-                <p class="text-sm text-gray-600 mb-4">Select which devices will display this campaign</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('admin.organization.campaign_form.assign_devices') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('admin.organization.campaign_form.assign_devices_hint') }}</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($devices as $device)
@@ -225,9 +225,9 @@
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-medium text-gray-900">{{ $device->name }}</span>
                                 @if($device->status == 'online')
-                                    <span class="badge-success text-xs">Online</span>
+                                    <span class="badge-success text-xs">{{ __('admin.organization.online') }}</span>
                                 @else
-                                    <span class="badge-gray text-xs">Offline</span>
+                                    <span class="badge-gray text-xs">{{ __('admin.organization.offline') }}</span>
                                 @endif
                             </div>
                             @if($device->location)
@@ -245,8 +245,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <div>
-                        <h4 class="text-sm font-semibold text-blue-900">No devices available</h4>
-                        <p class="text-sm text-blue-700 mt-1">You need to register devices before assigning them to campaigns. <a href="{{ route('organization.devices.create') }}" class="underline font-medium">Register a device now</a></p>
+                        <h4 class="text-sm font-semibold text-blue-900">{{ __('admin.organization.campaign_form.no_devices_available') }}</h4>
+                        <p class="text-sm text-blue-700 mt-1">{{ __('admin.organization.campaign_form.no_devices_available_text') }} <a href="{{ route('organization.devices.create') }}" class="underline font-medium">{{ __('admin.organization.campaign_form.register_device_now') }}</a></p>
                     </div>
                 </div>
             </div>
@@ -254,12 +254,12 @@
 
             <!-- Form Actions -->
             <div class="flex items-center justify-end space-x-4 pt-4">
-                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">Cancel</a>
+                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">{{ __('admin.common.cancel') }}</a>
                 <button type="submit" class="btn-primary">
                     <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Create Campaign
+                    {{ __('admin.organization.create_campaign') }}
                 </button>
             </div>
         </form>

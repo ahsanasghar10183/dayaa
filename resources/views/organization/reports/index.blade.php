@@ -2,15 +2,15 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Donation Reports</h2>
-                <p class="text-sm text-gray-500 mt-1">Detailed donation records with advanced filtering and export</p>
+                <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.organization.reports_page.title') }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ __('admin.organization.reports_page.subtitle') }}</p>
             </div>
             <a href="{{ route('organization.reports.export', request()->query()) }}"
                class="btn-primary flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                Export CSV
+                {{ __('admin.organization.reports_page.export_csv') }}
             </a>
         </div>
     </x-slot>
@@ -19,41 +19,41 @@
 
         {{-- Filters --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h3 class="text-base font-semibold text-gray-900 mb-4">Filter Donations</h3>
+            <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.reports_page.filter_donations') }}</h3>
             <form method="GET" action="{{ route('organization.reports.index') }}" id="filterForm">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                     {{-- Date Preset --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Date Range</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.reports_page.date_range') }}</label>
                         <select name="date_preset" id="datePreset" onchange="handleDatePresetChange()"
-                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
-                            <option value="today" {{ $datePreset === 'today' ? 'selected' : '' }}>Today</option>
-                            <option value="yesterday" {{ $datePreset === 'yesterday' ? 'selected' : '' }}>Yesterday</option>
-                            <option value="last_7_days" {{ $datePreset === 'last_7_days' ? 'selected' : '' }}>Last 7 Days</option>
-                            <option value="last_30_days" {{ $datePreset === 'last_30_days' ? 'selected' : '' }}>Last 30 Days</option>
-                            <option value="this_month" {{ $datePreset === 'this_month' ? 'selected' : '' }}>This Month</option>
-                            <option value="last_month" {{ $datePreset === 'last_month' ? 'selected' : '' }}>Last Month</option>
-                            <option value="custom" {{ $datePreset === 'custom' ? 'selected' : '' }}>Custom Range</option>
+                                class="select">
+                            <option value="today" {{ $datePreset === 'today' ? 'selected' : '' }}>{{ __('admin.dashboard.today') }}</option>
+                            <option value="yesterday" {{ $datePreset === 'yesterday' ? 'selected' : '' }}>{{ __('admin.organization.reports_page.yesterday') }}</option>
+                            <option value="last_7_days" {{ $datePreset === 'last_7_days' ? 'selected' : '' }}>{{ __('admin.organization.reports_page.last_7_days') }}</option>
+                            <option value="last_30_days" {{ $datePreset === 'last_30_days' ? 'selected' : '' }}>{{ __('admin.organization.reports_page.last_30_days') }}</option>
+                            <option value="this_month" {{ $datePreset === 'this_month' ? 'selected' : '' }}>{{ __('admin.dashboard.this_month') }}</option>
+                            <option value="last_month" {{ $datePreset === 'last_month' ? 'selected' : '' }}>{{ __('admin.dashboard.last_month') }}</option>
+                            <option value="custom" {{ $datePreset === 'custom' ? 'selected' : '' }}>{{ __('admin.dashboard.custom_range') }}</option>
                         </select>
                     </div>
 
                     {{-- Custom date range --}}
                     <div id="customDateRange" class="{{ $datePreset === 'custom' ? '' : 'hidden' }} col-span-2 md:col-span-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">From</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.reports_page.from') }}</label>
                         <input type="date" name="start_date" value="{{ request('start_date') }}"
                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     <div id="customDateRangeTo" class="{{ $datePreset === 'custom' ? '' : 'hidden' }}">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">To</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.reports_page.to') }}</label>
                         <input type="date" name="end_date" value="{{ request('end_date') }}"
                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                     </div>
 
                     {{-- Campaign --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Campaign</label>
-                        <select name="campaign_id" class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">All Campaigns</option>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.table_campaign') }}</label>
+                        <select name="campaign_id" class="select">
+                            <option value="">{{ __('admin.organization.donations_page.all_campaigns') }}</option>
                             @foreach($campaigns as $campaign)
                                 <option value="{{ $campaign->id }}" {{ request('campaign_id') == $campaign->id ? 'selected' : '' }}>
                                     {{ $campaign->name }}
@@ -64,9 +64,9 @@
 
                     {{-- Device --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Device</label>
-                        <select name="device_id" class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">All Devices</option>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.table_device') }}</label>
+                        <select name="device_id" class="select">
+                            <option value="">{{ __('admin.organization.donations_page.all_devices') }}</option>
                             @foreach($devices as $device)
                                 <option value="{{ $device->id }}" {{ request('device_id') == $device->id ? 'selected' : '' }}>
                                     {{ $device->name }}
@@ -77,41 +77,41 @@
 
                     {{-- Status --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status" class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">All Statuses</option>
-                            <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>Processing</option>
-                            <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Failed</option>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.table_status') }}</label>
+                        <select name="status" class="select">
+                            <option value="">{{ __('admin.organization.reports_page.all_statuses') }}</option>
+                            <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>{{ __('admin.shop.status_completed') }}</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('admin.shop.status_pending') }}</option>
+                            <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>{{ __('admin.shop.status_processing') }}</option>
+                            <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>{{ __('admin.shop.status_failed') }}</option>
                         </select>
                     </div>
 
                     {{-- Amount Min --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Min Amount (€)</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.reports_page.min_amount') }}</label>
                         <input type="number" name="amount_min" value="{{ request('amount_min') }}" step="0.01" min="0" placeholder="0.00"
                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                     </div>
 
                     {{-- Amount Max --}}
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Max Amount (€)</label>
-                        <input type="number" name="amount_max" value="{{ request('amount_max') }}" step="0.01" min="0" placeholder="Any"
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.organization.reports_page.max_amount') }}</label>
+                        <input type="number" name="amount_max" value="{{ request('amount_max') }}" step="0.01" min="0" placeholder="{{ __('admin.organization.reports_page.any_placeholder') }}"
                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                     </div>
 
                     {{-- Search --}}
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Search</label>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Receipt #, Transaction ID, amount..."
+                        <label class="block text-xs font-medium text-gray-700 mb-1">{{ __('admin.common.search') }}</label>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('admin.organization.reports_page.search_placeholder') }}"
                                class="w-full rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <button type="submit" class="btn-primary text-sm">Apply Filters</button>
-                    <a href="{{ route('organization.reports.index') }}" class="btn-secondary text-sm">Reset</a>
+                    <button type="submit" class="btn-primary text-sm">{{ __('admin.organization.donations_page.apply_filters') }}</button>
+                    <a href="{{ route('organization.reports.index') }}" class="btn-secondary text-sm">{{ __('admin.common.reset') }}</a>
                 </div>
             </form>
         </div>
@@ -119,27 +119,27 @@
         {{-- Summary Stats Bar --}}
         <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4 grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
             <div>
-                <p class="text-xs text-blue-600 font-medium">Total Records</p>
+                <p class="text-xs text-blue-600 font-medium">{{ __('admin.organization.reports_page.total_records') }}</p>
                 <p class="text-lg font-bold text-blue-800">{{ number_format($summary->total_count) }}</p>
             </div>
             <div>
-                <p class="text-xs text-blue-600 font-medium">Total Amount</p>
+                <p class="text-xs text-blue-600 font-medium">{{ __('admin.organization.donations_page.total_amount') }}</p>
                 <p class="text-lg font-bold text-blue-800">€{{ number_format($summary->total_amount ?? 0, 2) }}</p>
             </div>
             <div>
-                <p class="text-xs text-blue-600 font-medium">Avg Amount</p>
+                <p class="text-xs text-blue-600 font-medium">{{ __('admin.organization.reports_page.avg_amount') }}</p>
                 <p class="text-lg font-bold text-blue-800">€{{ number_format($summary->avg_amount ?? 0, 2) }}</p>
             </div>
             <div>
-                <p class="text-xs text-green-600 font-medium">Completed</p>
+                <p class="text-xs text-green-600 font-medium">{{ __('admin.shop.status_completed') }}</p>
                 <p class="text-lg font-bold text-green-700">{{ number_format($summary->success_count) }}</p>
             </div>
             <div>
-                <p class="text-xs text-yellow-600 font-medium">Pending</p>
+                <p class="text-xs text-yellow-600 font-medium">{{ __('admin.shop.status_pending') }}</p>
                 <p class="text-lg font-bold text-yellow-700">{{ number_format($summary->pending_count) }}</p>
             </div>
             <div>
-                <p class="text-xs text-red-600 font-medium">Failed</p>
+                <p class="text-xs text-red-600 font-medium">{{ __('admin.shop.status_failed') }}</p>
                 <p class="text-lg font-bold text-red-700">{{ number_format($summary->failed_count) }}</p>
             </div>
         </div>
@@ -148,10 +148,10 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
             {{-- Table Header --}}
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h3 class="text-base font-semibold text-gray-900">Donation Records</h3>
+                <h3 class="text-base font-semibold text-gray-900">{{ __('admin.organization.reports_page.donation_records') }}</h3>
                 <div class="flex items-center gap-3">
-                    <span class="text-sm text-gray-500">Per page:</span>
-                    <select onchange="changePerPage(this.value)" class="rounded-lg border-gray-300 text-sm focus:ring-primary-500 focus:border-primary-500">
+                    <span class="text-sm text-gray-500">{{ __('admin.organization.reports_page.per_page') }}</span>
+                    <select onchange="changePerPage(this.value)" class="select w-auto">
                         <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
                         <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
                         <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
@@ -164,8 +164,8 @@
                     <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
-                    <p class="text-gray-500 text-lg font-medium">No donations found</p>
-                    <p class="text-gray-400 text-sm mt-1">Try adjusting your filters</p>
+                    <p class="text-gray-500 text-lg font-medium">{{ __('admin.organization.reports_page.no_donations_found') }}</p>
+                    <p class="text-gray-400 text-sm mt-1">{{ __('admin.organization.reports_page.try_adjusting_filters') }}</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -175,26 +175,26 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     @php $isSortedByDate = request('sort_by', 'created_at') === 'created_at'; @endphp
                                     <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'created_at', 'sort_dir' => $isSortedByDate && request('sort_dir', 'desc') === 'desc' ? 'asc' : 'desc']) }}" class="flex items-center gap-1 hover:text-gray-900">
-                                        Date/Time
+                                        {{ __('admin.organization.reports_page.table_datetime_slash') }}
                                         @if($isSortedByDate)
                                             <svg class="w-3 h-3 {{ request('sort_dir', 'desc') === 'desc' ? '' : 'rotate-180' }}" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>
                                         @endif
                                     </a>
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receipt #</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.organization.reports_page.table_receipt') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     @php $isSortedByAmount = request('sort_by') === 'amount'; @endphp
                                     <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'amount', 'sort_dir' => $isSortedByAmount && request('sort_dir', 'desc') === 'desc' ? 'asc' : 'desc']) }}" class="flex items-center gap-1 hover:text-gray-900">
-                                        Amount
+                                        {{ __('admin.dashboard.amount') }}
                                         @if($isSortedByAmount)
                                             <svg class="w-3 h-3 {{ request('sort_dir', 'desc') === 'desc' ? '' : 'rotate-180' }}" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>
                                         @endif
                                     </a>
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.organization.table_campaign') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.organization.table_device') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.organization.table_status') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.organization.reports_page.table_transaction_id') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-50">
@@ -211,31 +211,31 @@
                                     <span class="text-sm font-bold text-gray-900">€{{ number_format($donation->amount, 2) }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm text-gray-700">{{ $donation->campaign->name ?? 'N/A' }}</span>
+                                    <span class="text-sm text-gray-700">{{ $donation->campaign->name ?? __('admin.billing.not_available') }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm text-gray-700">{{ $donation->device->name ?? 'N/A' }}</span>
+                                    <span class="text-sm text-gray-700">{{ $donation->device->name ?? __('admin.billing.not_available') }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($donation->payment_status === 'completed')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Completed
+                                            {{ __('admin.shop.status_completed') }}
                                         </span>
                                     @elseif($donation->payment_status === 'pending')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            Pending
+                                            {{ __('admin.shop.status_pending') }}
                                         </span>
                                     @elseif($donation->payment_status === 'processing')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            Processing
+                                            {{ __('admin.shop.status_processing') }}
                                         </span>
                                     @elseif($donation->payment_status === 'failed')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                            Failed
+                                            {{ __('admin.shop.status_failed') }}
                                         </span>
                                     @else
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                            {{ ucfirst($donation->payment_status ?? 'Unknown') }}
+                                            {{ $donation->payment_status ? ucfirst($donation->payment_status) : __('admin.organization.reports_page.unknown_status') }}
                                         </span>
                                     @endif
                                 </td>
@@ -251,7 +251,7 @@
                 {{-- Pagination --}}
                 <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
                     <p class="text-sm text-gray-500">
-                        Showing {{ $donations->firstItem() }}–{{ $donations->lastItem() }} of {{ number_format($donations->total()) }} results
+                        {{ __('admin.organization.reports_page.showing_results', ['first' => $donations->firstItem(), 'last' => $donations->lastItem(), 'total' => number_format($donations->total())]) }}
                     </p>
                     {{ $donations->links() }}
                 </div>

@@ -4,14 +4,14 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Create New Campaign</h1>
-                    <p class="mt-2 text-gray-600">Design a beautiful donation campaign in minutes</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.wizard.title') }}</h1>
+                    <p class="mt-2 text-gray-600">{{ __('admin.organization.wizard.subtitle') }}</p>
                 </div>
                 <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">
                     <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
-                    Cancel
+                    {{ __('admin.common.cancel') }}
                 </a>
             </div>
 
@@ -19,27 +19,27 @@
             <div class="flex items-center justify-center space-x-4 mb-8">
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-primary text-white font-semibold shadow-primary">1</div>
-                    <span class="ml-2 text-sm font-medium text-gray-900">Select Layout</span>
+                    <span class="ml-2 text-sm font-medium text-gray-900">{{ __('admin.organization.wizard.step1_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">2</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Design</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step2_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">3</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Donations</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step3_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">4</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Thank You</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step4_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Finish</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step5_label') }}</span>
                 </div>
             </div>
         </div>
@@ -47,8 +47,8 @@
         <!-- Layout Selection -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Choose Your Campaign Layout</h2>
-                <p class="text-gray-600">Select a layout that best fits your campaign style</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ __('admin.organization.wizard.step1_heading') }}</h2>
+                <p class="text-gray-600">{{ __('admin.organization.wizard.step1_subtitle') }}</p>
             </div>
 
             <form method="POST" action="{{ route('organization.campaigns.wizard.step1.post') }}" id="layoutForm">
@@ -76,11 +76,11 @@
                                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
                                     </svg>
-                                    Solid Color
+                                    {{ __('admin.organization.campaign_edit_page.layout_solid_color') }}
                                 </h3>
-                                <p class="text-sm text-gray-600">Simple background with donation buttons</p>
+                                <p class="text-sm text-gray-600">{{ __('admin.organization.wizard.layout_solid_color_desc') }}</p>
                                 <div class="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-xs font-medium">
-                                    Perfect for minimal design
+                                    {{ __('admin.organization.wizard.layout_solid_color_badge') }}
                                 </div>
                             </div>
                         </div>
@@ -108,11 +108,11 @@
                                     <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
                                     </svg>
-                                    Dual Color
+                                    {{ __('admin.organization.campaign_edit_page.layout_dual_color') }}
                                 </h3>
-                                <p class="text-sm text-gray-600">Header color with body section</p>
+                                <p class="text-sm text-gray-600">{{ __('admin.organization.wizard.layout_dual_color_desc') }}</p>
                                 <div class="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
-                                    Modern & professional
+                                    {{ __('admin.organization.wizard.layout_dual_color_badge') }}
                                 </div>
                             </div>
                         </div>
@@ -141,11 +141,11 @@
                                     <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
-                                    Banner Image
+                                    {{ __('admin.organization.campaign_edit_page.layout_banner_image') }}
                                 </h3>
-                                <p class="text-sm text-gray-600">Image header with colored body</p>
+                                <p class="text-sm text-gray-600">{{ __('admin.organization.wizard.layout_banner_image_desc') }}</p>
                                 <div class="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-xs font-medium">
-                                    Eye-catching & engaging
+                                    {{ __('admin.organization.wizard.layout_banner_image_badge') }}
                                 </div>
                             </div>
                         </div>
@@ -174,11 +174,11 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     </svg>
-                                    Full Background
+                                    {{ __('admin.organization.campaign_edit_page.layout_full_background') }}
                                 </h3>
-                                <p class="text-sm text-gray-600">Complete background image</p>
+                                <p class="text-sm text-gray-600">{{ __('admin.organization.wizard.layout_full_background_desc') }}</p>
                                 <div class="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-orange-50 text-orange-700 text-xs font-medium">
-                                    Immersive & dramatic
+                                    {{ __('admin.organization.wizard.layout_full_background_badge') }}
                                 </div>
                             </div>
                         </div>
@@ -188,7 +188,7 @@
                 <!-- Next Button -->
                 <div class="flex items-center justify-center mt-12">
                     <button type="submit" id="nextBtn" disabled class="btn-primary px-12 py-4 text-lg opacity-50 cursor-not-allowed transition-all duration-300">
-                        Continue to Design
+                        {{ __('admin.organization.wizard.continue_to_design') }}
                         <svg class="w-6 h-6 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                         </svg>

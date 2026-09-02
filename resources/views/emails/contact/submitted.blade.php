@@ -1,20 +1,14 @@
 <x-mail::message>
-# New Contact Form Submission
+# New Contact Inquiry
 
-You have received a new contact form submission from the Dayaa website.
+You have received a new message through the Dayaa website.
 
-## Contact Information
+## Customer Details
 
 - **Name:** {{ $contactData['name'] }}
 - **Email:** {{ $contactData['email'] }}
 - **Phone:** {{ $contactData['phone'] ?? 'Not provided' }}
-@if(isset($contactData['company']))
-- **Company:** {{ $contactData['company'] }}
-@endif
-
-## Subject
-
-{{ $contactData['subject'] ?? 'General Inquiry' }}
+- **Subject:** {{ $contactData['subject'] ?? 'General Inquiry' }}
 
 ## Message
 
@@ -22,10 +16,8 @@ You have received a new contact form submission from the Dayaa website.
 
 ---
 
-**Submitted on:** {{ now()->format('M d, Y \a\t g:i A') }}
+**Reply directly to this email to respond to the customer.**
 
-You can reply directly to this email to respond to {{ $contactData['name'] }}.
-
-Thanks,<br>
-{{ config('app.name') }} System
+Thank you,<br>
+**Dayaa Team**
 </x-mail::message>

@@ -79,6 +79,7 @@
 
                 @if(session('success'))
                 <div id="contact-form-alert" class="alert alert-success" role="alert">
+                    <strong>{{ __('marketing.contact.success_title') }}</strong><br>
                     {{ session('success') }}
                 </div>
                 @endif

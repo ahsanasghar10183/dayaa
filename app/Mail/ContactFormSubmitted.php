@@ -3,13 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactFormSubmitted extends Mailable implements ShouldQueue
+class ContactFormSubmitted extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +25,7 @@ class ContactFormSubmitted extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Contact Form Submission from ' . $this->contactData['name'],
+            subject: 'New Inquiry Received – ' . ($this->contactData['subject'] ?? 'General Inquiry'),
             replyTo: [$this->contactData['email']],
         );
     }

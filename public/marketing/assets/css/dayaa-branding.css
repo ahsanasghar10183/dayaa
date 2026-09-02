@@ -1174,3 +1174,70 @@ hr.gradient {
         margin-bottom: 20px !important;
     }
 }
+
+/* ============================================
+   RESPONSIVE BUTTON SIZING - pp-theme-btn family
+   ============================================ */
+
+@media (max-width: 575.98px) {
+    .pp-theme-btn,
+    .pp-theme-btn-2,
+    .pp-theme-btn-outline,
+    .theme-btn,
+    .theme-btn-2 {
+        padding: 13px 18px !important;
+        font-size: 14px !important;
+    }
+}
+
+/* Outline variant used by the shop "Buy Now" button (previously fully inline-styled) */
+.pp-theme-btn-outline {
+    display: inline-block;
+    background: #fff;
+    border: 2px solid #0F69F3;
+    color: #0F69F3;
+    border-radius: 100px;
+    padding: 17px 24px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.pp-theme-btn-outline:hover {
+    color: #0F69F3;
+}
+
+/* ============================================
+   PRODUCT TITLE TRUNCATION - shop listing cards
+   ============================================ */
+
+.dayaa-product-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================
+   SELECT / DROPDOWN SIZING - global, all marketing selects
+   ============================================ */
+
+select.form-select,
+.nice-select {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+    select.form-select,
+    .nice-select {
+        font-size: 14px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+}

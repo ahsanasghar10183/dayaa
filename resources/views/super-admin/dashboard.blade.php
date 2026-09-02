@@ -1,8 +1,19 @@
 <x-super-admin-sidebar-layout>
     <x-slot name="header">
-        <h1 class="text-2xl font-bold text-gray-900">{{ __('admin.super_admin.dashboard') }}</h1>
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ __('admin.super_admin.dashboard') }}</h1>
         <p class="text-sm text-gray-600 mt-1">{{ __('admin.dashboard.platform_overview') }}</p>
     </x-slot>
+
+    @php
+        $periodLabelKey = match(request('period', 'last_6_months')) {
+            'today' => 'admin.dashboard.today',
+            'this_month' => 'admin.dashboard.this_month',
+            'last_month' => 'admin.dashboard.last_month',
+            'last_year' => 'admin.dashboard.last_year',
+            'custom' => 'admin.dashboard.custom_range',
+            default => 'admin.dashboard.last_6_months',
+        };
+    @endphp
 
     <!-- Date Filter -->
     <div class="mb-6" x-data="{ customRange: {{ request('period') == 'custom' ? 'true' : 'false' }} }">
@@ -17,7 +28,7 @@
                 </label>
                 <select name="period"
                         @change="if($el.value === 'custom') { customRange = true; } else { customRange = false; $el.form.submit(); }"
-                        class="px-4 py-2.5 pr-10 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all bg-white text-sm font-medium text-gray-700 min-w-[200px]">
+                        class="select sm:w-auto sm:min-w-[200px] font-medium">
                     <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>{{ __('admin.dashboard.today') }}</option>
                     <option value="this_month" {{ request('period') == 'this_month' ? 'selected' : '' }}>{{ __('admin.dashboard.this_month') }}</option>
                     <option value="last_month" {{ request('period') == 'last_month' ? 'selected' : '' }}>{{ __('admin.dashboard.last_month') }}</option>
@@ -65,9 +76,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             @if(request('period') == 'custom')
-                {{ \Carbon\Carbon::parse(request('start_date'))->format('M d, Y') }} - {{ \Carbon\Carbon::parse(request('end_date'))->format('M d, Y') }}
+                {{ \Carbon\Carbon::parse(request('start_date'))->translatedFormat('M d, Y') }} - {{ \Carbon\Carbon::parse(request('end_date'))->translatedFormat('M d, Y') }}
             @else
-                {{ ucwords(str_replace('_', ' ', request('period'))) }}
+                {{ __($periodLabelKey) }}
             @endif
         </div>
         @endif
@@ -152,9 +163,9 @@
                 <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.dashboard.donations_trend') }}</h3>
                 <p class="text-sm text-gray-600 mt-1">
                     @if(request('period') == 'custom')
-                        {{ \Carbon\Carbon::parse(request('start_date'))->format('M d, Y') }} - {{ \Carbon\Carbon::parse(request('end_date'))->format('M d, Y') }}
+                        {{ \Carbon\Carbon::parse(request('start_date'))->translatedFormat('M d, Y') }} - {{ \Carbon\Carbon::parse(request('end_date'))->translatedFormat('M d, Y') }}
                     @else
-                        {{ ucwords(str_replace('_', ' ', request('period', 'Last 6 months'))) }} {{ __('admin.dashboard.activity') }}
+                        {{ __($periodLabelKey) }} {{ __('admin.dashboard.activity') }}
                     @endif
                 </p>
             </div>
@@ -196,8 +207,8 @@
                 <div class="p-6 space-y-3">
                     @foreach($pendingOrganizations as $org)
                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 hover:shadow-md transition-all">
-                        <div class="flex items-center space-x-4 flex-1">
-                            <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md">
+                        <div class="flex items-center space-x-4 flex-1 min-w-0">
+                            <div class="w-10 h-10 flex-shrink-0 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md">
                                 {{ substr($org->name, 0, 1) }}
                             </div>
                             <div class="flex-1 min-w-0">
@@ -206,7 +217,7 @@
                                 <p class="text-xs text-gray-500 mt-0.5">{{ $org->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
-                        <a href="{{ route('super-admin.organizations.show', $org) }}" class="btn-primary ml-4 text-sm">
+                        <a href="{{ route('super-admin.organizations.show', $org) }}" class="btn-primary ml-4 text-sm flex-shrink-0 whitespace-nowrap">
                             {{ __('admin.dashboard.review') }}
                         </a>
                     </div>
@@ -244,7 +255,7 @@
                                     <span class="text-sm font-semibold text-green-600">€{{ number_format($donation->amount, 2) }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    {{ $donation->created_at->format('M d, H:i') }}
+                                    {{ $donation->created_at->translatedFormat('M d, H:i') }}
                                 </td>
                             </tr>
                             @endforeach
@@ -323,6 +334,17 @@
 
     <!-- Chart.js Scripts -->
     <script>
+        const chartLocale = @json(app()->getLocale() === 'de' ? 'de-DE' : 'en-US');
+        const chartLabels = {
+            donationsCount: @json(__('admin.dashboard.chart.donations_count_label')),
+            revenue: @json(__('admin.dashboard.chart.revenue_label')),
+            donationsCountAxis: @json(__('admin.dashboard.chart.donations_count_axis')),
+            onlineDonations: @json(__('admin.dashboard.chart.online_donations')),
+            offlineDonations: @json(__('admin.dashboard.chart.offline_donations')),
+            shopOrders: @json(__('admin.dashboard.shop_orders')),
+            subscriptions: @json(__('admin.dashboard.subscriptions')),
+        };
+
         // Monthly Donations Trend Chart (Last 6 Months)
         const donationsTrendCtx = document.getElementById('donationsTrendChart').getContext('2d');
 
@@ -330,7 +352,7 @@
         const monthLabels = monthlyData.map(item => {
             const [year, month] = item.month.split('-');
             const date = new Date(year, month - 1);
-            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            return date.toLocaleDateString(chartLocale, { month: 'short', year: 'numeric' });
         });
         const donationCounts = monthlyData.map(item => parseInt(item.count));
         const donationAmounts = monthlyData.map(item => parseFloat(item.total));
@@ -341,7 +363,7 @@
                 labels: monthLabels,
                 datasets: [
                     {
-                        label: 'Number of Donations',
+                        label: chartLabels.donationsCount,
                         data: donationCounts,
                         borderColor: 'rgb(59, 130, 246)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -350,7 +372,7 @@
                         yAxisID: 'y',
                     },
                     {
-                        label: 'Revenue (€)',
+                        label: chartLabels.revenue,
                         data: donationAmounts,
                         borderColor: 'rgb(16, 185, 129)',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -402,7 +424,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Donations Count'
+                            text: chartLabels.donationsCountAxis
                         }
                     },
                     y1: {
@@ -415,7 +437,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Revenue (€)'
+                            text: chartLabels.revenue
                         }
                     },
                 }
@@ -427,7 +449,7 @@
         new Chart(revenueDistCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Online Donations', 'Offline Donations', 'Shop Orders', 'Subscriptions'],
+                labels: [chartLabels.onlineDonations, chartLabels.offlineDonations, chartLabels.shopOrders, chartLabels.subscriptions],
                 datasets: [{
                     data: [45, 30, 15, 10],
                     backgroundColor: [

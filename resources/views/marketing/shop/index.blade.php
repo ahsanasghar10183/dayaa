@@ -63,7 +63,7 @@
                                 </a>
                             </div>
                             <div class="pp-offer-content flex-grow-1 d-flex flex-column">
-                                <h4 style="min-height: 2.5em; line-height: 1.25em;">
+                                <h4 class="dayaa-product-title" style="min-height: 2.5em; line-height: 1.25em;">
                                     <a href="{{ route('marketing.shop.product', $product->slug) }}" class="text-decoration-none">
                                         {{ $product->name }}
                                     </a>

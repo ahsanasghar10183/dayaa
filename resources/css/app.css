@@ -69,7 +69,11 @@
 /* Custom Components */
 @layer components {
     .btn {
-        @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 transform active:scale-95 shadow-sm;
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 transform active:scale-95 shadow-sm;
+    }
+
+    .btn svg {
+        @apply flex-shrink-0;
     }
 
     .btn-primary {
@@ -132,6 +136,34 @@
 
     .input:hover {
         @apply border-gray-300;
+    }
+
+    /*
+     * Shared <select> styling — single source of truth for dropdown/select
+     * sizing across the whole app so every page gets the same responsive
+     * padding/font-size/height and can never overflow its container.
+     */
+    .select {
+        @apply w-full max-w-full px-3 py-2 pr-8 text-sm sm:px-4 sm:py-2.5 sm:text-base leading-normal truncate border-2 border-gray-200 rounded-lg sm:rounded-xl bg-white text-gray-700 focus:ring-4 focus:ring-primary-100 focus:border-primary-500 transition-all duration-200;
+    }
+
+    .select:hover {
+        @apply border-gray-300;
+    }
+
+    /*
+     * Shared Alpine dropdown-panel sizing — caps width/height so a menu can
+     * never spill outside the viewport regardless of trigger position or
+     * option count. Intentionally excludes color/border/shadow so each
+     * panel's existing visual design is untouched.
+     */
+    .dropdown-panel {
+        @apply max-w-[calc(100vw-2rem)] max-h-[70vh] overflow-y-auto;
+    }
+
+    /* Shared dropdown menu item sizing — consistent padding/font-size/line-height everywhere */
+    .dropdown-item {
+        @apply block px-4 py-2.5 text-sm leading-normal truncate;
     }
 }
 

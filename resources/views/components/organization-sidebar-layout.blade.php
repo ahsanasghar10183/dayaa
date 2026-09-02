@@ -201,14 +201,14 @@
                             <div x-show="userMenuOpen"
                                  @click.away="userMenuOpen = false"
                                  x-cloak
-                                 class="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-xl shadow-2xl py-2 border border-gray-100">
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                 class="absolute bottom-full left-0 right-0 mb-2 dropdown-panel bg-white rounded-xl shadow-2xl py-2 border border-gray-100">
+                                <a href="{{ route('profile.edit') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
                                     {{ __('auth.user_settings') }}
                                 </a>
-                                <a href="{{ route('organization.profile.show') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                <a href="{{ route('organization.profile.show') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
@@ -217,7 +217,7 @@
                                 <div class="border-t border-gray-100 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                    <button type="submit" class="dropdown-item w-full text-left font-medium text-red-600 hover:bg-red-50 transition-colors">
                                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                         </svg>
@@ -268,11 +268,11 @@
                                     </svg>
                                     <span class="text-sm font-medium">{{ strtoupper(app()->getLocale()) }}</span>
                                 </button>
-                                <div x-show="langOpen" @click.away="langOpen = false" x-cloak class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
-                                    <a href="{{ route('language.switch', 'de') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'de' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                <div x-show="langOpen" @click.away="langOpen = false" x-cloak class="absolute right-0 mt-2 w-32 dropdown-panel bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
+                                    <a href="{{ route('language.switch', 'de') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'de' ? 'bg-blue-50 text-primary-600' : '' }}">
                                         🇩🇪 Deutsch
                                     </a>
-                                    <a href="{{ route('language.switch', 'en') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'en' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                    <a href="{{ route('language.switch', 'en') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'en' ? 'bg-blue-50 text-primary-600' : '' }}">
                                         🇬🇧 English
                                     </a>
                                 </div>

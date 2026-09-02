@@ -28,7 +28,7 @@
                 <!-- Parent Category -->
                 <div>
                     <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
-                    <select name="parent_id" id="parent_id" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <select name="parent_id" id="parent_id" class="select">
                         <option value="">None (Root Category)</option>
                         @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('parent_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>

@@ -3,10 +3,10 @@
         <!-- Page Header -->
         <div class="mb-8 flex items-start justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">SumUp Card Readers</h1>
-                <p class="mt-2 text-gray-600">Pair your SumUp Solo card readers to accept card donations in person.</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.sumup_readers.title') }}</h1>
+                <p class="mt-2 text-gray-600">{{ __('admin.organization.sumup_readers.subtitle') }}</p>
             </div>
-            <a href="{{ route('organization.sumup.show') }}" class="text-sm font-semibold text-gray-600 hover:text-gray-900">&larr; Back to SumUp</a>
+            <a href="{{ route('organization.sumup.show') }}" class="text-sm font-semibold text-gray-600 hover:text-gray-900">&larr; {{ __('admin.organization.sumup_readers.back_to_sumup') }}</a>
         </div>
 
         @if(session('completed'))
@@ -23,25 +23,25 @@
 
         <!-- How to pair -->
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-            <h3 class="text-lg font-semibold text-blue-900 mb-3">How to pair a Solo reader</h3>
+            <h3 class="text-lg font-semibold text-blue-900 mb-3">{{ __('admin.organization.sumup_readers.how_to_pair_title') }}</h3>
             <ol class="list-decimal list-inside space-y-2 text-sm text-blue-900">
-                <li>Turn on your SumUp Solo terminal and connect it to the internet.</li>
-                <li>On the terminal, open <strong>Settings &rarr; Card Reader Pairing</strong>. A pairing code will appear (e.g. <code>ABCD-EFGH</code>).</li>
-                <li>Enter that code below along with a name to identify this reader (e.g. "Front desk").</li>
-                <li>Click <strong>Pair reader</strong>. The terminal will confirm pairing within a few seconds.</li>
+                <li>{{ __('admin.organization.sumup_readers.step1') }}</li>
+                <li>{!! __('admin.organization.sumup_readers.step2') !!}</li>
+                <li>{{ __('admin.organization.sumup_readers.step3') }}</li>
+                <li>{!! __('admin.organization.sumup_readers.step4') !!}</li>
             </ol>
         </div>
 
         <!-- Pair form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Pair a new reader</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('admin.organization.sumup_readers.pair_new_reader') }}</h3>
 
             <form method="POST" action="{{ route('organization.sumup.readers.store') }}" class="space-y-4">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="pairing_code" class="block text-sm font-medium text-gray-700 mb-2">Pairing code *</label>
+                        <label for="pairing_code" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.sumup_readers.pairing_code_label') }}</label>
                         <input type="text"
                                name="pairing_code"
                                id="pairing_code"
@@ -59,7 +59,7 @@
                     </div>
 
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Reader name *</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.sumup_readers.reader_name_label') }}</label>
                         <input type="text"
                                name="name"
                                id="name"
@@ -67,7 +67,7 @@
                                minlength="2"
                                maxlength="60"
                                value="{{ old('name') }}"
-                               placeholder="e.g. Front desk"
+                               placeholder="{{ __('admin.organization.sumup_readers.reader_name_placeholder') }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm @error('name') border-red-500 @enderror">
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -76,17 +76,17 @@
                 </div>
 
                 <div class="flex items-center justify-end pt-2">
-                    <button type="submit" class="btn-primary px-8">Pair reader</button>
+                    <button type="submit" class="btn-primary px-8">{{ __('admin.organization.sumup_readers.pair_reader_button') }}</button>
                 </div>
             </form>
         </div>
 
         <!-- Existing readers -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Paired readers</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('admin.organization.sumup_readers.paired_readers') }}</h3>
 
             @if($readers->isEmpty())
-                <p class="text-sm text-gray-500">No readers paired yet. Use the form above to pair your first Solo terminal.</p>
+                <p class="text-sm text-gray-500">{{ __('admin.organization.sumup_readers.no_readers_yet') }}</p>
             @else
                 <div class="divide-y divide-gray-100">
                     @foreach($readers as $reader)
@@ -95,25 +95,25 @@
                                 <div class="flex items-center gap-3">
                                     <h4 class="text-base font-semibold text-gray-900">{{ $reader->name }}</h4>
                                     @if($reader->isPaired())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Paired</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">{{ __('admin.organization.sumup_readers.paired_badge') }}</span>
                                     @else
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">{{ ucfirst($reader->status) }}</span>
                                     @endif
                                 </div>
                                 <p class="mt-1 text-xs text-gray-500">
-                                    ID: <code>{{ $reader->sumup_reader_id }}</code>
+                                    {{ __('admin.organization.sumup_readers.id_prefix') }} <code>{{ $reader->sumup_reader_id }}</code>
                                     @if($reader->device_model) &middot; {{ $reader->device_model }} @endif
-                                    @if($reader->device_serial_number) &middot; SN {{ $reader->device_serial_number }} @endif
+                                    @if($reader->device_serial_number) &middot; {{ __('admin.organization.sumup_readers.sn_prefix') }} {{ $reader->device_serial_number }} @endif
                                 </p>
                                 @if($reader->last_seen_at)
-                                    <p class="text-xs text-gray-400">Paired {{ $reader->last_seen_at->diffForHumans() }}</p>
+                                    <p class="text-xs text-gray-400">{{ __('admin.organization.sumup_readers.paired_time_prefix') }} {{ $reader->last_seen_at->diffForHumans() }}</p>
                                 @endif
                             </div>
                             <form method="POST" action="{{ route('organization.sumup.readers.destroy', $reader) }}"
-                                  onsubmit="return confirm('Unpair this reader? You will need a fresh pairing code from the terminal to re-pair it.');">
+                                  onsubmit="return confirm(@json(__('admin.organization.sumup_readers.unpair_confirm')));">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 rounded-lg hover:bg-red-100">Unpair</button>
+                                <button type="submit" class="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 rounded-lg hover:bg-red-100">{{ __('admin.organization.sumup_readers.unpair_button') }}</button>
                             </form>
                         </div>
                     @endforeach

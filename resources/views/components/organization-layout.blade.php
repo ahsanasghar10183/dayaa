@@ -115,12 +115,12 @@
                                 </button>
 
                                 <!-- Dropdown Menu -->
-                                <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200">
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account Settings</a>
-                                    <a href="{{ route('organization.profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Organization Profile</a>
+                                <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 dropdown-panel bg-white rounded-lg shadow-lg py-1 border border-gray-200">
+                                    <a href="{{ route('profile.edit') }}" class="dropdown-item text-gray-700 hover:bg-gray-100">Account Settings</a>
+                                    <a href="{{ route('organization.profile.show') }}" class="dropdown-item text-gray-700 hover:bg-gray-100">Organization Profile</a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
+                                        <button type="submit" class="dropdown-item w-full text-left text-gray-700 hover:bg-gray-100">Sign out</button>
                                     </form>
                                 </div>
                             </div>

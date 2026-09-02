@@ -17,7 +17,7 @@
                 </label>
                 <select name="period"
                         @change="if($el.value === 'custom') { customRange = true; } else { customRange = false; $el.form.submit(); }"
-                        class="px-4 py-2.5 pr-10 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all bg-white text-sm font-medium text-gray-700 min-w-[200px]">
+                        class="select sm:w-auto sm:min-w-[200px] font-medium">
                     <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>{{ __('admin.dashboard.today') }}</option>
                     <option value="this_month" {{ request('period', 'this_month') == 'this_month' ? 'selected' : '' }}>{{ __('admin.dashboard.this_month') }}</option>
                     <option value="last_month" {{ request('period') == 'last_month' ? 'selected' : '' }}>{{ __('admin.dashboard.last_month') }}</option>
@@ -196,7 +196,7 @@
                                 @foreach($recentDonations as $donation)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $donation->campaign->name }}</div>
+                                        <div class="text-sm font-medium text-gray-900 truncate max-w-[160px]">{{ $donation->campaign->name }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="text-sm font-semibold text-green-600">€{{ number_format($donation->amount, 2) }}</span>

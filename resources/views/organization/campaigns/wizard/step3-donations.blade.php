@@ -4,10 +4,10 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Configure Donation Amounts</h1>
-                    <p class="mt-2 text-gray-600">Set up donation options for your donors</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.wizard.step3_title') }}</h1>
+                    <p class="mt-2 text-gray-600">{{ __('admin.organization.wizard.step3_subtitle') }}</p>
                 </div>
-                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">Cancel</a>
+                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">{{ __('admin.common.cancel') }}</a>
             </div>
 
             <!-- Progress Steps -->
@@ -18,7 +18,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Layout</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.progress_layout') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
@@ -27,22 +27,22 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Design</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step2_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-primary text-white font-semibold shadow-primary">3</div>
-                    <span class="ml-2 text-sm font-medium text-gray-900">Donations</span>
+                    <span class="ml-2 text-sm font-medium text-gray-900">{{ __('admin.organization.wizard.step3_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">4</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Thank You</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step4_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Finish</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step5_label') }}</span>
                 </div>
             </div>
         </div>
@@ -55,12 +55,12 @@
                 <div class="space-y-6">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">Donation Amounts</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.organization.campaign_form.donation_amounts') }}</h3>
                             <button type="button" id="addAmountBtn" class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                Add Amount
+                                {{ __('admin.organization.campaign_edit_page.add_amount') }}
                             </button>
                         </div>
 
@@ -88,7 +88,7 @@
 
                         <!-- Button Position -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-3">Button Position</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.button_position') }}</label>
                             <div class="grid grid-cols-3 gap-3">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="button_position" value="top" class="hidden position-radio" checked>
@@ -96,7 +96,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Top</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_top') }}</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
@@ -105,7 +105,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Middle</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_middle') }}</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
@@ -114,7 +114,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Bottom</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_bottom') }}</span>
                                     </div>
                                 </label>
                             </div>
@@ -123,8 +123,8 @@
                         <!-- Show Custom Amount Toggle -->
                         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900">Show "Choose Your Own Amount" Button</h4>
-                                <p class="text-xs text-gray-500 mt-1">Allow donors to enter custom amounts</p>
+                                <h4 class="text-sm font-medium text-gray-900">{{ __('admin.organization.wizard.show_custom_amount_toggle_title') }}</h4>
+                                <p class="text-xs text-gray-500 mt-1">{{ __('admin.organization.campaign_form.allow_custom_amount') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" name="show_custom_amount" id="customAmountToggle" value="1" checked class="sr-only peer">
@@ -139,10 +139,10 @@
                             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
-                            Back
+                            {{ __('admin.common.back') }}
                         </a>
                         <button type="submit" class="btn-primary">
-                            Continue to Thank You Screen
+                            {{ __('admin.organization.wizard.continue_to_thankyou') }}
                             <svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -154,7 +154,7 @@
                 <div class="lg:sticky lg:top-8 lg:self-start">
                     <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-white font-semibold">Live Preview</h3>
+                            <h3 class="text-white font-semibold">{{ __('admin.organization.campaign_edit_page.live_preview') }}</h3>
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 rounded-full bg-red-500"></div>
                                 <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -166,7 +166,7 @@
                             <div id="preview-content" class="h-full flex flex-col"></div>
                         </div>
 
-                        <p class="text-xs text-gray-400 mt-4 text-center">Buttons update in real-time</p>
+                        <p class="text-xs text-gray-400 mt-4 text-center">{{ __('admin.organization.wizard.buttons_update_realtime') }}</p>
                     </div>
                 </div>
             </div>
@@ -177,9 +177,10 @@
         const layoutType = '{{ session("campaign_wizard.layout_type") }}';
         const primaryColor = '{{ session("campaign_wizard.primary_color", "#1163F0") }}';
         const accentColor = '{{ session("campaign_wizard.accent_color", "#F3F4F6") }}';
-        const heading = '{{ session("campaign_wizard.heading", "Your Campaign Heading") }}';
-        const message = '{{ session("campaign_wizard.message", "Your message here...") }}';
+        const heading = '{{ session("campaign_wizard.heading", __("admin.organization.wizard.js_default_heading")) }}';
+        const message = '{{ session("campaign_wizard.message", __("admin.organization.wizard.js_default_message_short")) }}';
         const backgroundImage = '{{ session("campaign_wizard.background_image_url", "") }}';
+        const i18nWizard = @json(__('admin.organization.wizard'));
 
         const preview = document.getElementById('preview-content');
         const amountsContainer = document.getElementById('amountsContainer');
@@ -276,7 +277,7 @@
             ).join('');
 
             if (showCustomAmount) {
-                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg" style="border-color: ${primaryColor}; color: ${primaryColor}">Custom Amount</button>`;
+                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg" style="border-color: ${primaryColor}; color: ${primaryColor}">${i18nWizard.js_custom_amount_button}</button>`;
             }
 
             const buttonContainer = `<div class="grid grid-cols-2 gap-3 w-full max-w-sm">${buttonsHTML}</div>`;
@@ -327,7 +328,7 @@
                                 ${currentPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${heading}</h1><p class="text-white opacity-90 mb-8 text-sm">${message}</p>` : ''}
                                 <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
                                     ${amounts.map(amount => `<button class="px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold shadow-xl">€${amount.toFixed(2)}</button>`).join('')}
-                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl">Custom Amount</button>` : ''}
+                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl">${i18nWizard.js_custom_amount_button}</button>` : ''}
                                 </div>
                                 ${currentPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${heading}</h1><p class="text-white opacity-90 text-sm">${message}</p>` : ''}
                             </div>

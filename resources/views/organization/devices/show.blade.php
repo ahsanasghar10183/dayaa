@@ -6,7 +6,7 @@
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Devices
+                {{ __('admin.organization.back_to_devices') }}
             </a>
         </div>
 
@@ -35,19 +35,19 @@
                         @if($device->status == 'online')
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-200">
                                 <span class="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></span>
-                                Online
+                                {{ __('admin.organization.online') }}
                             </span>
                         @elseif($device->status == 'maintenance')
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                 </svg>
-                                Maintenance
+                                {{ __('admin.organization.maintenance') }}
                             </span>
                         @else
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-800 border border-gray-200">
                                 <span class="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
-                                Offline
+                                {{ __('admin.organization.offline') }}
                             </span>
                         @endif
 
@@ -73,16 +73,16 @@
                         <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
-                        Edit Device
+                        {{ __('admin.organization.edit_device_title') }}
                     </a>
-                    <form method="POST" action="{{ route('organization.devices.destroy', $device) }}" onsubmit="return confirm('Are you sure you want to delete this device? This action cannot be undone.')">
+                    <form method="POST" action="{{ route('organization.devices.destroy', $device) }}" onsubmit="return confirm(@json(__('admin.organization.device_show.confirm_delete')))">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full btn-danger">
                             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
-                            Delete
+                            {{ __('admin.common.delete') }}
                         </button>
                     </form>
                 </div>
@@ -101,7 +101,7 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Total Donations</p>
+                    <p class="text-sm text-gray-600 font-medium">{{ __('admin.organization.device_show.total_donations') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_donations']) }}</p>
                 </div>
             </div>
@@ -116,9 +116,9 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Total Raised</p>
+                    <p class="text-sm text-gray-600 font-medium">{{ __('admin.organization.table_total_raised') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">€{{ number_format($stats['total_amount'], 2) }}</p>
-                    <p class="mt-3 text-sm text-gray-600">Avg: €{{ number_format($stats['average_donation'], 2) }}</p>
+                    <p class="mt-3 text-sm text-gray-600">{{ __('admin.organization.device_show.avg_prefix') }}: €{{ number_format($stats['average_donation'], 2) }}</p>
                 </div>
             </div>
 
@@ -132,7 +132,7 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Today's Donations</p>
+                    <p class="text-sm text-gray-600 font-medium">{{ __('admin.organization.device_show.todays_donations') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['today_donations']) }}</p>
                     <p class="mt-3 text-sm text-gray-600">€{{ number_format($stats['today_amount'], 2) }}</p>
                 </div>
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">This Month</p>
+                    <p class="text-sm text-gray-600 font-medium">{{ __('admin.organization.device_show.this_month') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($stats['this_month_donations']) }}</p>
                     <p class="mt-3 text-sm text-gray-600">€{{ number_format($stats['this_month_amount'], 2) }}</p>
                 </div>
@@ -162,19 +162,19 @@
                 <!-- Device Pairing Card -->
                 <div class="bg-gradient-to-br from-primary-500 to-blue-600 rounded-2xl shadow-lg p-8 text-white">
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-1">Device Pairing Credentials</h3>
-                        <p class="text-blue-100 text-sm">Use these credentials to connect your physical device or mobile app</p>
+                        <h3 class="text-lg font-semibold mb-1">{{ __('admin.organization.device_show.pairing_credentials_title') }}</h3>
+                        <p class="text-blue-100 text-sm">{{ __('admin.organization.device_show.pairing_credentials_subtitle') }}</p>
                     </div>
 
                     <!-- Device ID -->
                     <div class="mb-4">
                         <div class="flex items-center justify-between mb-2">
-                            <label class="text-sm font-medium text-blue-100">Device ID</label>
+                            <label class="text-sm font-medium text-blue-100">{{ __('admin.organization.device_id') }}</label>
                             <button onclick="copyDeviceId()" class="p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors text-xs">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                Copy
+                                {{ __('admin.organization.device_show.copy') }}
                             </button>
                         </div>
                         <div class="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm">
@@ -186,18 +186,18 @@
                     @if($device->pairing_pin && $device->isPairingPinValid())
                     <div class="mb-6">
                         <div class="flex items-center justify-between mb-2">
-                            <label class="text-sm font-medium text-blue-100">Pairing PIN</label>
+                            <label class="text-sm font-medium text-blue-100">{{ __('admin.organization.pairing_pin') }}</label>
                             <button onclick="copyPin()" class="p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors text-xs">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                Copy
+                                {{ __('admin.organization.device_show.copy') }}
                             </button>
                         </div>
                         <div class="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm mb-2">
                             <p class="text-3xl font-mono font-bold text-center tracking-widest">{{ $device->pairing_pin }}</p>
                         </div>
-                        <p class="text-xs text-blue-100 text-center">Expires: {{ $device->pairing_pin_expires_at->format('M d, Y H:i') }}</p>
+                        <p class="text-xs text-blue-100 text-center">{{ __('admin.organization.device_show.expires_prefix') }}: {{ $device->pairing_pin_expires_at->format('M d, Y H:i') }}</p>
                     </div>
                     @elseif($device->is_paired)
                     <div class="mb-6">
@@ -206,13 +206,13 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span class="font-semibold">Device Already Paired</span>
+                                <span class="font-semibold">{{ __('admin.organization.device_show.already_paired') }}</span>
                             </div>
                         </div>
                         <form method="POST" action="{{ route('organization.devices.regenerate-pin', $device) }}" class="mt-3">
                             @csrf
                             <button type="submit" class="w-full bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
-                                Unpair & Generate New PIN
+                                {{ __('admin.organization.device_show.unpair_regenerate') }}
                             </button>
                         </form>
                     </div>
@@ -223,20 +223,20 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span class="font-semibold">PIN Expired</span>
+                                <span class="font-semibold">{{ __('admin.organization.device_show.pin_expired') }}</span>
                             </div>
                         </div>
                         <form method="POST" action="{{ route('organization.devices.regenerate-pin', $device) }}">
                             @csrf
                             <button type="submit" class="w-full bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
-                                Generate New PIN
+                                {{ __('admin.organization.device_show.generate_new_pin') }}
                             </button>
                         </form>
                     </div>
                     @endif
 
                     <button onclick="togglePairingGuide()" class="w-full text-center text-blue-100 hover:text-white text-sm font-medium transition-colors">
-                        View Pairing Instructions
+                        {{ __('admin.organization.device_show.view_pairing_instructions') }}
                         <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -250,13 +250,13 @@
                             <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            Device Pairing Guide
+                            {{ __('admin.organization.device_show.pairing_guide_title') }}
                         </h3>
                     </div>
                     <div class="p-6 space-y-6">
                         <!-- API Base URL Info -->
                         <div>
-                            <h4 class="font-semibold text-gray-900 mb-3">API Base URL</h4>
+                            <h4 class="font-semibold text-gray-900 mb-3">{{ __('admin.organization.device_show.api_base_url') }}</h4>
                             <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                 <code class="text-sm text-gray-800 break-all">{{ url('/api') }}</code>
                             </div>
@@ -264,12 +264,12 @@
 
                         <!-- Step-by-step Guide -->
                         <div>
-                            <h4 class="font-semibold text-gray-900 mb-3">Pairing Steps</h4>
+                            <h4 class="font-semibold text-gray-900 mb-3">{{ __('admin.organization.device_show.pairing_steps') }}</h4>
                             <ol class="space-y-4">
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">1</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Send POST request to pairing endpoint with Device ID and PIN</p>
+                                        <p class="text-gray-800 font-medium">{{ __('admin.organization.device_show.step1_pairing') }}</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                             <pre class="text-xs text-green-400">POST {{ url('/api/devices/pair') }}
 Content-Type: application/json
@@ -284,8 +284,8 @@ Content-Type: application/json
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">2</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Save the API token from response</p>
-                                        <p class="text-sm text-gray-600 mt-1">The response will include an API token. Store this securely on your device.</p>
+                                        <p class="text-gray-800 font-medium">{{ __('admin.organization.device_show.step2_pairing') }}</p>
+                                        <p class="text-sm text-gray-600 mt-1">{{ __('admin.organization.device_show.step2_pairing_text') }}</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                             <pre class="text-xs text-green-400">Response:
 {
@@ -302,7 +302,7 @@ Content-Type: application/json
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">3</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Send heartbeat every 60 seconds</p>
+                                        <p class="text-gray-800 font-medium">{{ __('admin.organization.device_show.step3_pairing') }}</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                             <pre class="text-xs text-green-400">POST {{ url('/api/devices/heartbeat') }}
 Authorization: Bearer YOUR_API_TOKEN
@@ -317,7 +317,7 @@ Content-Type: application/json
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">4</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Fetch assigned campaigns</p>
+                                        <p class="text-gray-800 font-medium">{{ __('admin.organization.device_show.step4_pairing') }}</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                             <pre class="text-xs text-green-400">GET {{ url('/api/campaigns/active') }}
 Authorization: Bearer YOUR_API_TOKEN
@@ -328,7 +328,7 @@ Content-Type: application/json</pre>
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold mr-3">5</span>
                                     <div class="flex-1">
-                                        <p class="text-gray-800 font-medium">Submit donations</p>
+                                        <p class="text-gray-800 font-medium">{{ __('admin.organization.device_show.step5_pairing') }}</p>
                                         <div class="mt-2 bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                             <pre class="text-xs text-green-400">POST {{ url('/api/donations') }}
 Authorization: Bearer YOUR_API_TOKEN
@@ -351,7 +351,7 @@ Content-Type: application/json
                                 <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                 </svg>
-                                Test Pairing Connection
+                                {{ __('admin.organization.device_show.test_pairing_button') }}
                             </button>
                         </div>
 
@@ -365,12 +365,12 @@ Content-Type: application/json
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                                 <div class="text-sm text-blue-800">
-                                    <p class="font-semibold mb-1">Important Notes</p>
+                                    <p class="font-semibold mb-1">{{ __('admin.organization.device_show.important_notes') }}</p>
                                     <ul class="list-disc list-inside space-y-1 text-blue-700">
-                                        <li>Keep your API token secure and never share it publicly</li>
-                                        <li>The device status will automatically change to "online" when heartbeat is received</li>
-                                        <li>If heartbeat stops, the device will remain online until manually changed</li>
-                                        <li>Assign campaigns to this device from the campaign management page</li>
+                                        <li>{{ __('admin.organization.device_show.note1') }}</li>
+                                        <li>{{ __('admin.organization.device_show.note2') }}</li>
+                                        <li>{{ __('admin.organization.device_show.note3') }}</li>
+                                        <li>{{ __('admin.organization.device_show.note4') }}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -386,17 +386,17 @@ Content-Type: application/json
                             <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            Recent Donations
+                            {{ __('admin.organization.device_show.recent_donations') }}
                         </h3>
-                        <span class="text-sm text-gray-500">Last 10</span>
+                        <span class="text-sm text-gray-500">{{ __('admin.organization.device_show.last_10') }}</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Campaign</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date & Time</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.dashboard.amount') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.organization.table_campaign') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('admin.organization.device_show.table_date_time') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -408,10 +408,10 @@ Content-Type: application/json
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="text-sm text-gray-900">{{ $donation->campaign->name ?? 'N/A' }}</span>
+                                        <span class="text-sm text-gray-900">{{ $donation->campaign->name ?? __('admin.billing.not_available') }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ $donation->created_at->format('M d, Y') }} at {{ $donation->created_at->format('H:i') }}
+                                        {{ $donation->created_at->format('M d, Y') }} {{ __('admin.organization.device_show.at_time') }} {{ $donation->created_at->format('H:i') }}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -424,8 +424,8 @@ Content-Type: application/json
                     <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">No Donations Yet</h3>
-                    <p class="text-gray-600">This device hasn't processed any donations yet.</p>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('admin.organization.device_show.no_donations_yet_title') }}</h3>
+                    <p class="text-gray-600">{{ __('admin.organization.device_show.no_donations_yet_text') }}</p>
                 </div>
                 @endif
             </div>
@@ -438,7 +438,7 @@ Content-Type: application/json
                         <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        Device Info
+                        {{ __('admin.organization.device_show.device_info') }}
                     </h3>
                     <div class="space-y-4">
                         <div class="flex items-start">
@@ -446,12 +446,12 @@ Content-Type: application/json
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div>
-                                <div class="text-xs text-gray-500">Last Active</div>
+                                <div class="text-xs text-gray-500">{{ __('admin.organization.last_active') }}</div>
                                 <div class="text-sm font-medium text-gray-900">
                                     @if($device->last_active)
                                         {{ $device->last_active->diffForHumans() }}
                                     @else
-                                        Never
+                                        {{ __('admin.organization.never') }}
                                     @endif
                                 </div>
                             </div>
@@ -462,7 +462,7 @@ Content-Type: application/json
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             <div>
-                                <div class="text-xs text-gray-500">Added On</div>
+                                <div class="text-xs text-gray-500">{{ __('admin.organization.device_show.added_on') }}</div>
                                 <div class="text-sm font-medium text-gray-900">{{ $device->created_at->format('M d, Y') }}</div>
                             </div>
                         </div>
@@ -476,7 +476,7 @@ Content-Type: application/json
                             <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            Campaigns
+                            {{ __('admin.organization.campaigns') }}
                         </h3>
                         <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold">{{ $device->campaigns->count() }}</span>
                     </div>
@@ -488,9 +488,13 @@ Content-Type: application/json
                             <div class="flex items-center justify-between mb-1">
                                 <span class="text-sm font-medium text-gray-900">{{ $campaign->name }}</span>
                                 @if($campaign->status == 'active')
-                                    <span class="badge-success text-xs">Active</span>
+                                    <span class="badge-success text-xs">{{ __('admin.common.active') }}</span>
+                                @elseif($campaign->status == 'scheduled')
+                                    <span class="badge-gray text-xs">{{ __('admin.organization.campaign_status_scheduled') }}</span>
+                                @elseif($campaign->status == 'inactive')
+                                    <span class="badge-gray text-xs">{{ __('admin.common.inactive') }}</span>
                                 @else
-                                    <span class="badge-gray text-xs">{{ ucfirst($campaign->status) }}</span>
+                                    <span class="badge-gray text-xs">{{ __('admin.organization.campaign_status_ended') }}</span>
                                 @endif
                             </div>
                         </a>
@@ -501,7 +505,7 @@ Content-Type: application/json
                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        <p class="text-sm text-gray-500">No campaigns assigned</p>
+                        <p class="text-sm text-gray-500">{{ __('admin.organization.device_show.no_campaigns_assigned') }}</p>
                     </div>
                     @endif
                 </div>
@@ -513,14 +517,14 @@ Content-Type: application/json
         function copyDeviceId() {
             const deviceId = '{{ $device->device_id }}';
             navigator.clipboard.writeText(deviceId).then(() => {
-                showToast('Device ID copied to clipboard!');
+                showToast(@json(__('admin.organization.copied_alert')));
             });
         }
 
         function copyPin() {
             const pin = '{{ $device->pairing_pin }}';
             navigator.clipboard.writeText(pin).then(() => {
-                showToast('Pairing PIN copied to clipboard!');
+                showToast(@json(__('admin.organization.device_show.pin_copied_alert')));
             });
         }
 
@@ -552,6 +556,7 @@ Content-Type: application/json
         async function testPairing() {
             const deviceId = '{{ $device->device_id }}';
             const resultDiv = document.getElementById('testResult');
+            const i18n = @json(__('admin.organization.device_show'));
 
             // Show loading state
             resultDiv.className = 'bg-blue-50 border border-blue-200 rounded-lg p-4';
@@ -561,7 +566,7 @@ Content-Type: application/json
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span class="font-medium">Testing pairing connection...</span>
+                    <span class="font-medium">${i18n.testing_pairing}</span>
                 </div>
             `;
             resultDiv.classList.remove('hidden');
@@ -590,13 +595,13 @@ Content-Type: application/json
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div class="flex-1">
-                                <p class="font-semibold text-green-800 mb-2">Pairing Successful!</p>
+                                <p class="font-semibold text-green-800 mb-2">${i18n.pairing_successful}</p>
                                 <div class="text-sm text-green-700 space-y-1">
-                                    <p><strong>Device:</strong> ${data.data.device_name}</p>
-                                    <p><strong>Organization:</strong> ${data.data.organization}</p>
-                                    <p><strong>Status:</strong> ${data.data.status}</p>
+                                    <p><strong>${i18n.device_label}:</strong> ${data.data.device_name}</p>
+                                    <p><strong>${i18n.organization_label}:</strong> ${data.data.organization}</p>
+                                    <p><strong>${i18n.status_label}:</strong> ${data.data.status}</p>
                                     <div class="mt-3 bg-white bg-opacity-50 rounded p-3">
-                                        <p class="text-xs font-semibold mb-1">API Token (save this securely):</p>
+                                        <p class="text-xs font-semibold mb-1">${i18n.api_token_save}</p>
                                         <code class="text-xs break-all">${data.data.api_token}</code>
                                     </div>
                                 </div>
@@ -612,8 +617,8 @@ Content-Type: application/json
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div class="flex-1">
-                                <p class="font-semibold text-red-800 mb-1">Pairing Failed</p>
-                                <p class="text-sm text-red-700">${data.message || 'Unknown error occurred'}</p>
+                                <p class="font-semibold text-red-800 mb-1">${i18n.pairing_failed}</p>
+                                <p class="text-sm text-red-700">${data.message || i18n.unknown_error}</p>
                             </div>
                         </div>
                     `;
@@ -626,7 +631,7 @@ Content-Type: application/json
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <div class="flex-1">
-                            <p class="font-semibold text-red-800 mb-1">Connection Error</p>
+                            <p class="font-semibold text-red-800 mb-1">${i18n.connection_error}</p>
                             <p class="text-sm text-red-700">${error.message}</p>
                         </div>
                     </div>

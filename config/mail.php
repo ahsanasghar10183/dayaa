@@ -115,4 +115,17 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Recipient
+    |--------------------------------------------------------------------------
+    |
+    | The mailbox that receives Contact Us form submissions. Falls back to the
+    | global "from" address if CONTACT_EMAIL isn't set, preserving prior
+    | behavior for installs that don't configure it explicitly.
+    |
+    */
+
+    'contact_recipient' => env('CONTACT_EMAIL', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+
 ];

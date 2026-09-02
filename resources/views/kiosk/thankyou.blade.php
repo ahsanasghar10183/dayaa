@@ -43,7 +43,7 @@
             </div>
 
             <button onclick="goHome()"
-                    class="touch-btn mt-8 bg-white text-2xl font-bold py-5 px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
+                    class="touch-btn mt-8 bg-white text-lg sm:text-xl md:text-2xl font-bold py-3 sm:py-4 md:py-5 px-8 sm:px-10 md:px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
                     style="color: {{ $primaryColor }};">
                 Done
             </button>

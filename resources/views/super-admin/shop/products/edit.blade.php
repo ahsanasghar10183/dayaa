@@ -1,12 +1,12 @@
 <x-super-admin-sidebar-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-gray-800">Edit Product: {{ $product->name }}</h2>
-            <a href="{{ route('super-admin.shop.products.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-lg font-semibold text-gray-700 hover:bg-gray-300 transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="font-semibold text-xl sm:text-2xl text-gray-800 min-w-0 truncate">{{ __('admin.super_admin.edit_product') }}: {{ $product->name }}</h2>
+            <a href="{{ route('super-admin.shop.products.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 border border-transparent rounded-lg font-semibold text-gray-700 hover:bg-gray-300 transition flex-shrink-0">
+                <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Products
+                {{ __('admin.shop.back_to_products') }}
             </a>
         </div>
     </x-slot>
@@ -37,7 +37,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">There were errors with your submission:</h3>
+                    <h3 class="text-sm font-medium text-red-800">{{ __('admin.shop.submission_errors_title') }}</h3>
                     <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
                         @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -55,7 +55,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Product Name -->
                 <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name (Default) *</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.product_name_default') }}</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name') border-red-500 @enderror">
                     @error('name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -64,7 +64,7 @@
 
                 <!-- Product Name English -->
                 <div>
-                    <label for="name_en" class="block text-sm font-medium text-gray-700 mb-1">Product Name (English)</label>
+                    <label for="name_en" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.product_name_en') }}</label>
                     <input type="text" name="name_en" id="name_en" value="{{ old('name_en', $product->name_en) }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name_en') border-red-500 @enderror">
                     @error('name_en')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -73,7 +73,7 @@
 
                 <!-- Product Name German -->
                 <div>
-                    <label for="name_de" class="block text-sm font-medium text-gray-700 mb-1">Product Name (German)</label>
+                    <label for="name_de" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.product_name_de') }}</label>
                     <input type="text" name="name_de" id="name_de" value="{{ old('name_de', $product->name_de) }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('name_de') border-red-500 @enderror">
                     @error('name_de')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -82,24 +82,24 @@
 
                 <!-- Product Type Selection -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Product Type *</label>
-                    <div class="flex items-center space-x-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.shop.product_type_label') }}</label>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                         <label class="flex items-center cursor-pointer">
                             <input type="radio" name="product_type" value="simple"
                                    {{ old('product_type', $product->product_type ?? 'simple') == 'simple' ? 'checked' : '' }}
-                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 flex-shrink-0">
                             <div class="ml-3">
-                                <span class="block text-sm font-medium text-gray-900">Single Product</span>
-                                <span class="block text-xs text-gray-500">One product with fixed price and inventory</span>
+                                <span class="block text-sm font-medium text-gray-900">{{ __('admin.shop.single_product') }}</span>
+                                <span class="block text-xs text-gray-500">{{ __('admin.shop.simple_product_desc') }}</span>
                             </div>
                         </label>
                         <label class="flex items-center cursor-pointer">
                             <input type="radio" name="product_type" value="variable"
                                    {{ old('product_type', $product->product_type) == 'variable' ? 'checked' : '' }}
-                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                   class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 flex-shrink-0">
                             <div class="ml-3">
-                                <span class="block text-sm font-medium text-gray-900">Variable Product</span>
-                                <span class="block text-xs text-gray-500">Product with multiple variations (e.g., sizes, colors)</span>
+                                <span class="block text-sm font-medium text-gray-900">{{ __('admin.shop.variable_product') }}</span>
+                                <span class="block text-xs text-gray-500">{{ __('admin.shop.variable_product_desc') }}</span>
                             </div>
                         </label>
                     </div>
@@ -107,7 +107,7 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     @if($product->isVariable() && $product->variations->count() > 0)
-                    <p class="mt-2 text-xs text-gray-600">💡 <strong>Note:</strong> This product already has variations. Changing to "Single Product" will keep existing variations but they won't be used.</p>
+                    <p class="mt-2 text-xs text-gray-600">💡 <strong>{{ __('admin.shop.note_label') }}</strong> {{ __('admin.shop.variation_type_note') }}</p>
                     @endif
                 </div>
 
@@ -115,14 +115,14 @@
                 @if($product->isVariable())
                 <!-- Weight -->
                 <div class="md:col-span-2">
-                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.weight_kg') }}</label>
                     <input type="number" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" step="0.01" min="0" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                 </div>
                 @else
                 <!-- Simple Product Fields -->
                 <!-- SKU -->
                 <div>
-                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">SKU *</label>
+                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.sku_required') }}</label>
                     <input type="text" name="sku" id="sku" value="{{ old('sku', $product->sku) }}" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('sku') border-red-500 @enderror">
                     @error('sku')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -131,7 +131,7 @@
 
                 <!-- Price -->
                 <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (€) *</label>
+                    <label for="price" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.price_eur_required') }}</label>
                     <input type="number" name="price" id="price" value="{{ old('price', $product->price) }}" step="0.01" min="0" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('price') border-red-500 @enderror">
                     @error('price')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -140,14 +140,14 @@
 
                 <!-- Compare Price -->
                 <div>
-                    <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-1">Compare Price (€)</label>
+                    <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.compare_price_eur') }}</label>
                     <input type="number" name="compare_price" id="compare_price" value="{{ old('compare_price', $product->compare_price) }}" step="0.01" min="0" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-xs text-gray-500">Original price to show discount</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.shop.compare_price_hint') }}</p>
                 </div>
 
                 <!-- Quantity -->
                 <div>
-                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity *</label>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.stock_quantity_required') }}</label>
                     <input type="number" name="quantity" id="quantity" value="{{ old('quantity', $product->quantity) }}" min="0" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('quantity') border-red-500 @enderror">
                     @error('quantity')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -156,14 +156,14 @@
 
                 <!-- Weight -->
                 <div>
-                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.weight_kg') }}</label>
                     <input type="number" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" step="0.01" min="0" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                 </div>
                 @endif
 
                 <!-- Description -->
                 <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description (Default) *</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.description_default') }}</label>
                     <textarea name="description" id="description" rows="4" required class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description') border-red-500 @enderror">{{ old('description', $product->description) }}</textarea>
                     @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -172,7 +172,7 @@
 
                 <!-- Description English -->
                 <div class="md:col-span-2">
-                    <label for="description_en" class="block text-sm font-medium text-gray-700 mb-1">Description (English)</label>
+                    <label for="description_en" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.description_en') }}</label>
                     <textarea name="description_en" id="description_en" rows="4" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description_en') border-red-500 @enderror">{{ old('description_en', $product->description_en) }}</textarea>
                     @error('description_en')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -181,7 +181,7 @@
 
                 <!-- Description German -->
                 <div class="md:col-span-2">
-                    <label for="description_de" class="block text-sm font-medium text-gray-700 mb-1">Description (German)</label>
+                    <label for="description_de" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.description_de') }}</label>
                     <textarea name="description_de" id="description_de" rows="4" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 @error('description_de') border-red-500 @enderror">{{ old('description_de', $product->description_de) }}</textarea>
                     @error('description_de')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -190,7 +190,7 @@
 
                 <!-- Product Images Manager -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Product Images</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.shop.product_images') }}</label>
 
                     <!-- Existing Images Grid -->
                     @if($product->images->count() > 0)
@@ -207,7 +207,7 @@
                                 <!-- Primary Badge -->
                                 @if($existingImage->is_primary)
                                 <div class="absolute top-2 left-2 bg-gradient-dayaa text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
-                                    Primary
+                                    {{ __('admin.shop.primary') }}
                                 </div>
                                 @endif
 
@@ -225,7 +225,7 @@
                                 <button type="button"
                                         onclick="setPrimaryImage({{ $product->id }}, {{ $existingImage->id }})"
                                         class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity w-full bg-white/90 hover:bg-white text-gray-700 text-xs font-medium px-2 py-1.5 rounded-lg shadow-md transition-colors">
-                                    Set as Primary
+                                    {{ __('admin.shop.set_as_primary') }}
                                 </button>
                                 @endif
                             </div>
@@ -247,13 +247,16 @@
                                 <svg class="w-10 h-10 mb-3 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
-                                <p class="mb-2 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 2MB (Max 10 images total)</p>
+                                <p class="mb-2 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">{{ __('admin.shop.click_to_upload') }}</span> {{ __('admin.shop.or_drag_drop') }}</p>
+                                <p class="text-xs text-gray-500">{{ __('admin.shop.image_upload_hint') }}</p>
                             </div>
                         </label>
                     </div>
 
                     <script>
+                        const previewImagesI18n = {
+                            newBadge: @json(__('admin.shop.new_badge')),
+                        };
                         function previewImages(event) {
                             const container = document.getElementById('preview-container');
                             const files = event.target.files;
@@ -271,7 +274,7 @@
                                             <div class="aspect-square relative">
                                                 <img src="${e.target.result}" alt="New image ${index + 1}" class="w-full h-full object-cover">
                                                 <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
-                                                    New
+                                                    ${previewImagesI18n.newBadge}
                                                 </div>
                                             </div>
                                         `;
@@ -288,12 +291,16 @@
                     <!-- Hidden container for delete image IDs -->
                     <div id="delete-images-container"></div>
 
-                    <p class="mt-2 text-xs text-gray-500">💡 Green border indicates new images to be uploaded. Click "Set as Primary" on any existing image to make it the main product image.</p>
+                    <p class="mt-2 text-xs text-gray-500">💡 {{ __('admin.shop.green_border_hint') }}</p>
                 </div>
 
                 <script>
+                    const markForDeletionI18n = {
+                        confirmDelete: @json(__('admin.shop.confirm_delete_image')),
+                        deletedBadge: @json(__('admin.shop.deleted_badge')),
+                    };
                     function markForDeletion(imageId) {
-                        if (confirm('Are you sure you want to delete this image?')) {
+                        if (confirm(markForDeletionI18n.confirmDelete)) {
                             // Add hidden input for deletion
                             const container = document.getElementById('delete-images-container');
                             const input = document.createElement('input');
@@ -310,7 +317,7 @@
                                 // Add deleted badge
                                 const badge = document.createElement('div');
                                 badge.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10';
-                                badge.innerHTML = '<span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg">Deleted</span>';
+                                badge.innerHTML = `<span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg">${markForDeletionI18n.deletedBadge}</span>`;
                                 imageElement.querySelector('.aspect-square').appendChild(badge);
                             }
                         }
@@ -346,11 +353,11 @@
                 <div class="md:col-span-2 space-y-2">
                     <div class="flex items-center">
                         <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="is_active" class="ml-2 text-sm text-gray-700">Active (visible in shop)</label>
+                        <label for="is_active" class="ml-2 text-sm text-gray-700">{{ __('admin.shop.active_visible_shop') }}</label>
                     </div>
                     <div class="flex items-center">
                         <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="is_featured" class="ml-2 text-sm text-gray-700">Featured (show on homepage)</label>
+                        <label for="is_featured" class="ml-2 text-sm text-gray-700">{{ __('admin.shop.featured_show_homepage') }}</label>
                     </div>
                 </div>
             </div>
@@ -358,10 +365,10 @@
             <!-- Action Buttons -->
             <div class="mt-6 flex justify-end space-x-3">
                 <a href="{{ route('super-admin.shop.products.index') }}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                    Cancel
+                    {{ __('admin.common.cancel') }}
                 </a>
                 <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Update Product
+                    {{ __('admin.shop.update_product') }}
                 </button>
             </div>
         </form>
@@ -371,56 +378,56 @@
         <div class="mt-8 bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h3 class="text-xl font-semibold text-gray-800">Product Variations</h3>
-                    <p class="text-sm text-gray-600 mt-1">Manage different variations of this product (e.g., different sizes, colors, or models)</p>
+                    <h3 class="text-xl font-semibold text-gray-800">{{ __('admin.shop.product_variations') }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">{{ __('admin.shop.manage_variations_hint') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <span class="text-sm font-medium text-gray-700">Product Type:</span>
+                    <span class="text-sm font-medium text-gray-700">{{ __('admin.shop.product_type_label') }}</span>
                     <span class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
-                        Variable Product
+                        {{ __('admin.shop.variable_product') }}
                     </span>
                 </div>
             </div>
 
             @if($product->isVariable() && $product->quantity > 0)
             <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p class="text-sm text-yellow-800">⚠️ <strong>Note:</strong> This product is set to Variable type. Stock is managed per variation. The parent product quantity ({{ $product->quantity }}) is not used.</p>
+                <p class="text-sm text-yellow-800">⚠️ <strong>{{ __('admin.shop.note_label') }}</strong> {{ __('admin.shop.variable_stock_note', ['qty' => $product->quantity]) }}</p>
             </div>
             @endif
 
             <!-- Add Variation Form -->
             <form action="{{ route('super-admin.shop.products.variations.store', $product) }}" method="POST" enctype="multipart/form-data" class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                 @csrf
-                <h4 class="font-medium text-gray-700 mb-4">Add New Variation</h4>
-                <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-                    <div class="md:col-span-2">
-                        <label for="variation_name" class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
-                        <input type="text" name="name" id="variation_name" required placeholder="e.g., Style-1, Blue, Large"
+                <h4 class="font-medium text-gray-700 mb-4">{{ __('admin.shop.add_new_variation') }}</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                    <div class="sm:col-span-2">
+                        <label for="variation_name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.variation_name_required') }}</label>
+                        <input type="text" name="name" id="variation_name" required placeholder="{{ __('admin.shop.variation_name_placeholder') }}"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label for="variation_sku" class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-                        <input type="text" name="sku" id="variation_sku" placeholder="Optional"
+                        <label for="variation_sku" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.sku') }}</label>
+                        <input type="text" name="sku" id="variation_sku" placeholder="{{ __('admin.shop.sku_optional') }}"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label for="variation_price" class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
-                        <input type="number" name="price" id="variation_price" step="0.01" min="0" placeholder="Uses product price if empty"
+                        <label for="variation_price" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.price_eur_required') }}</label>
+                        <input type="number" name="price" id="variation_price" step="0.01" min="0" placeholder="{{ __('admin.shop.price_uses_product_hint') }}"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label for="variation_quantity" class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                        <label for="variation_quantity" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.stock_required') }}</label>
                         <input type="number" name="quantity" id="variation_quantity" required min="0" value="0"
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div class="flex items-end">
                         <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                            Add Variation
+                            {{ __('admin.shop.add_variation') }}
                         </button>
                     </div>
                 </div>
                 <div class="mt-4">
-                    <label for="variation_images" class="block text-sm font-medium text-gray-700 mb-1">Variation Images (Optional)</label>
+                    <label for="variation_images" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.variation_images_optional') }}</label>
 
                     <!-- New Images Preview Grid for Add Variation -->
                     <div id="new-variation-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" style="display: none;"></div>
@@ -434,15 +441,19 @@
                                 <svg class="w-8 h-8 mb-2 text-gray-400 group-hover:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
-                                <p class="mb-1 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Click to upload</span> variation images</p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 2MB (Max 10 images)</p>
+                                <p class="mb-1 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">{{ __('admin.shop.click_to_upload') }}</span> {{ __('admin.shop.variation_images') }}</p>
+                                <p class="text-xs text-gray-500">{{ __('admin.shop.variation_image_upload_hint') }}</p>
                             </div>
                         </label>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">Upload multiple images for this variation. First image will be the primary image. If no images uploaded, product's primary image will be used.</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.shop.variation_image_hint_full') }}</p>
                 </div>
 
                 <script>
+                    const previewVariationImagesI18n = {
+                        primary: @json(__('admin.shop.primary')),
+                        newBadge: @json(__('admin.shop.new_badge')),
+                    };
                     function previewVariationImages(event) {
                         const container = document.getElementById('new-variation-preview-container');
                         const files = event.target.files;
@@ -460,7 +471,7 @@
                                         <div class="aspect-square relative">
                                             <img src="${e.target.result}" alt="New image ${index + 1}" class="w-full h-full object-cover">
                                             <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-lg">
-                                                ${index === 0 ? 'Primary' : 'New'}
+                                                ${index === 0 ? previewVariationImagesI18n.primary : previewVariationImagesI18n.newBadge}
                                             </div>
                                         </div>
                                     `;
@@ -476,7 +487,7 @@
                 <div class="mt-3">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Active</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('admin.common.active') }}</span>
                     </label>
                 </div>
             </form>
@@ -487,13 +498,13 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.shop.image_col') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.shop.name_col') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.shop.sku') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.shop.price_col') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.shop.stock_col') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.dashboard.status') }}</th>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.common.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -507,7 +518,7 @@
                                         {{ $variation->images_count }}
                                     </div>
                                     @elseif($variation->hasOwnImage())
-                                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs px-1 rounded-bl" title="Has own image">
+                                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs px-1 rounded-bl" title="{{ __('admin.shop.has_own_image_title') }}">
                                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                                         </svg>
@@ -526,25 +537,25 @@
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <span class="px-2 py-1 rounded-full text-xs font-medium {{ $variation->quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $variation->quantity }} units
+                                    {{ $variation->quantity }} {{ __('admin.shop.units_suffix') }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <form action="{{ route('super-admin.shop.products.variations.toggle-status', [$product, $variation]) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="px-3 py-1 rounded-full text-xs font-medium transition {{ $variation->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }}">
-                                        {{ $variation->is_active ? 'Active' : 'Inactive' }}
+                                        {{ $variation->is_active ? __('admin.common.active') : __('admin.common.inactive') }}
                                     </button>
                                 </form>
                             </td>
                             <td class="px-4 py-3 text-sm text-right space-x-2">
                                 <button onclick="editVariation({{ $variation->id }}, '{{ $variation->name }}', '{{ $variation->sku }}', '{{ $variation->price }}', {{ $variation->quantity }}, {{ $variation->is_active ? 'true' : 'false' }}, '{{ $variation->image_url }}')"
-                                        class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                                        class="text-blue-600 hover:text-blue-800 font-medium">{{ __('admin.common.edit') }}</button>
                                 <form action="{{ route('super-admin.shop.products.variations.destroy', [$product, $variation]) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this variation?');">
+                                      onsubmit="return confirm('{{ __('admin.shop.confirm_delete_variation') }}');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">Delete</button>
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">{{ __('admin.common.delete') }}</button>
                                 </form>
                             </td>
                         </tr>
@@ -557,7 +568,7 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                 </svg>
-                <p class="mt-2 text-sm">No variations yet. Add your first variation above.</p>
+                <p class="mt-2 text-sm">{{ __('admin.shop.no_variations_yet') }}</p>
             </div>
             @endif
         </div>
@@ -565,29 +576,29 @@
         <!-- Edit Variation Modal (Hidden by default) -->
         <div id="edit-variation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
-                <h3 class="text-lg font-semibold mb-4">Edit Variation</h3>
+                <h3 class="text-lg font-semibold mb-4">{{ __('admin.shop.edit_variation') }}</h3>
                 <form id="edit-variation-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Variation Name *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.variation_name_required') }}</label>
                                 <input type="text" name="name" id="edit_variation_name" required
                                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.sku') }}</label>
                                 <input type="text" name="sku" id="edit_variation_sku"
                                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.price_eur') }}</label>
                                 <input type="number" name="price" id="edit_variation_price" step="0.01" min="0"
                                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.shop.stock_required') }}</label>
                                 <input type="number" name="quantity" id="edit_variation_quantity" required min="0"
                                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
@@ -595,13 +606,13 @@
 
                         <!-- Existing Images Gallery -->
                         <div id="edit_variation_images_container">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.shop.current_images') }}</label>
                             <div id="edit_variation_images_grid" class="grid grid-cols-3 md:grid-cols-4 gap-3 mb-3"></div>
                         </div>
 
                         <!-- Upload New Images -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Add More Images (Optional)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.shop.add_more_images_optional') }}</label>
 
                             <!-- New Images Preview -->
                             <div id="edit-variation-preview-container" class="grid grid-cols-3 md:grid-cols-4 gap-3 mb-3" style="display: none;"></div>
@@ -615,8 +626,8 @@
                                         <svg class="w-8 h-8 mb-1 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                         </svg>
-                                        <p class="text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Upload more images</span></p>
-                                        <p class="text-xs text-gray-500">Max 10 images total</p>
+                                        <p class="text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">{{ __('admin.shop.upload_more_images') }}</span></p>
+                                        <p class="text-xs text-gray-500">{{ __('admin.shop.max_images_total_hint') }}</p>
                                     </div>
                                 </label>
                             </div>
@@ -625,16 +636,16 @@
                         <div>
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" id="edit_variation_active" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">Active</span>
+                                <span class="ml-2 text-sm text-gray-700">{{ __('admin.common.active') }}</span>
                             </label>
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end space-x-3">
                         <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                            Cancel
+                            {{ __('admin.common.cancel') }}
                         </button>
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            Update Variation
+                            {{ __('admin.shop.update_variation') }}
                         </button>
                     </div>
                 </form>
@@ -642,6 +653,14 @@
         </div>
 
         <script>
+            const editVariationI18n = {
+                primary: @json(__('admin.shop.primary')),
+                newBadge: @json(__('admin.shop.new_badge')),
+                confirmDeleteImage: @json(__('admin.shop.confirm_delete_image')),
+                noImagesUploadBelow: @json(__('admin.shop.no_images_upload_below')),
+                errorDeletingImage: @json(__('admin.shop.error_deleting_image')),
+            };
+
             let currentVariationId = null;
 
             async function editVariation(id, name, sku, price, quantity, isActive, imageUrl) {
@@ -688,7 +707,7 @@
                                 <img src="${image.url}" alt="Variation image ${index + 1}" class="w-full h-full object-cover">
                                 ${image.is_primary ? `
                                     <div class="absolute top-1 left-1 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded shadow">
-                                        Primary
+                                        ${editVariationI18n.primary}
                                     </div>
                                 ` : ''}
                                 <button type="button"
@@ -703,12 +722,12 @@
                         grid.appendChild(div);
                     });
                 } else {
-                    grid.innerHTML = '<p class="text-sm text-gray-500 col-span-full">No images for this variation. Upload some below!</p>';
+                    grid.innerHTML = `<p class="text-sm text-gray-500 col-span-full">${editVariationI18n.noImagesUploadBelow}</p>`;
                 }
             }
 
             async function deleteVariationImage(imageId) {
-                if (!confirm('Are you sure you want to delete this image?')) {
+                if (!confirm(editVariationI18n.confirmDeleteImage)) {
                     return;
                 }
 
@@ -727,11 +746,11 @@
                         const data = await imagesResponse.json();
                         displayVariationImages(data.images);
                     } else {
-                        alert('Error deleting image. Please try again.');
+                        alert(editVariationI18n.errorDeletingImage);
                     }
                 } catch (error) {
                     console.error('Error deleting image:', error);
-                    alert('Error deleting image. Please try again.');
+                    alert(editVariationI18n.errorDeletingImage);
                 }
             }
 

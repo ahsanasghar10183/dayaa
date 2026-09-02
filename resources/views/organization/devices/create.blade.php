@@ -6,14 +6,14 @@
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Devices
+                {{ __('admin.organization.back_to_devices') }}
             </a>
         </div>
 
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Add New Device</h1>
-            <p class="mt-2 text-gray-600">Register a new donation device to your organization</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.add_new_device') }}</h1>
+            <p class="mt-2 text-gray-600">{{ __('admin.organization.add_device_subtitle') }}</p>
         </div>
 
         <!-- Form -->
@@ -24,7 +24,7 @@
                 <!-- Device Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Device Name *
+                        {{ __('admin.organization.device_name_required') }}
                     </label>
                     <input
                         type="text"
@@ -33,18 +33,18 @@
                         value="{{ old('name') }}"
                         required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                        placeholder="e.g., Main Entrance Device"
+                        placeholder="{{ __('admin.organization.device_name_placeholder') }}"
                     >
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">A friendly name to identify this device</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.device_name_hint') }}</p>
                 </div>
 
                 <!-- Location -->
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-                        Location
+                        {{ __('admin.organization.location') }}
                     </label>
                     <input
                         type="text"
@@ -52,30 +52,30 @@
                         id="location"
                         value="{{ old('location') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('location') border-red-500 @enderror"
-                        placeholder="e.g., Main Office, Building A"
+                        placeholder="{{ __('admin.organization.location_placeholder') }}"
                     >
                     @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">Where is this device located?</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.location_hint') }}</p>
                 </div>
 
                 <!-- Description -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Description
+                        {{ __('admin.organization.description') }}
                     </label>
                     <textarea
                         name="description"
                         id="description"
                         rows="4"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror"
-                        placeholder="Additional information about this device..."
+                        placeholder="{{ __('admin.organization.description_placeholder') }}"
                     >{{ old('description') }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">Optional notes or details about this device</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.description_hint') }}</p>
                 </div>
 
                 <!-- Info Box -->
@@ -85,8 +85,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <div class="text-sm text-blue-800">
-                            <p class="font-semibold mb-1">What happens next?</p>
-                            <p>After creating the device, you'll receive a unique <strong>Device ID</strong> that you'll use to pair your physical device with this account.</p>
+                            <p class="font-semibold mb-1">{{ __('admin.organization.device_info_title') }}</p>
+                            <p>{!! __('admin.organization.device_info_text') !!}</p>
                         </div>
                     </div>
                 </div>
@@ -94,13 +94,13 @@
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
                     <a href="{{ route('organization.devices.index') }}" class="btn-secondary">
-                        Cancel
+                        {{ __('admin.common.cancel') }}
                     </a>
                     <button type="submit" class="btn-primary px-8">
                         <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        Add Device
+                        {{ __('admin.organization.add_device') }}
                     </button>
                 </div>
             </div>

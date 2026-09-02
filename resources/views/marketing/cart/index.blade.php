@@ -56,8 +56,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" style="width: 80px; height: 80px; object-fit: cover;" class="me-3">
-                                        <div>
-                                            <h5 class="mb-1">{{ $item->product->name }}</h5>
+                                        <div class="flex-grow-1" style="min-width: 0;">
+                                            <h5 class="mb-1 text-truncate">{{ $item->product->name }}</h5>
                                             @if($item->variation_name)
                                             <p class="mb-1 text-primary small"><strong>{{ $item->variation_name }}</strong></p>
                                             @endif

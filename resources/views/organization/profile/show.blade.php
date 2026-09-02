@@ -3,14 +3,14 @@
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between gap-4">
             <div class="min-w-0">
-                <h1 class="text-3xl font-bold text-gray-900">Organization Profile</h1>
-                <p class="mt-2 text-gray-600">View and manage your organization information</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.profile') }}</h1>
+                <p class="mt-2 text-gray-600">{{ __('admin.organization.profile_page.subtitle') }}</p>
             </div>
             <a href="{{ route('organization.profile.edit') }}" class="btn-primary shrink-0 px-4 py-2">
                 <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                 </svg>
-                Edit Profile
+                {{ __('admin.organization.edit_profile') }}
             </a>
         </div>
 
@@ -39,35 +39,35 @@
                         <!-- About Section -->
                         @if($organization->description)
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-2">About</h3>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-2">{{ __('admin.super_admin.about') }}</h3>
                             <p class="text-gray-600">{{ $organization->description }}</p>
                         </div>
                         @endif
 
                         <!-- Contact Information -->
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Contact Information</h3>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.super_admin.contact_information') }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-xs text-gray-500">Contact Person</label>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.contact_person') }}</label>
                                     <p class="text-sm font-medium text-gray-900">{{ $organization->contact_person }}</p>
                                 </div>
                                 <div>
-                                    <label class="text-xs text-gray-500">Email</label>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.email') }}</label>
                                     <p class="text-sm font-medium text-gray-900">{{ $organization->user->email }}</p>
                                 </div>
                                 <div>
-                                    <label class="text-xs text-gray-500">Phone</label>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.phone') }}</label>
                                     <p class="text-sm font-medium text-gray-900">{{ $organization->phone }}</p>
                                 </div>
                                 <div>
-                                    <label class="text-xs text-gray-500">Website</label>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.website') }}</label>
                                     @if($organization->website)
                                     <a href="{{ $organization->website }}" target="_blank" class="text-sm font-medium text-primary-600 hover:text-primary-700">
                                         {{ $organization->website }}
                                     </a>
                                     @else
-                                    <p class="text-sm font-medium text-gray-400">Not provided</p>
+                                    <p class="text-sm font-medium text-gray-400">{{ __('admin.organization.profile_page.not_provided') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -75,21 +75,21 @@
 
                         <!-- Address -->
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Address</h3>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.organization.address') }}</h3>
                             <p class="text-sm text-gray-900">{{ $organization->address }}</p>
                         </div>
 
                         <!-- Legal Information -->
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Legal Information</h3>
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.super_admin.legal_information') }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-xs text-gray-500">Charity Number</label>
-                                    <p class="text-sm font-medium text-gray-900">{{ $organization->charity_number ?? 'N/A' }}</p>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.charity_number') }}</label>
+                                    <p class="text-sm font-medium text-gray-900">{{ $organization->charity_number ?? __('admin.billing.not_available') }}</p>
                                 </div>
                                 <div>
-                                    <label class="text-xs text-gray-500">Tax ID</label>
-                                    <p class="text-sm font-medium text-gray-900">{{ $organization->tax_id ?? 'N/A' }}</p>
+                                    <label class="text-xs text-gray-500">{{ __('admin.organization.tax_id') }}</label>
+                                    <p class="text-sm font-medium text-gray-900">{{ $organization->tax_id ?? __('admin.billing.not_available') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -103,10 +103,10 @@
                                 </svg>
                                 <div class="ml-3">
                                     <p class="text-sm text-blue-700">
-                                        <strong>Bank Account:</strong> {{ $organization->bank_account ?? 'Not configured' }}
+                                        <strong>{{ __('admin.organization.profile_page.bank_account_prefix') }}</strong> {{ $organization->bank_account ?? __('admin.organization.profile_page.bank_account_not_configured') }}
                                     </p>
                                     @if(!$organization->bank_account)
-                                    <p class="text-xs text-blue-600 mt-1">Please add your bank account details to receive donations</p>
+                                    <p class="text-xs text-blue-600 mt-1">{{ __('admin.organization.profile_page.bank_account_hint') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -120,39 +120,39 @@
             <div class="space-y-6">
                 <!-- Status Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-sm font-semibold text-gray-700 mb-4">Status</h3>
+                    <h3 class="text-sm font-semibold text-gray-700 mb-4">{{ __('admin.dashboard.status') }}</h3>
 
                     <div class="mb-4">
                         @if($organization->status == 'active')
-                            <span class="badge-success text-lg">Active</span>
+                            <span class="badge-success text-lg">{{ __('admin.common.active') }}</span>
                         @elseif($organization->status == 'pending')
-                            <span class="badge-warning text-lg">Pending Approval</span>
+                            <span class="badge-warning text-lg">{{ __('admin.super_admin.pending_approval') }}</span>
                         @elseif($organization->status == 'suspended')
-                            <span class="badge-error text-lg">Suspended</span>
+                            <span class="badge-error text-lg">{{ __('admin.organization.suspended_page.badge') }}</span>
                         @else
                             <span class="badge-gray text-lg">{{ ucfirst($organization->status) }}</span>
                         @endif
                     </div>
 
                     <div class="text-xs text-gray-500 space-y-1">
-                        <p>Registered: {{ $organization->created_at->format('M d, Y') }}</p>
+                        <p>{{ __('admin.super_admin.registered') }}: {{ $organization->created_at->format('M d, Y') }}</p>
                         @if($organization->approved_at)
-                        <p>Approved: {{ $organization->approved_at->format('M d, Y') }}</p>
+                        <p>{{ __('admin.organization.profile_page.approved_prefix') }} {{ $organization->approved_at->format('M d, Y') }}</p>
                         @endif
                     </div>
 
                     @if($organization->status == 'pending')
                     <div class="mt-4 p-3 bg-yellow-50 rounded-lg">
-                        <p class="text-xs text-yellow-800">Your organization is pending approval. You'll be notified once it's reviewed.</p>
+                        <p class="text-xs text-yellow-800">{{ __('admin.organization.profile_page.pending_approval_hint') }}</p>
                     </div>
                     @elseif($organization->status == 'rejected')
                     <div class="mt-4 p-3 bg-red-50 rounded-lg">
-                        <p class="text-xs text-red-800 font-medium mb-1">Rejection Reason:</p>
+                        <p class="text-xs text-red-800 font-medium mb-1">{{ __('admin.organization.profile_page.rejection_reason_label') }}</p>
                         <p class="text-xs text-red-700">{{ $organization->rejection_reason }}</p>
                     </div>
                     @elseif($organization->status == 'suspended')
                     <div class="mt-4 p-3 bg-red-50 rounded-lg">
-                        <p class="text-xs text-red-800 font-medium mb-1">Suspension Reason:</p>
+                        <p class="text-xs text-red-800 font-medium mb-1">{{ __('admin.organization.profile_page.suspension_reason_label') }}</p>
                         <p class="text-xs text-red-700">{{ $organization->suspension_reason }}</p>
                     </div>
                     @endif
@@ -161,14 +161,14 @@
                 <!-- Verification Documents -->
                 @if($organization->verification_documents)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-sm font-semibold text-gray-700 mb-4">Verification Documents</h3>
+                    <h3 class="text-sm font-semibold text-gray-700 mb-4">{{ __('admin.organization.profile_page.verification_documents') }}</h3>
                     <div class="space-y-2">
                         @foreach($organization->verification_documents as $document)
                         <a href="{{ Storage::url($document) }}" target="_blank" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                             <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span class="text-sm text-gray-700">Document {{ $loop->iteration }}</span>
+                            <span class="text-sm text-gray-700">{{ __('admin.organization.profile_page.document_label') }} {{ $loop->iteration }}</span>
                         </a>
                         @endforeach
                     </div>
@@ -177,18 +177,18 @@
 
                 <!-- Statistics -->
                 <div class="bg-gradient-primary rounded-xl shadow-lg p-6 text-white">
-                    <h3 class="text-lg font-semibold mb-4">Quick Stats</h3>
+                    <h3 class="text-lg font-semibold mb-4">{{ __('admin.organization.profile_page.quick_stats') }}</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm opacity-90">Campaigns</span>
+                            <span class="text-sm opacity-90">{{ __('admin.organization.campaigns') }}</span>
                             <span class="text-xl font-bold">{{ $stats['total_campaigns'] }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm opacity-90">Devices</span>
+                            <span class="text-sm opacity-90">{{ __('admin.organization.devices') }}</span>
                             <span class="text-xl font-bold">{{ $stats['total_devices'] }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm opacity-90">Donations</span>
+                            <span class="text-sm opacity-90">{{ __('admin.organization.donations') }}</span>
                             <span class="text-xl font-bold">{{ $stats['total_donations'] }}</span>
                         </div>
                     </div>

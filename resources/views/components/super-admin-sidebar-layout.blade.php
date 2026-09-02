@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Dayaa') }} - Super Admin</title>
+        <title>{{ config('app.name', 'Dayaa') }} - {{ __('admin.super_admin.role_label') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -85,7 +85,7 @@
                             </div>
                             <div x-show="sidebarOpen" class="flex flex-col">
                                 <span class="text-xl font-bold text-gradient-dayaa">Dayaa</span>
-                                <span class="text-xs text-gray-500 font-medium">Super Admin</span>
+                                <span class="text-xs text-gray-500 font-medium">{{ __('admin.super_admin.role_label') }}</span>
                             </div>
                         </a>
                         <!-- Mobile Close Button -->
@@ -198,11 +198,11 @@
                                     </svg>
                                     <span class="text-sm font-medium">{{ strtoupper(app()->getLocale()) }}</span>
                                 </button>
-                                <div x-show="langOpen" @click.away="langOpen = false" x-cloak class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
-                                    <a href="{{ route('language.switch', 'de') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'de' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                <div x-show="langOpen" @click.away="langOpen = false" x-cloak class="absolute right-0 mt-2 w-32 dropdown-panel bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
+                                    <a href="{{ route('language.switch', 'de') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'de' ? 'bg-blue-50 text-primary-600' : '' }}">
                                         🇩🇪 Deutsch
                                     </a>
-                                    <a href="{{ route('language.switch', 'en') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'en' ? 'bg-blue-50 text-primary-600' : '' }}">
+                                    <a href="{{ route('language.switch', 'en') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ app()->getLocale() == 'en' ? 'bg-blue-50 text-primary-600' : '' }}">
                                         🇬🇧 English
                                     </a>
                                 </div>
@@ -217,7 +217,7 @@
                                     </div>
                                     <div class="hidden md:block text-left">
                                         <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</p>
-                                        <p class="text-xs text-gray-500">Super Admin</p>
+                                        <p class="text-xs text-gray-500">{{ __('admin.super_admin.role_label') }}</p>
                                     </div>
                                     <svg class="w-4 h-4 text-gray-400 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -234,12 +234,12 @@
                                      x-transition:leave="transition ease-in duration-75"
                                      x-transition:leave-start="transform opacity-100 scale-100"
                                      x-transition:leave-end="transform opacity-0 scale-95"
-                                     class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
+                                     class="absolute right-0 mt-2 w-56 dropdown-panel bg-white rounded-xl shadow-2xl py-2 border border-gray-100 z-50">
                                     <div class="px-4 py-3 border-b border-gray-100">
                                         <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</p>
                                         <p class="text-xs text-gray-500 mt-0.5">{{ auth()->user()->email }}</p>
                                     </div>
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <a href="{{ route('profile.edit') }}" class="dropdown-item font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>
@@ -248,7 +248,7 @@
                                     <div class="border-t border-gray-100 my-1"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                        <button type="submit" class="dropdown-item w-full text-left font-medium text-red-600 hover:bg-red-50 transition-colors">
                                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                             </svg>

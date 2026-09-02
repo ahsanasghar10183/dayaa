@@ -203,7 +203,7 @@
                             {{ __('admin.billing.country') }}
                         </label>
                         <select name="billing_country"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="select"
                                 required>
                             <option value="DE">{{ __('admin.countries.germany') }}</option>
                             <option value="AT">{{ __('admin.countries.austria') }}</option>

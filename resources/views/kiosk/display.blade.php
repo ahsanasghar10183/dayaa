@@ -134,10 +134,10 @@
                         @if($showCustom)
                             <button
                                 onclick="showCustomAmount()"
-                                class="w-full touch-btn text-white text-3xl font-bold py-7 rounded-[32px] shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                                class="w-full touch-btn inline-flex items-center justify-center text-white text-xl sm:text-2xl md:text-3xl font-bold py-4 sm:py-5 md:py-7 rounded-[32px] shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
                                 style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);"
                             >
-                                <svg class="w-10 h-10 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0 mr-2 sm:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
                                 Enter Custom Amount
@@ -195,7 +195,7 @@
                     <div id="paymentMockBanner" class="hidden bg-yellow-50 border-2 border-yellow-300 text-yellow-800 rounded-2xl px-6 py-3 mb-6 text-lg">
                         Test mode — no real charge will be made
                     </div>
-                    <button onclick="cancelPayment()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-xl font-bold py-4 px-10 rounded-2xl transition-colors">
+                    <button onclick="cancelPayment()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-base sm:text-xl font-bold py-3 sm:py-4 px-6 sm:px-10 rounded-2xl transition-colors">
                         Cancel
                     </button>
                 </div>
@@ -210,10 +210,10 @@
                     <h2 class="text-5xl font-bold text-gray-900 mb-4">Payment Failed</h2>
                     <p id="paymentErrorMessage" class="text-2xl text-gray-600 mb-8">Please try again</p>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="closePaymentOverlay()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-xl font-bold py-5 rounded-2xl transition-colors">
+                        <button onclick="closePaymentOverlay()" class="touch-btn bg-gray-200 hover:bg-gray-300 text-gray-800 text-base sm:text-xl font-bold py-3 sm:py-5 rounded-2xl transition-colors">
                             Close
                         </button>
-                        <button onclick="retryPayment()" class="touch-btn text-white text-xl font-bold py-5 rounded-2xl transition-colors" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);">
+                        <button onclick="retryPayment()" class="touch-btn text-white text-base sm:text-xl font-bold py-3 sm:py-5 rounded-2xl transition-colors" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $primaryColor }}dd 100%);">
                             Try Again
                         </button>
                     </div>
@@ -239,27 +239,27 @@
                 <!-- Number Pad -->
                 <div class="grid grid-cols-3 gap-4 mb-8">
                     @for($i = 1; $i <= 9; $i++)
-                        <button onclick="appendNumber('{{ $i }}')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-4xl font-bold py-6 rounded-2xl transition-colors">
+                        <button onclick="appendNumber('{{ $i }}')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-2xl sm:text-3xl md:text-4xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                             {{ $i }}
                         </button>
                     @endfor
-                    <button onclick="clearAmount()" class="touch-btn bg-red-100 hover:bg-red-200 text-red-600 text-3xl font-bold py-6 rounded-2xl transition-colors">
+                    <button onclick="clearAmount()" class="touch-btn bg-red-100 hover:bg-red-200 text-red-600 text-xl sm:text-2xl md:text-3xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                         Clear
                     </button>
-                    <button onclick="appendNumber('0')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-4xl font-bold py-6 rounded-2xl transition-colors">
+                    <button onclick="appendNumber('0')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-2xl sm:text-3xl md:text-4xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                         0
                     </button>
-                    <button onclick="appendNumber('00')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-4xl font-bold py-6 rounded-2xl transition-colors">
+                    <button onclick="appendNumber('00')" class="touch-btn bg-gray-100 hover:bg-gray-200 text-2xl sm:text-3xl md:text-4xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                         00
                     </button>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-4">
-                    <button onclick="closeCustomAmount()" class="touch-btn bg-gray-300 hover:bg-gray-400 text-gray-800 text-2xl font-bold py-6 rounded-2xl transition-colors">
+                    <button onclick="closeCustomAmount()" class="touch-btn bg-gray-300 hover:bg-gray-400 text-gray-800 text-lg sm:text-xl md:text-2xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                         Cancel
                     </button>
-                    <button onclick="confirmCustomAmount()" class="touch-btn bg-gradient-to-r from-primary-500 to-blue-600 hover:from-primary-600 hover:to-blue-700 text-white text-2xl font-bold py-6 rounded-2xl transition-colors">
+                    <button onclick="confirmCustomAmount()" class="touch-btn bg-gradient-to-r from-primary-500 to-blue-600 hover:from-primary-600 hover:to-blue-700 text-white text-lg sm:text-xl md:text-2xl font-bold py-4 sm:py-5 md:py-6 rounded-2xl transition-colors">
                         Continue
                     </button>
                 </div>

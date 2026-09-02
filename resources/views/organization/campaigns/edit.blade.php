@@ -12,14 +12,14 @@
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Edit Campaign</h1>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.campaign_edit_page.title') }}</h1>
                 <p class="mt-2 text-gray-600">{{ $campaign->name }}</p>
             </div>
             <a href="{{ route('organization.campaigns.show', $campaign) }}" class="btn-secondary">
                 <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Campaign
+                {{ __('admin.organization.campaign_edit_page.back_to_campaign') }}
             </a>
         </div>
 
@@ -37,26 +37,26 @@
                                 <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
                                 </svg>
-                                Layout & Design
+                                {{ __('admin.organization.campaign_edit_page.tab_layout_design') }}
                             </button>
                             <button type="button" class="tab-btn flex-1 px-6 py-4 text-sm font-medium text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="donations">
                                 <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                Donation Settings
+                                {{ __('admin.organization.campaign_edit_page.tab_donation_settings') }}
                             </button>
                             <button type="button" class="tab-btn flex-1 px-6 py-4 text-sm font-medium text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="thankyou">
                                 <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                                 </svg>
-                                Thank You Screen
+                                {{ __('admin.organization.campaign_edit_page.tab_thank_you_screen') }}
                             </button>
                             <button type="button" class="tab-btn flex-1 px-6 py-4 text-sm font-medium text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="settings">
                                 <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
-                                Settings
+                                {{ __('admin.organization.campaign_edit_page.tab_settings') }}
                             </button>
                         </div>
 
@@ -64,17 +64,17 @@
                         <div class="p-6">
                             <!-- Layout & Design Tab -->
                             <div class="tab-content" id="layout-tab">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6">Layout & Design</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_edit_page.tab_layout_design') }}</h3>
 
                                 <!-- Layout Type Selection -->
                                 <div class="mb-6">
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">Layout Type</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.layout_type_label') }}</label>
                                     <div class="grid grid-cols-2 gap-3">
                                         <label class="cursor-pointer">
                                             <input type="radio" name="layout_type" value="solid_color" class="hidden layout-radio" {{ $layoutType == 'solid_color' ? 'checked' : '' }}>
                                             <div class="layout-card border-2 rounded-lg p-3 hover:border-primary-500 transition-all text-center">
                                                 <div class="h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded mb-2"></div>
-                                                <p class="text-xs font-medium text-gray-700">Solid Color</p>
+                                                <p class="text-xs font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.layout_solid_color') }}</p>
                                             </div>
                                         </label>
                                         <label class="cursor-pointer">
@@ -84,7 +84,7 @@
                                                     <div class="h-1/3 bg-blue-600"></div>
                                                     <div class="h-2/3 bg-gray-100"></div>
                                                 </div>
-                                                <p class="text-xs font-medium text-gray-700">Dual Color</p>
+                                                <p class="text-xs font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.layout_dual_color') }}</p>
                                             </div>
                                         </label>
                                         <label class="cursor-pointer">
@@ -94,14 +94,14 @@
                                                     <div class="h-1/3 bg-gradient-to-r from-purple-500 to-pink-500"></div>
                                                     <div class="h-2/3 bg-white"></div>
                                                 </div>
-                                                <p class="text-xs font-medium text-gray-700">Banner Image</p>
+                                                <p class="text-xs font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.layout_banner_image') }}</p>
                                             </div>
                                         </label>
                                         <label class="cursor-pointer">
                                             <input type="radio" name="layout_type" value="full_background" class="hidden layout-radio" {{ $layoutType == 'full_background' ? 'checked' : '' }}>
                                             <div class="layout-card border-2 rounded-lg p-3 hover:border-primary-500 transition-all text-center">
                                                 <div class="h-20 bg-gradient-to-br from-green-500 to-teal-600 rounded mb-2"></div>
-                                                <p class="text-xs font-medium text-gray-700">Full Background</p>
+                                                <p class="text-xs font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.layout_full_background') }}</p>
                                             </div>
                                         </label>
                                     </div>
@@ -109,25 +109,25 @@
 
                                 <!-- Campaign Name -->
                                 <div class="mb-6">
-                                    <label for="campaign_name" class="block text-sm font-medium text-gray-700 mb-2">Campaign Name *</label>
+                                    <label for="campaign_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.campaign_name_required') }}</label>
                                     <input type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name', $campaign->name) }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                 </div>
 
                                 <!-- Heading -->
                                 <div class="mb-6">
-                                    <label for="heading" class="block text-sm font-medium text-gray-700 mb-2">Heading *</label>
+                                    <label for="heading" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.heading_required') }}</label>
                                     <input type="text" name="heading" id="heading" value="{{ old('heading', $designSettings['heading'] ?? 'Support Our Cause') }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                 </div>
 
                                 <!-- Message -->
                                 <div class="mb-6">
-                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.message_label') }}</label>
                                     <textarea name="message" id="message" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">{{ old('message', $designSettings['message'] ?? '') }}</textarea>
                                 </div>
 
                                 <!-- Primary Color -->
                                 <div class="mb-6">
-                                    <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                                    <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.primary_color') }}</label>
                                     <div class="flex gap-3">
                                         <input type="color" name="primary_color" id="primary_color" value="{{ old('primary_color', $designSettings['primary_color'] ?? '#1163F0') }}" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                                         <input type="text" id="primary_color_text" value="{{ old('primary_color', $designSettings['primary_color'] ?? '#1163F0') }}" readonly class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono text-sm">
@@ -136,7 +136,7 @@
 
                                 <!-- Accent Color (for dual_color, banner_image) -->
                                 <div class="mb-6 accent-color-field" style="display: {{ in_array($layoutType, ['dual_color', 'banner_image']) ? 'block' : 'none' }}">
-                                    <label for="accent_color" class="block text-sm font-medium text-gray-700 mb-2">Accent Color</label>
+                                    <label for="accent_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.accent_color') }}</label>
                                     <div class="flex gap-3">
                                         <input type="color" name="accent_color" id="accent_color" value="{{ old('accent_color', $designSettings['accent_color'] ?? '#F3F4F6') }}" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                                         <input type="text" id="accent_color_text" value="{{ old('accent_color', $designSettings['accent_color'] ?? '#F3F4F6') }}" readonly class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono text-sm">
@@ -146,22 +146,22 @@
                                 <!-- Background Image (for banner_image, full_background) -->
                                 <div class="background-image-field" style="display: {{ in_array($layoutType, ['banner_image', 'full_background']) ? 'block' : 'none' }}">
                                     <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ $layoutType == 'banner_image' ? 'Banner Image' : 'Background Image' }}
+                                        {{ $layoutType == 'banner_image' ? __('admin.organization.campaign_edit_page.banner_image_label') : __('admin.organization.campaign_edit_page.background_image_label') }}
                                     </label>
                                     @if($backgroundImageUrl)
                                     <div class="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                                         <img src="{{ $backgroundImageUrl }}" alt="Current background" class="h-24 w-full object-cover rounded">
-                                        <p class="text-xs text-gray-500 mt-2">Current image (upload new to replace)</p>
+                                        <p class="text-xs text-gray-500 mt-2">{{ __('admin.organization.campaign_edit_page.current_image_hint') }}</p>
                                     </div>
                                     @endif
                                     <input type="file" name="background_image" id="background_image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                                    <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image</p>
+                                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.campaign_edit_page.leave_empty_current_image') }}</p>
                                 </div>
                             </div>
 
                             <!-- Donation Settings Tab -->
                             <div class="tab-content hidden" id="donations-tab">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6">Donation Amounts</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_form.donation_amounts') }}</h3>
 
                                 <div id="amountsContainer" class="space-y-3 mb-6">
                                     @foreach($presetAmounts as $index => $amount)
@@ -181,12 +181,12 @@
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
-                                    Add Amount
+                                    {{ __('admin.organization.campaign_edit_page.add_amount') }}
                                 </button>
 
                                 <!-- Button Position -->
                                 <div class="mb-6">
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">Button Position</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.button_position') }}</label>
                                     <div class="grid grid-cols-3 gap-3">
                                         @foreach(['top', 'middle', 'bottom'] as $position)
                                         <label class="cursor-pointer">
@@ -201,7 +201,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                                     @endif
                                                 </svg>
-                                                <span class="text-sm font-medium text-gray-700 capitalize">{{ $position }}</span>
+                                                <span class="text-sm font-medium text-gray-700 capitalize">{{ __('admin.organization.campaign_edit_page.position_' . $position) }}</span>
                                             </div>
                                         </label>
                                         @endforeach
@@ -211,8 +211,8 @@
                                 <!-- Custom Amount Toggle -->
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                                     <div>
-                                        <h4 class="text-sm font-medium text-gray-900">Allow Custom Amount</h4>
-                                        <p class="text-xs text-gray-500 mt-1">Let donors enter their own amount</p>
+                                        <h4 class="text-sm font-medium text-gray-900">{{ __('admin.organization.campaign_edit_page.allow_custom_amount_toggle_title') }}</h4>
+                                        <p class="text-xs text-gray-500 mt-1">{{ __('admin.organization.campaign_edit_page.allow_custom_amount_hint') }}</p>
                                     </div>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="show_custom_amount" id="customAmountToggle" value="1" {{ ($amountSettings['allow_custom_amount'] ?? false) ? 'checked' : '' }} class="sr-only peer">
@@ -223,38 +223,38 @@
 
                             <!-- Thank You Screen Tab -->
                             <div class="tab-content hidden" id="thankyou-tab">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6">Thank You Screen</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_edit_page.tab_thank_you_screen') }}</h3>
 
                                 <!-- Thank You Image (conditional) -->
                                 <div class="thankyou-image-field mb-6" style="display: {{ in_array($layoutType, ['banner_image', 'full_background']) ? 'block' : 'none' }}">
                                     <label for="thankyou_image" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Thank You {{ $layoutType == 'banner_image' ? 'Banner' : 'Background' }} (Optional)
+                                        {{ $layoutType == 'banner_image' ? __('admin.organization.campaign_edit_page.thankyou_banner_optional') : __('admin.organization.campaign_edit_page.thankyou_background_optional') }}
                                     </label>
                                     @if($thankyouImageUrl)
                                     <div class="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                                         <img src="{{ $thankyouImageUrl }}" alt="Current thank you image" class="h-24 w-full object-cover rounded">
-                                        <p class="text-xs text-gray-500 mt-2">Current image (upload new to replace)</p>
+                                        <p class="text-xs text-gray-500 mt-2">{{ __('admin.organization.campaign_edit_page.current_image_hint') }}</p>
                                     </div>
                                     @endif
                                     <input type="file" name="thankyou_image" id="thankyou_image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                    <p class="mt-1 text-xs text-gray-500">Leave empty to use campaign image</p>
+                                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.campaign_edit_page.leave_empty_campaign_image') }}</p>
                                 </div>
 
                                 <!-- Thank You Message -->
                                 <div class="mb-6">
-                                    <label for="thankyou_message" class="block text-sm font-medium text-gray-700 mb-2">Thank You Message *</label>
+                                    <label for="thankyou_message" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.thank_you_message_required') }}</label>
                                     <textarea name="thankyou_message" id="thankyou_message" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">{{ old('thankyou_message', $designSettings['thankyou_message'] ?? 'Thank you for your generous donation!') }}</textarea>
                                 </div>
 
                                 <!-- Thank You Subtitle -->
                                 <div class="mb-6">
-                                    <label for="thankyou_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                                    <label for="thankyou_subtitle" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.subtitle_label') }}</label>
                                     <input type="text" name="thankyou_subtitle" id="thankyou_subtitle" value="{{ old('thankyou_subtitle', $designSettings['thankyou_subtitle'] ?? 'Your support makes a real difference.') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
                                 </div>
 
                                 <!-- Thank You Position -->
                                 <div class="mb-6">
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">Message Position</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.message_position') }}</label>
                                     <div class="grid grid-cols-3 gap-3">
                                         @foreach(['top', 'middle', 'bottom'] as $position)
                                         <label class="cursor-pointer">
@@ -269,7 +269,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                                     @endif
                                                 </svg>
-                                                <span class="text-sm font-medium text-gray-700 capitalize">{{ $position }}</span>
+                                                <span class="text-sm font-medium text-gray-700 capitalize">{{ __('admin.organization.campaign_edit_page.position_' . $position) }}</span>
                                             </div>
                                         </label>
                                         @endforeach
@@ -283,9 +283,9 @@
                                             <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
-                                            Offer Donation Receipt
+                                            {{ __('admin.organization.campaign_edit_page.offer_donation_receipt') }}
                                         </h4>
-                                        <p class="text-xs text-gray-600 mt-1">Email a receipt to the donor</p>
+                                        <p class="text-xs text-gray-600 mt-1">{{ __('admin.organization.campaign_edit_page.offer_receipt_hint') }}</p>
                                     </div>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="offer_receipt" id="offerReceiptToggle" value="1" {{ ($designSettings['offer_receipt'] ?? false) ? 'checked' : '' }} class="sr-only peer">
@@ -296,41 +296,41 @@
 
                             <!-- Campaign Settings Tab -->
                             <div class="tab-content hidden" id="settings-tab">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6">Campaign Settings</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.campaign_edit_page.campaign_settings_heading') }}</h3>
 
                                 <!-- Reference Code -->
                                 <div class="mb-6">
-                                    <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">Reference Code</label>
-                                    <input type="text" name="reference_code" id="reference_code" value="{{ old('reference_code', $campaign->reference_code) }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500" placeholder="e.g., SPRING2026">
+                                    <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.reference_code_label') }}</label>
+                                    <input type="text" name="reference_code" id="reference_code" value="{{ old('reference_code', $campaign->reference_code) }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500" placeholder="{{ __('admin.organization.campaign_edit_page.reference_code_placeholder2') }}">
                                 </div>
 
                                 <!-- Dates -->
                                 <div class="grid grid-cols-2 gap-4 mb-6">
                                     <div>
-                                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.start_date') }}</label>
                                         <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $campaign->start_date?->format('Y-m-d')) }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
                                     </div>
                                     <div>
-                                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.end_date') }}</label>
                                         <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $campaign->end_date?->format('Y-m-d')) }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
                                     </div>
                                 </div>
 
                                 <!-- Status -->
                                 <div class="mb-6">
-                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
-                                    <select name="status" id="status" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                                        <option value="inactive" {{ $campaign->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                        <option value="active" {{ $campaign->status == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="scheduled" {{ $campaign->status == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                                        <option value="ended" {{ $campaign->status == 'ended' ? 'selected' : '' }}>Ended</option>
+                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.status_required') }}</label>
+                                    <select name="status" id="status" required class="select">
+                                        <option value="inactive" {{ $campaign->status == 'inactive' ? 'selected' : '' }}>{{ __('admin.common.inactive') }}</option>
+                                        <option value="active" {{ $campaign->status == 'active' ? 'selected' : '' }}>{{ __('admin.common.active') }}</option>
+                                        <option value="scheduled" {{ $campaign->status == 'scheduled' ? 'selected' : '' }}>{{ __('admin.organization.campaign_status_scheduled') }}</option>
+                                        <option value="ended" {{ $campaign->status == 'ended' ? 'selected' : '' }}>{{ __('admin.organization.campaign_status_ended') }}</option>
                                     </select>
                                 </div>
 
                                 <!-- Device Assignment -->
                                 @if($devices->count() > 0)
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">Assign to Devices</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.assign_to_devices') }}</label>
                                     <div class="space-y-2 max-h-64 overflow-y-auto">
                                         @foreach($devices as $device)
                                         <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-500 cursor-pointer transition-all">
@@ -339,9 +339,9 @@
                                                 <div class="flex items-center justify-between">
                                                     <span class="text-sm font-medium text-gray-900">{{ $device->name }}</span>
                                                     @if($device->status == 'online')
-                                                    <span class="badge-success text-xs">Online</span>
+                                                    <span class="badge-success text-xs">{{ __('admin.organization.online') }}</span>
                                                     @else
-                                                    <span class="badge-gray text-xs">Offline</span>
+                                                    <span class="badge-gray text-xs">{{ __('admin.organization.offline') }}</span>
                                                     @endif
                                                 </div>
                                                 @if($device->location)
@@ -359,12 +359,12 @@
 
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-between">
-                        <a href="{{ route('organization.campaigns.show', $campaign) }}" class="btn-secondary">Cancel</a>
+                        <a href="{{ route('organization.campaigns.show', $campaign) }}" class="btn-secondary">{{ __('admin.common.cancel') }}</a>
                         <button type="submit" class="btn-primary px-8">
                             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Save Changes
+                            {{ __('admin.organization.save_changes') }}
                         </button>
                     </div>
                 </div>
@@ -373,11 +373,11 @@
                 <div class="lg:sticky lg:top-8 lg:self-start">
                     <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-white font-semibold">Live Preview</h3>
+                            <h3 class="text-white font-semibold">{{ __('admin.organization.campaign_edit_page.live_preview') }}</h3>
                             <div class="flex items-center space-x-2">
-                                <button type="button" id="previewMode" class="text-xs text-gray-400 hover:text-white">Campaign</button>
+                                <button type="button" id="previewMode" class="text-xs text-gray-400 hover:text-white">{{ __('admin.organization.campaign_edit_page.preview_campaign_tab') }}</button>
                                 <span class="text-gray-600">|</span>
-                                <button type="button" id="previewThankYou" class="text-xs text-gray-400 hover:text-white">Thank You</button>
+                                <button type="button" id="previewThankYou" class="text-xs text-gray-400 hover:text-white">{{ __('admin.organization.campaign_edit_page.preview_thankyou_tab') }}</button>
                             </div>
                         </div>
 
@@ -385,7 +385,7 @@
                             <div id="preview-content" class="h-full flex flex-col"></div>
                         </div>
 
-                        <p class="text-xs text-gray-400 mt-4 text-center">Updates in real-time</p>
+                        <p class="text-xs text-gray-400 mt-4 text-center">{{ __('admin.organization.campaign_edit_page.updates_realtime') }}</p>
                     </div>
                 </div>
             </div>
@@ -404,6 +404,7 @@
         let showCustomAmount = {{ ($amountSettings['allow_custom_amount'] ?? false) ? 'true' : 'false' }};
         let showReceipt = {{ ($designSettings['offer_receipt'] ?? false) ? 'true' : 'false' }};
         let isThankYouPreview = false;
+        const i18nPreview = @json(__('admin.organization.campaign_edit_page'));
 
         const preview = document.getElementById('preview-content');
 
@@ -652,7 +653,7 @@
             ).join('');
 
             if (showCustomAmount) {
-                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg" style="border-color: ${primaryColor}; color: ${primaryColor}">Custom Amount</button>`;
+                buttonsHTML += `<button class="px-6 py-3 bg-white border-2 rounded-lg font-semibold shadow-lg" style="border-color: ${primaryColor}; color: ${primaryColor}">${i18nPreview.js_custom_amount_button}</button>`;
             }
 
             const buttonContainer = `<div class="grid grid-cols-2 gap-3 w-full max-w-sm">${buttonsHTML}</div>`;
@@ -703,7 +704,7 @@
                                 ${currentButtonPosition !== 'bottom' ? `<h1 class="text-2xl font-bold text-white mb-4">${heading}</h1><p class="text-white opacity-90 mb-8 text-sm">${message}</p>` : ''}
                                 <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
                                     ${amounts.map(amount => `<button class="px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold shadow-xl">€${amount.toFixed(2)}</button>`).join('')}
-                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl">Custom Amount</button>` : ''}
+                                    ${showCustomAmount ? `<button class="px-6 py-3 bg-white bg-opacity-20 border-2 border-white text-white rounded-lg font-semibold shadow-xl">${i18nPreview.js_custom_amount_button}</button>` : ''}
                                 </div>
                                 ${currentButtonPosition === 'bottom' ? `<h1 class="text-2xl font-bold text-white mt-8 mb-4">${heading}</h1><p class="text-white opacity-90 text-sm">${message}</p>` : ''}
                             </div>
@@ -734,7 +735,7 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    Email Receipt
+                    ${i18nPreview.js_email_receipt_button}
                 </button>
             ` : '';
 

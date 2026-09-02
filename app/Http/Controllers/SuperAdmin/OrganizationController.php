@@ -30,7 +30,9 @@ class OrganizationController extends Controller
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%')
+                  ->orWhereHas('user', function ($userQuery) use ($request) {
+                      $userQuery->where('email', 'like', '%' . $request->search . '%');
+                  })
                   ->orWhere('charity_number', 'like', '%' . $request->search . '%');
             });
         }

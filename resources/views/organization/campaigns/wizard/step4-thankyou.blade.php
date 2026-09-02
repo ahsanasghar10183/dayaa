@@ -4,10 +4,10 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Customize Thank You Screen</h1>
-                    <p class="mt-2 text-gray-600">Design the screen donors see after completing their donation</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.wizard.step4_title') }}</h1>
+                    <p class="mt-2 text-gray-600">{{ __('admin.organization.wizard.step4_subtitle') }}</p>
                 </div>
-                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">Cancel</a>
+                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">{{ __('admin.common.cancel') }}</a>
             </div>
 
             <!-- Progress Steps -->
@@ -18,7 +18,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Layout</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.progress_layout') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
@@ -27,7 +27,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Design</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step2_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
@@ -36,17 +36,17 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Donations</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step3_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-primary text-white font-semibold shadow-primary">4</div>
-                    <span class="ml-2 text-sm font-medium text-gray-900">Thank You</span>
+                    <span class="ml-2 text-sm font-medium text-gray-900">{{ __('admin.organization.wizard.step4_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Finish</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step5_label') }}</span>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                 <!-- Left Side: Form -->
                 <div class="space-y-6">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Thank You Screen Design</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.wizard.thankyou_screen_design_heading') }}</h3>
 
                         @if(in_array(session('campaign_wizard.layout_type'), ['banner_image', 'full_background']))
                         <!-- Thank You Screen Image (Optional different image) -->
@@ -66,27 +66,27 @@
                             <label class="flex items-center justify-between mb-2">
                                 <span class="block text-sm font-medium text-gray-700">
                                     @if(session('campaign_wizard.layout_type') == 'banner_image')
-                                        Thank You Banner Image
+                                        {{ __('admin.organization.wizard.thankyou_banner_image_label') }}
                                     @else
-                                        Thank You Background Image
+                                        {{ __('admin.organization.wizard.thankyou_background_image_label') }}
                                     @endif
                                 </span>
-                                <span class="text-xs text-gray-500">(Optional - uses campaign image by default)</span>
+                                <span class="text-xs text-gray-500">{{ __('admin.organization.wizard.optional_uses_campaign_image') }}</span>
                             </label>
                             <input type="file" name="thankyou_image" id="thankyou_image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Leave empty to use the same image as campaign screen</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.wizard.leave_empty_same_image') }}</p>
                         </div>
                         @endif
 
                         @if(session('campaign_wizard.layout_type') == 'solid_color')
                         <!-- Thank You Background Color -->
                         <div class="mb-6">
-                            <label for="thankyou_color" class="block text-sm font-medium text-gray-700 mb-2">Thank You Screen Color</label>
+                            <label for="thankyou_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.wizard.thankyou_screen_color_label') }}</label>
                             <div class="flex gap-3">
                                 <input type="color" name="thankyou_color" id="thankyou_color" value="{{ old('thankyou_color', session('campaign_wizard.primary_color', '#10B981')) }}" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                                 <input type="text" id="thankyou_color_text" value="{{ old('thankyou_color', session('campaign_wizard.primary_color', '#10B981')) }}" readonly class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono">
                             </div>
-                            <p class="mt-1 text-xs text-gray-500">Can be different from campaign color</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.wizard.can_differ_from_campaign_color') }}</p>
                         </div>
                         @endif
 
@@ -94,14 +94,14 @@
                         <!-- Thank You Header & Body Colors -->
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div>
-                                <label for="thankyou_header_color" class="block text-sm font-medium text-gray-700 mb-2">Header Color</label>
+                                <label for="thankyou_header_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.wizard.header_color_label') }}</label>
                                 <div class="flex gap-2">
                                     <input type="color" name="thankyou_header_color" id="thankyou_header_color" value="{{ old('thankyou_header_color', session('campaign_wizard.primary_color', '#10B981')) }}" class="h-12 w-16 rounded-lg border-2 border-gray-200 cursor-pointer">
                                     <input type="text" id="thankyou_header_color_text" value="{{ old('thankyou_header_color', session('campaign_wizard.primary_color', '#10B981')) }}" readonly class="flex-1 px-2 py-2 border border-gray-300 rounded-lg bg-gray-50 text-xs text-gray-700 font-mono">
                                 </div>
                             </div>
                             <div>
-                                <label for="thankyou_body_color" class="block text-sm font-medium text-gray-700 mb-2">Body Color</label>
+                                <label for="thankyou_body_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.wizard.body_color_label') }}</label>
                                 <div class="flex gap-2">
                                     <input type="color" name="thankyou_body_color" id="thankyou_body_color" value="{{ old('thankyou_body_color', session('campaign_wizard.accent_color', '#F0FDF4')) }}" class="h-12 w-16 rounded-lg border-2 border-gray-200 cursor-pointer">
                                     <input type="text" id="thankyou_body_color_text" value="{{ old('thankyou_body_color', session('campaign_wizard.accent_color', '#F0FDF4')) }}" readonly class="flex-1 px-2 py-2 border border-gray-300 rounded-lg bg-gray-50 text-xs text-gray-700 font-mono">
@@ -112,19 +112,19 @@
 
                         <!-- Thank You Message -->
                         <div class="mb-6">
-                            <label for="thankyou_message" class="block text-sm font-medium text-gray-700 mb-2">Thank You Message *</label>
-                            <textarea name="thankyou_message" id="thankyou_message" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Thank you for your generous donation!">{{ old('thankyou_message', 'Thank you for your generous donation!') }}</textarea>
+                            <label for="thankyou_message" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.thank_you_message_required') }}</label>
+                            <textarea name="thankyou_message" id="thankyou_message" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="{{ __('admin.organization.wizard.thankyou_message_placeholder') }}">{{ old('thankyou_message', 'Thank you for your generous donation!') }}</textarea>
                         </div>
 
                         <!-- Thank You Subtitle -->
                         <div class="mb-6">
-                            <label for="thankyou_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
-                            <input type="text" name="thankyou_subtitle" id="thankyou_subtitle" value="{{ old('thankyou_subtitle', 'Your support makes a real difference in our community.') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Additional message...">
+                            <label for="thankyou_subtitle" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.subtitle_label') }}</label>
+                            <input type="text" name="thankyou_subtitle" id="thankyou_subtitle" value="{{ old('thankyou_subtitle', 'Your support makes a real difference in our community.') }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="{{ __('admin.organization.wizard.subtitle_placeholder') }}">
                         </div>
 
                         <!-- Message Position -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-3">Message Position</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.organization.campaign_edit_page.message_position') }}</label>
                             <div class="grid grid-cols-3 gap-3">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="thankyou_position" value="top" class="hidden position-radio">
@@ -132,7 +132,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Top</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_top') }}</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
@@ -141,7 +141,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Middle</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_middle') }}</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
@@ -150,7 +150,7 @@
                                         <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
-                                        <span class="text-sm font-medium text-gray-700">Bottom</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('admin.organization.campaign_edit_page.position_bottom') }}</span>
                                     </div>
                                 </label>
                             </div>
@@ -163,9 +163,9 @@
                                     <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
-                                    Offer Donation Receipt
+                                    {{ __('admin.organization.campaign_edit_page.offer_donation_receipt') }}
                                 </h4>
-                                <p class="text-xs text-gray-600 mt-1">Email a receipt to the donor</p>
+                                <p class="text-xs text-gray-600 mt-1">{{ __('admin.organization.campaign_edit_page.offer_receipt_hint') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" name="offer_receipt" id="offerReceiptToggle" value="1" checked class="sr-only peer">
@@ -180,10 +180,10 @@
                             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
-                            Back
+                            {{ __('admin.common.back') }}
                         </a>
                         <button type="submit" class="btn-primary">
-                            Continue to Final Details
+                            {{ __('admin.organization.wizard.continue_to_final') }}
                             <svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -195,7 +195,7 @@
                 <div class="lg:sticky lg:top-8 lg:self-start">
                     <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-white font-semibold">Thank You Screen Preview</h3>
+                            <h3 class="text-white font-semibold">{{ __('admin.organization.wizard.thankyou_screen_preview') }}</h3>
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 rounded-full bg-red-500"></div>
                                 <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -207,7 +207,7 @@
                             <div id="preview-content" class="h-full flex flex-col"></div>
                         </div>
 
-                        <p class="text-xs text-gray-400 mt-4 text-center">This is what donors will see</p>
+                        <p class="text-xs text-gray-400 mt-4 text-center">{{ __('admin.organization.wizard.this_is_what_donors_see') }}</p>
                     </div>
                 </div>
             </div>
@@ -237,6 +237,7 @@
         let thankyouImageUrl = '';
         let currentPosition = 'middle';
         let showReceipt = true;
+        const i18nWizard = @json(__('admin.organization.wizard'));
 
         // Color pickers
         thankyouColorInput?.addEventListener('input', function() {
@@ -300,8 +301,8 @@
         });
 
         function updatePreview() {
-            const message = thankyouMessageInput?.value || 'Thank you for your generous donation!';
-            const subtitle = thankyouSubtitleInput?.value || 'Your support makes a real difference.';
+            const message = thankyouMessageInput?.value || i18nWizard.thankyou_message_placeholder;
+            const subtitle = thankyouSubtitleInput?.value || i18nWizard.js_default_ty_subtitle;
             const tyColor = thankyouColorInput?.value || primaryColor;
             const tyHeaderColor = thankyouHeaderColorInput?.value || primaryColor;
             const tyBodyColor = thankyouBodyColorInput?.value || accentColor;
@@ -322,7 +323,7 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    Email Receipt
+                    ${i18nWizard.js_email_receipt_button}
                 </button>
             ` : '';
 

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactFormSubmitted;
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionTier;
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -98,9 +100,22 @@ class MarketingController extends Controller
                 ->withInput();
         }
 
-        // Send contact form notification to admin
-        $adminEmail = config('mail.from.address');
-        Mail::to($adminEmail)->send(new ContactFormSubmitted($request->all()));
+        $data = $validator->validated();
+
+        // Persist first so the inquiry is never lost, even if the email below fails.
+        $contactMessage = ContactMessage::create($data);
+
+        try {
+            Mail::to(config('mail.contact_recipient'))->send(new ContactFormSubmitted($data));
+            $contactMessage->update(['email_sent' => true]);
+        } catch (\Throwable $e) {
+            Log::error('Contact form email failed to send.', [
+                'contact_message_id' => $contactMessage->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', __('marketing.contact.error'));
+        }
 
         return back()->with('success', __('marketing.contact.success'));
     }

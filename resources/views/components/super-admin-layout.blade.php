@@ -48,14 +48,14 @@
                                     </button>
 
                                     <!-- Dropdown Menu -->
-                                    <div x-show="open" @click.away="open = false" x-cloak class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200 z-50">
-                                        <a href="{{ route('super-admin.shop.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.products.*') ? 'bg-gray-50 text-primary-700' : '' }}">
+                                    <div x-show="open" @click.away="open = false" x-cloak class="absolute left-0 mt-2 w-48 dropdown-panel bg-white rounded-lg shadow-lg py-1 border border-gray-200 z-50">
+                                        <a href="{{ route('super-admin.shop.products.index') }}" class="dropdown-item text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.products.*') ? 'bg-gray-50 text-primary-700' : '' }}">
                                             Products
                                         </a>
-                                        <a href="{{ route('super-admin.shop.categories.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.categories.*') ? 'bg-gray-50 text-primary-700' : '' }}">
+                                        <a href="{{ route('super-admin.shop.categories.index') }}" class="dropdown-item text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.categories.*') ? 'bg-gray-50 text-primary-700' : '' }}">
                                             Categories
                                         </a>
-                                        <a href="{{ route('super-admin.shop.orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.orders.*') ? 'bg-gray-50 text-primary-700' : '' }}">
+                                        <a href="{{ route('super-admin.shop.orders.index') }}" class="dropdown-item text-gray-700 hover:bg-gray-100 {{ request()->routeIs('super-admin.shop.orders.*') ? 'bg-gray-50 text-primary-700' : '' }}">
                                             Orders
                                         </a>
                                     </div>
@@ -90,11 +90,11 @@
                                 </button>
 
                                 <!-- Dropdown Menu -->
-                                <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200">
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
+                                <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 dropdown-panel bg-white rounded-lg shadow-lg py-1 border border-gray-200">
+                                    <a href="{{ route('profile.edit') }}" class="dropdown-item text-gray-700 hover:bg-gray-100">Profile Settings</a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
+                                        <button type="submit" class="dropdown-item w-full text-left text-gray-700 hover:bg-gray-100">Sign out</button>
                                     </form>
                                 </div>
                             </div>

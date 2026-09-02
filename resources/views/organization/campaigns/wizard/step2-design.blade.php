@@ -4,10 +4,10 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Design Your Campaign</h1>
-                    <p class="mt-2 text-gray-600">Customize the look and feel of your campaign</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.wizard.step2_title') }}</h1>
+                    <p class="mt-2 text-gray-600">{{ __('admin.organization.wizard.step2_subtitle') }}</p>
                 </div>
-                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">Cancel</a>
+                <a href="{{ route('organization.campaigns.index') }}" class="btn-secondary">{{ __('admin.common.cancel') }}</a>
             </div>
 
             <!-- Progress Steps -->
@@ -18,27 +18,27 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Layout</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.progress_layout') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-primary-500"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-primary text-white font-semibold shadow-primary">2</div>
-                    <span class="ml-2 text-sm font-medium text-gray-900">Design</span>
+                    <span class="ml-2 text-sm font-medium text-gray-900">{{ __('admin.organization.wizard.step2_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">3</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Donations</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step3_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">4</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Thank You</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step4_label') }}</span>
                 </div>
                 <div class="w-16 h-1 bg-gray-200"></div>
                 <div class="flex items-center">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
-                    <span class="ml-2 text-sm font-medium text-gray-500">Finish</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500">{{ __('admin.organization.wizard.step5_label') }}</span>
                 </div>
             </div>
         </div>
@@ -51,44 +51,44 @@
                 <!-- Left Side: Form -->
                 <div class="space-y-6">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Campaign Design</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ __('admin.organization.wizard.campaign_design_heading') }}</h3>
 
                         @if(in_array(session('campaign_wizard.layout_type'), ['banner_image', 'full_background']))
                         <!-- Background/Banner Image -->
                         <div class="mb-6">
                             <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">
                                 @if(session('campaign_wizard.layout_type') == 'banner_image')
-                                    Banner Image *
+                                    {{ __('admin.organization.wizard.banner_image_required') }}
                                 @else
-                                    Background Image *
+                                    {{ __('admin.organization.wizard.background_image_required') }}
                                 @endif
                             </label>
                             <input type="file" name="background_image" id="background_image" accept="image/*" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Recommended: 1920x600px for best quality</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.wizard.recommended_size_hint') }}</p>
                         </div>
                         @endif
 
                         <!-- Campaign Name -->
                         <div class="mb-6">
-                            <label for="campaign_name" class="block text-sm font-medium text-gray-700 mb-2">Campaign Name *</label>
-                            <input type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name') }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Support Our Community">
+                            <label for="campaign_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_form.campaign_name_required') }}</label>
+                            <input type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name') }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="{{ __('admin.organization.wizard.campaign_name_placeholder2') }}">
                         </div>
 
                         <!-- Heading -->
                         <div class="mb-6">
-                            <label for="heading" class="block text-sm font-medium text-gray-700 mb-2">Heading *</label>
-                            <input type="text" name="heading" id="heading" value="{{ old('heading') }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Help Us Make a Difference">
+                            <label for="heading" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.heading_required') }}</label>
+                            <input type="text" name="heading" id="heading" value="{{ old('heading') }}" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="{{ __('admin.organization.wizard.heading_placeholder') }}">
                         </div>
 
                         <!-- Message -->
                         <div class="mb-6">
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                            <textarea name="message" id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Your donation helps us continue our mission...">{{ old('message') }}</textarea>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.campaign_edit_page.message_label') }}</label>
+                            <textarea name="message" id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="{{ __('admin.organization.wizard.message_placeholder') }}">{{ old('message') }}</textarea>
                         </div>
 
                         <!-- Primary Color -->
                         <div class="mb-6">
-                            <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">Primary Color *</label>
+                            <label for="primary_color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.organization.wizard.primary_color_required') }}</label>
                             <div class="flex gap-3">
                                 <input type="color" name="primary_color" id="primary_color" value="{{ old('primary_color', '#1163F0') }}" class="h-12 w-20 rounded-lg border-2 border-gray-200 cursor-pointer">
                                 <input type="text" id="primary_color_text" value="{{ old('primary_color', '#1163F0') }}" readonly class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-mono">
@@ -100,9 +100,9 @@
                         <div class="mb-6">
                             <label for="accent_color" class="block text-sm font-medium text-gray-700 mb-2">
                                 @if(session('campaign_wizard.layout_type') == 'dual_color')
-                                    Body Color *
+                                    {{ __('admin.organization.wizard.body_color_required') }}
                                 @else
-                                    Accent Color
+                                    {{ __('admin.organization.campaign_edit_page.accent_color') }}
                                 @endif
                             </label>
                             <div class="flex gap-3">
@@ -119,10 +119,10 @@
                             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
-                            Back
+                            {{ __('admin.common.back') }}
                         </a>
                         <button type="submit" class="btn-primary">
-                            Continue to Donations
+                            {{ __('admin.organization.wizard.continue_to_donations') }}
                             <svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -134,7 +134,7 @@
                 <div class="lg:sticky lg:top-8 lg:self-start">
                     <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-white font-semibold">Live Preview</h3>
+                            <h3 class="text-white font-semibold">{{ __('admin.organization.campaign_edit_page.live_preview') }}</h3>
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 rounded-full bg-red-500"></div>
                                 <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -149,7 +149,7 @@
                             </div>
                         </div>
 
-                        <p class="text-xs text-gray-400 mt-4 text-center">Changes appear instantly</p>
+                        <p class="text-xs text-gray-400 mt-4 text-center">{{ __('admin.organization.wizard.changes_appear_instantly') }}</p>
                     </div>
                 </div>
             </div>
@@ -197,9 +197,11 @@
         headingInput?.addEventListener('input', updatePreview);
         messageInput?.addEventListener('input', updatePreview);
 
+        const i18nWizard = @json(__('admin.organization.wizard'));
+
         function updatePreview() {
-            const heading = headingInput?.value || 'Your Campaign Heading';
-            const message = messageInput?.value || 'Your campaign message will appear here...';
+            const heading = headingInput?.value || i18nWizard.js_default_heading;
+            const message = messageInput?.value || i18nWizard.js_default_message;
             const primaryColor = primaryColorInput?.value || '#1163F0';
             const accentColor = accentColorInput?.value || '#F3F4F6';
 

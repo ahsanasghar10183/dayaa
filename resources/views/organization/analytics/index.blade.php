@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
-                <p class="text-sm text-gray-500 mt-1">Comprehensive donation insights and performance metrics</p>
+                <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.organization.analytics_page.title') }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ __('admin.organization.analytics_page.subtitle') }}</p>
             </div>
         </div>
     </x-slot>
@@ -14,41 +14,41 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {{-- Today --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Today</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.today') }}</p>
                 <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($todayStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $todayStats['count'] }} donations</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $todayStats['count'] }} {{ __('admin.dashboard.donations') }}</p>
                 @php
                     $diff = $todayStats['total'] - $yesterdayStats['total'];
                     $pct = $yesterdayStats['total'] > 0 ? round(($diff / $yesterdayStats['total']) * 100, 1) : 0;
                 @endphp
                 <p class="text-xs mt-2 {{ $diff >= 0 ? 'text-green-600' : 'text-red-500' }}">
-                    {{ $diff >= 0 ? '+' : '' }}€{{ number_format(abs($diff), 2) }} vs yesterday
+                    {{ $diff >= 0 ? '+' : '' }}€{{ number_format(abs($diff), 2) }} {{ __('admin.organization.analytics_page.vs_yesterday') }}
                     @if($pct != 0)({{ $diff >= 0 ? '+' : '' }}{{ $pct }}%)@endif
                 </p>
             </div>
 
             {{-- This Week --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">This Week</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.organization.analytics_page.this_week') }}</p>
                 <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($weekStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $weekStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($weekStats['avg'], 2) }}</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $weekStats['count'] }} {{ __('admin.dashboard.donations') }}</p>
+                <p class="text-xs mt-2 text-gray-400">{{ __('admin.organization.device_show.avg_prefix') }} €{{ number_format($weekStats['avg'], 2) }}</p>
             </div>
 
             {{-- This Month --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">This Month</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.organization.device_show.this_month') }}</p>
                 <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($monthStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $monthStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($monthStats['avg'], 2) }}</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $monthStats['count'] }} {{ __('admin.dashboard.donations') }}</p>
+                <p class="text-xs mt-2 text-gray-400">{{ __('admin.organization.device_show.avg_prefix') }} €{{ number_format($monthStats['avg'], 2) }}</p>
             </div>
 
             {{-- All Time --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">All Time</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.organization.analytics_page.all_time') }}</p>
                 <p class="text-2xl font-bold text-gray-900 mt-1">€{{ number_format($allTimeStats['total'], 2) }}</p>
-                <p class="text-sm text-gray-500 mt-1">{{ $allTimeStats['count'] }} donations</p>
-                <p class="text-xs mt-2 text-gray-400">Avg €{{ number_format($allTimeStats['avg'], 2) }}</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $allTimeStats['count'] }} {{ __('admin.dashboard.donations') }}</p>
+                <p class="text-xs mt-2 text-gray-400">{{ __('admin.organization.device_show.avg_prefix') }} €{{ number_format($allTimeStats['avg'], 2) }}</p>
             </div>
         </div>
 
@@ -62,14 +62,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
-                    <p class="text-sm font-medium text-blue-700">Top Campaign</p>
+                    <p class="text-sm font-medium text-blue-700">{{ __('admin.organization.analytics_page.top_campaign') }}</p>
                 </div>
                 @if($topCampaign && $topCampaign->campaign)
                     <p class="font-bold text-gray-900 truncate">{{ $topCampaign->campaign->name }}</p>
                     <p class="text-2xl font-bold text-blue-700 mt-1">€{{ number_format($topCampaign->total, 2) }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ $topCampaign->count }} donations</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ $topCampaign->count }} {{ __('admin.dashboard.donations') }}</p>
                 @else
-                    <p class="text-gray-400 text-sm">No data yet</p>
+                    <p class="text-gray-400 text-sm">{{ __('admin.organization.analytics_page.no_data_yet') }}</p>
                 @endif
             </div>
 
@@ -81,14 +81,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                         </svg>
                     </div>
-                    <p class="text-sm font-medium text-purple-700">Top Device</p>
+                    <p class="text-sm font-medium text-purple-700">{{ __('admin.organization.analytics_page.top_device') }}</p>
                 </div>
                 @if($topDevice && $topDevice->device)
                     <p class="font-bold text-gray-900 truncate">{{ $topDevice->device->name }}</p>
                     <p class="text-2xl font-bold text-purple-700 mt-1">€{{ number_format($topDevice->total, 2) }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ $topDevice->count }} donations</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ $topDevice->count }} {{ __('admin.dashboard.donations') }}</p>
                 @else
-                    <p class="text-gray-400 text-sm">No data yet</p>
+                    <p class="text-gray-400 text-sm">{{ __('admin.organization.analytics_page.no_data_yet') }}</p>
                 @endif
             </div>
 
@@ -100,10 +100,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
                         </svg>
                     </div>
-                    <p class="text-sm font-medium text-green-700">Active Devices</p>
+                    <p class="text-sm font-medium text-green-700">{{ __('admin.organization.analytics_page.active_devices') }}</p>
                 </div>
                 <p class="text-3xl font-bold text-green-700">{{ $activeDevicesCount }}</p>
-                <p class="text-sm text-gray-500 mt-1">Currently online</p>
+                <p class="text-sm text-gray-500 mt-1">{{ __('admin.organization.analytics_page.currently_online') }}</p>
             </div>
         </div>
 
@@ -111,7 +111,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {{-- 30-Day Trend --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Donation Trend (Last 30 Days)</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.donation_trend_30d') }}</h3>
                 <div class="relative h-64">
                     <canvas id="trendChart"></canvas>
                 </div>
@@ -119,7 +119,7 @@
 
             {{-- 12-Month Trend --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Monthly Trend (Last 12 Months)</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.monthly_trend_12m') }}</h3>
                 <div class="relative h-64">
                     <canvas id="monthlyTrendChart"></canvas>
                 </div>
@@ -130,24 +130,24 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {{-- Campaign Performance --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Campaign Performance (Top 8)</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.campaign_performance_top8') }}</h3>
                 <div class="relative h-64">
                     @if(count($campaignChartData['labels']) > 0)
                         <canvas id="campaignChart"></canvas>
                     @else
-                        <div class="flex items-center justify-center h-full text-gray-400">No campaign data yet</div>
+                        <div class="flex items-center justify-center h-full text-gray-400">{{ __('admin.organization.analytics_page.no_campaign_data') }}</div>
                     @endif
                 </div>
             </div>
 
             {{-- Device Performance --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Device Performance</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.device_performance') }}</h3>
                 <div class="relative h-64">
                     @if(count($deviceChartData['labels']) > 0)
                         <canvas id="deviceChart"></canvas>
                     @else
-                        <div class="flex items-center justify-center h-full text-gray-400">No device data yet</div>
+                        <div class="flex items-center justify-center h-full text-gray-400">{{ __('admin.organization.analytics_page.no_device_data') }}</div>
                     @endif
                 </div>
             </div>
@@ -157,7 +157,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {{-- Hourly Activity --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Hourly Activity (Last 30 Days)</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.hourly_activity_30d') }}</h3>
                 <div class="relative h-64">
                     <canvas id="hourlyChart"></canvas>
                 </div>
@@ -165,7 +165,7 @@
 
             {{-- Day of Week --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-base font-semibold text-gray-900 mb-4">Day of Week Analysis (Last 90 Days)</h3>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.dow_analysis_90d') }}</h3>
                 <div class="relative h-64">
                     <canvas id="dowChart"></canvas>
                 </div>
@@ -174,13 +174,13 @@
 
         {{-- Payment Method Distribution --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-            <h3 class="text-base font-semibold text-gray-900 mb-4">Payment Method Distribution</h3>
+            <h3 class="text-base font-semibold text-gray-900 mb-4">{{ __('admin.organization.analytics_page.payment_method_distribution') }}</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="relative h-64">
                     @if(count($paymentMethodData['labels']) > 0)
                         <canvas id="paymentMethodChart"></canvas>
                     @else
-                        <div class="flex items-center justify-center h-full text-gray-400">No payment data yet</div>
+                        <div class="flex items-center justify-center h-full text-gray-400">{{ __('admin.organization.analytics_page.no_payment_data') }}</div>
                     @endif
                 </div>
                 <div>
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="text-right">
                                         <p class="font-bold text-gray-900">€{{ number_format($paymentMethodData['totals'][$index], 2) }}</p>
-                                        <p class="text-xs text-gray-500">{{ $paymentMethodData['counts'][$index] }} donations</p>
+                                        <p class="text-xs text-gray-500">{{ $paymentMethodData['counts'][$index] }} {{ __('admin.dashboard.donations') }}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -218,6 +218,8 @@
             const PRIMARY = '#1163F0';
             const PRIMARY_LIGHT = 'rgba(17,99,240,0.15)';
             const COLORS = ['#1163F0','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#F97316','#EC4899'];
+            const i18n = @json(__('admin.organization.analytics_page'));
+            const donationsLabel = @json(__('admin.dashboard.donations'));
 
             // ---- 30-Day Trend Chart ----
             const trendData = @json($trendData);
@@ -226,7 +228,7 @@
             data: {
                 labels: trendData.labels,
                 datasets: [{
-                    label: 'Total (€)',
+                    label: i18n.chart_total_label,
                     data: trendData.totals,
                     borderColor: PRIMARY,
                     backgroundColor: PRIMARY_LIGHT,
@@ -243,7 +245,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + trendData.counts[ctx.dataIndex] + ' donations)'
+                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + trendData.counts[ctx.dataIndex] + ' ' + donationsLabel + ')'
                         }
                     }
                 },
@@ -268,7 +270,7 @@
             data: {
                 labels: monthlyTrendData.labels,
                 datasets: [{
-                    label: 'Total (€)',
+                    label: i18n.chart_total_label,
                     data: monthlyTrendData.totals,
                     backgroundColor: 'rgba(17,99,240,0.7)',
                     borderRadius: 6,
@@ -281,7 +283,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + monthlyTrendData.counts[ctx.dataIndex] + ' donations)'
+                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + monthlyTrendData.counts[ctx.dataIndex] + ' ' + donationsLabel + ')'
                         }
                     }
                 },
@@ -304,7 +306,7 @@
             data: {
                 labels: campaignData.labels,
                 datasets: [{
-                    label: 'Total (€)',
+                    label: i18n.chart_total_label,
                     data: campaignData.totals,
                     backgroundColor: COLORS,
                     borderRadius: 6,
@@ -317,7 +319,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + campaignData.counts[ctx.dataIndex] + ' donations)'
+                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + campaignData.counts[ctx.dataIndex] + ' ' + donationsLabel + ')'
                         }
                     }
                 },
@@ -341,7 +343,7 @@
             data: {
                 labels: deviceData.labels,
                 datasets: [{
-                    label: 'Total (€)',
+                    label: i18n.chart_total_label,
                     data: deviceData.totals,
                     backgroundColor: COLORS,
                     borderRadius: 6,
@@ -354,7 +356,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + deviceData.counts[ctx.dataIndex] + ' donations)'
+                            label: ctx => '€' + ctx.parsed.y.toFixed(2) + ' (' + deviceData.counts[ctx.dataIndex] + ' ' + donationsLabel + ')'
                         }
                     }
                 },
@@ -377,7 +379,7 @@
             data: {
                 labels: hourlyData.labels,
                 datasets: [{
-                    label: 'Donations',
+                    label: i18n.chart_donations_label,
                     data: hourlyData.counts,
                     backgroundColor: 'rgba(16,185,129,0.7)',
                     borderRadius: 4,
@@ -390,7 +392,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => ctx.parsed.y + ' donations (€' + hourlyData.totals[ctx.dataIndex].toFixed(2) + ')'
+                            label: ctx => ctx.parsed.y + ' ' + donationsLabel + ' (€' + hourlyData.totals[ctx.dataIndex].toFixed(2) + ')'
                         }
                     }
                 },
@@ -408,7 +410,7 @@
             data: {
                 labels: dowData.labels,
                 datasets: [{
-                    label: 'Donations',
+                    label: i18n.chart_donations_label,
                     data: dowData.counts,
                     backgroundColor: COLORS.slice(0, 7),
                     borderRadius: 6,
@@ -421,7 +423,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => ctx.parsed.y + ' donations (€' + dowData.totals[ctx.dataIndex].toFixed(2) + ')'
+                            label: ctx => ctx.parsed.y + ' ' + donationsLabel + ' (€' + dowData.totals[ctx.dataIndex].toFixed(2) + ')'
                         }
                     }
                 },
@@ -453,7 +455,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => ctx.label + ': €' + ctx.parsed.toFixed(2) + ' (' + paymentMethodData.counts[ctx.dataIndex] + ' donations)'
+                            label: ctx => ctx.label + ': €' + ctx.parsed.toFixed(2) + ' (' + paymentMethodData.counts[ctx.dataIndex] + ' ' + donationsLabel + ')'
                         }
                     }
                 }

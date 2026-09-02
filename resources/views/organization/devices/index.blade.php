@@ -3,14 +3,14 @@
         <!-- Page Header -->
         <div class="mb-8 flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Devices</h1>
-                <p class="mt-2 text-gray-600">Manage your donation devices</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.devices') }}</h1>
+                <p class="mt-2 text-gray-600">{{ __('admin.organization.devices_subtitle') }}</p>
             </div>
             <a href="{{ route('organization.devices.create') }}" class="btn-primary">
                 <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Add New Device
+                {{ __('admin.organization.add_new_device') }}
             </a>
         </div>
 
@@ -19,15 +19,15 @@
             <form method="GET" action="{{ route('organization.devices.index') }}" class="flex flex-col md:flex-row gap-4">
                 <!-- Search -->
                 <div class="flex-1">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search devices..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('admin.organization.search_devices_placeholder') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 </div>
 
                 <!-- Status Filter -->
-                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Status</option>
-                    <option value="online" {{ request('status') == 'online' ? 'selected' : '' }}>Online</option>
-                    <option value="offline" {{ request('status') == 'offline' ? 'selected' : '' }}>Offline</option>
-                    <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                <select name="status" class="select sm:w-auto">
+                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>{{ __('admin.organization.filter_status_all') }}</option>
+                    <option value="online" {{ request('status') == 'online' ? 'selected' : '' }}>{{ __('admin.organization.online') }}</option>
+                    <option value="offline" {{ request('status') == 'offline' ? 'selected' : '' }}>{{ __('admin.organization.offline') }}</option>
+                    <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>{{ __('admin.organization.maintenance') }}</option>
                 </select>
 
                 <!-- Filter Button -->
@@ -35,12 +35,12 @@
                     <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                     </svg>
-                    Filter
+                    {{ __('admin.common.filter') }}
                 </button>
 
                 <!-- Reset -->
                 @if(request('search') || request('status') != 'all')
-                <a href="{{ route('organization.devices.index') }}" class="btn-secondary whitespace-nowrap">Reset</a>
+                <a href="{{ route('organization.devices.index') }}" class="btn-secondary whitespace-nowrap">{{ __('admin.common.reset') }}</a>
                 @endif
             </form>
         </div>
@@ -53,25 +53,25 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Device
+                                {{ __('admin.organization.table_device') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Device ID
+                                {{ __('admin.organization.device_id') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Status
+                                {{ __('admin.organization.table_status') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Campaigns
+                                {{ __('admin.organization.table_campaigns') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Total Raised
+                                {{ __('admin.organization.table_total_raised') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Last Active
+                                {{ __('admin.organization.last_active') }}
                             </th>
                             <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Actions
+                                {{ __('admin.common.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -113,19 +113,19 @@
                                 @if($device->status == 'online')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
                                         <span class="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></span>
-                                        Online
+                                        {{ __('admin.organization.online') }}
                                     </span>
                                 @elseif($device->status == 'maintenance')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                         </svg>
-                                        Maintenance
+                                        {{ __('admin.organization.maintenance') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200">
                                         <span class="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
-                                        Offline
+                                        {{ __('admin.organization.offline') }}
                                     </span>
                                 @endif
                             </td>
@@ -155,25 +155,25 @@
                                 @if($device->last_active)
                                     {{ $device->last_active->diffForHumans() }}
                                 @else
-                                    <span class="text-gray-400">Never</span>
+                                    <span class="text-gray-400">{{ __('admin.organization.never') }}</span>
                                 @endif
                             </td>
 
                             <!-- Actions -->
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('organization.devices.show', $device) }}" class="text-primary-600 hover:text-primary-900 transition-colors" title="View">
+                                    <a href="{{ route('organization.devices.show', $device) }}" class="text-primary-600 hover:text-primary-900 transition-colors" title="{{ __('admin.common.view') }}">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                     </a>
-                                    <a href="{{ route('organization.devices.edit', $device) }}" class="text-blue-600 hover:text-blue-900 transition-colors" title="Edit">
+                                    <a href="{{ route('organization.devices.edit', $device) }}" class="text-blue-600 hover:text-blue-900 transition-colors" title="{{ __('admin.common.edit') }}">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
-                                    <button onclick="confirmDelete({{ $device->id }}, '{{ $device->name }}')" class="text-red-600 hover:text-red-900 transition-colors" title="Delete">
+                                    <button onclick="confirmDelete({{ $device->id }}, '{{ $device->name }}')" class="text-red-600 hover:text-red-900 transition-colors" title="{{ __('admin.common.delete') }}">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
@@ -200,13 +200,13 @@
             <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
             </svg>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">No devices yet</h3>
-            <p class="text-gray-600 mb-6">Get started by adding your first donation device</p>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('admin.organization.no_devices_yet_title') }}</h3>
+            <p class="text-gray-600 mb-6">{{ __('admin.organization.no_devices_yet_text') }}</p>
             <a href="{{ route('organization.devices.create') }}" class="btn-primary inline-flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Add Your First Device
+                {{ __('admin.organization.add_first_device_button') }}
             </a>
         </div>
         @endif
@@ -220,7 +220,8 @@
 
     <script>
         function confirmDelete(deviceId, deviceName) {
-            if (confirm(`Are you sure you want to delete the device "${deviceName}"?\n\nThis action cannot be undone.`)) {
+            const confirmMessage = @json(__('admin.organization.confirm_delete_device')).replace(':name', deviceName);
+            if (confirm(confirmMessage)) {
                 const form = document.getElementById('delete-form');
                 form.action = `/organization/devices/${deviceId}`;
                 form.submit();

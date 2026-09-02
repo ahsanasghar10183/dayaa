@@ -6,13 +6,13 @@
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Back to Device
+                {{ __('admin.organization.back_to_device') }}
             </a>
         </div>
 
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Edit Device</h1>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.organization.edit_device_title') }}</h1>
             <p class="mt-2 text-gray-600">{{ $device->name }}</p>
         </div>
 
@@ -25,7 +25,7 @@
                 <!-- Device Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Device Name *
+                        {{ __('admin.organization.device_name_required') }}
                     </label>
                     <input
                         type="text"
@@ -34,7 +34,7 @@
                         value="{{ old('name', $device->name) }}"
                         required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                        placeholder="e.g., Main Entrance Device"
+                        placeholder="{{ __('admin.organization.device_name_placeholder') }}"
                     >
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -44,7 +44,7 @@
                 <!-- Location -->
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-                        Location
+                        {{ __('admin.organization.location') }}
                     </label>
                     <input
                         type="text"
@@ -52,7 +52,7 @@
                         id="location"
                         value="{{ old('location', $device->location) }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('location') border-red-500 @enderror"
-                        placeholder="e.g., Main Office, Building A"
+                        placeholder="{{ __('admin.organization.location_placeholder') }}"
                     >
                     @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -62,14 +62,14 @@
                 <!-- Description -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Description
+                        {{ __('admin.organization.description') }}
                     </label>
                     <textarea
                         name="description"
                         id="description"
                         rows="4"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('description') border-red-500 @enderror"
-                        placeholder="Additional information about this device..."
+                        placeholder="{{ __('admin.organization.description_placeholder') }}"
                     >{{ old('description', $device->description) }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -79,28 +79,28 @@
                 <!-- Status -->
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                        Status *
+                        {{ __('admin.organization.status_required') }}
                     </label>
                     <select
                         name="status"
                         id="status"
                         required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('status') border-red-500 @enderror"
+                        class="select @error('status') border-red-500 @enderror"
                     >
-                        <option value="online" {{ old('status', $device->status) == 'online' ? 'selected' : '' }}>Online</option>
-                        <option value="offline" {{ old('status', $device->status) == 'offline' ? 'selected' : '' }}>Offline</option>
-                        <option value="maintenance" {{ old('status', $device->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                        <option value="online" {{ old('status', $device->status) == 'online' ? 'selected' : '' }}>{{ __('admin.organization.online') }}</option>
+                        <option value="offline" {{ old('status', $device->status) == 'offline' ? 'selected' : '' }}>{{ __('admin.organization.offline') }}</option>
+                        <option value="maintenance" {{ old('status', $device->status) == 'maintenance' ? 'selected' : '' }}>{{ __('admin.organization.maintenance') }}</option>
                     </select>
                     @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">Set to "Maintenance" to temporarily disable this device</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.maintenance_hint') }}</p>
                 </div>
 
                 <!-- Device ID (Read-only) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Device ID
+                        {{ __('admin.organization.device_id') }}
                     </label>
                     <div class="flex items-center">
                         <input
@@ -115,19 +115,19 @@
                             </svg>
                         </button>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">This ID cannot be changed</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('admin.organization.device_id_readonly_hint') }}</p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
                     <a href="{{ route('organization.devices.show', $device) }}" class="btn-secondary">
-                        Cancel
+                        {{ __('admin.common.cancel') }}
                     </a>
                     <button type="submit" class="btn-primary px-8">
                         <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Save Changes
+                        {{ __('admin.organization.save_changes') }}
                     </button>
                 </div>
             </div>
@@ -138,7 +138,7 @@
         function copyDeviceId() {
             const deviceId = '{{ $device->device_id }}';
             navigator.clipboard.writeText(deviceId).then(() => {
-                alert('Device ID copied to clipboard!');
+                alert(@json(__('admin.organization.copied_alert')));
             });
         }
     </script>
