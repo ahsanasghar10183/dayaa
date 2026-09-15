@@ -29,7 +29,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 83.00,
                 'monthly_fee' => 15.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYB6FQiIRHgceVbdUVNg8e', // TODO: Replace with actual Stripe Price ID
+                'stripe_price_id' => 'price_1UBYcAFYR3hy5iDEMHvRsjcn', // TODO: Replace with actual Stripe Price ID
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Up to 5 devices',
@@ -46,7 +46,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 667.00,
                 'monthly_fee' => 25.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYBfFQiIRHgceVAAwXi7oy',
+                'stripe_price_id' => 'price_1UBYGrFYR3hy5iDEyyFhUnUB',
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Up to 10 devices',
@@ -63,7 +63,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 1333.00,
                 'monthly_fee' => 40.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYCXFQiIRHgceVfbBitxfu',
+                'stripe_price_id' => 'price_1UBYHeFYR3hy5iDE0j1Y1hbX',
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Up to 15 devices',
@@ -81,7 +81,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 2500.00,
                 'monthly_fee' => 60.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYDDFQiIRHgceVg0GzCUTp',
+                'stripe_price_id' => 'price_1UBYIuFYR3hy5iDE3kMI7Vt7',
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Up to 25 devices',
@@ -100,7 +100,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 5000.00,
                 'monthly_fee' => 95.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYEXFQiIRHgceVkaGb6WzS',
+                'stripe_price_id' => 'price_1UBYJSFYR3hy5iDEvH7OOlOp',
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Up to 50 devices',
@@ -120,7 +120,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 10000.00,
                 'monthly_fee' => 140.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYExFQiIRHgceVs4COjdmq',
+                'stripe_price_id' => 'price_1UBYJyFYR3hy5iDERjMU31pi',
                 'features' => json_encode([
                     'Unlimited campaigns',
                     'Unlimited devices',
@@ -141,7 +141,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 25000.00,
                 'monthly_fee' => 200.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYFUFQiIRHgceVbcnLee6o',
+                'stripe_price_id' => 'price_1UBYLOFYR3hy5iDE1pEcvASt',
                 'features' => json_encode([
                     'Everything in previous tier',
                     'Custom integrations',
@@ -158,7 +158,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 50000.00,
                 'monthly_fee' => 270.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => 'price_1TLYG2FQiIRHgceVu2KZf2y9',
+                'stripe_price_id' => 'price_1UBYM2FYR3hy5iDEDOHQxaH3',
                 'features' => json_encode([
                     'Everything in previous tier',
                     'Enterprise SLA',
@@ -175,7 +175,7 @@ class SubscriptionTierSeeder extends Seeder
                 'max_amount' => 100000.00,
                 'monthly_fee' => 380.00,
                 'currency' => 'EUR',
-                'stripe_price_id' => null, // TODO: Replace with actual Stripe Price ID
+                'stripe_price_id' => 'price_1UBYMSFYR3hy5iDEpViOClJm', // TODO: Replace with actual Stripe Price ID
                 'features' => json_encode([
                     'Everything in previous tier',
                     'Dedicated infrastructure',

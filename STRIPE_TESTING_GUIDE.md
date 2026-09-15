@@ -510,7 +510,7 @@ for ($i = 0; $i < 12; $i++) {
     \App\Models\Donation::create([
         'organization_id' => $org->id,
         'campaign_id' => 1, // Assuming you have a campaign with ID 1
-        'amount' => 1000,
+        'amount' => 100,
         'currency' => 'EUR',
         'payment_status' => 'completed',
         'payment_method' => 'sumup',
